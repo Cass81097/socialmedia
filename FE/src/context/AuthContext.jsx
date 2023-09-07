@@ -19,7 +19,6 @@ export const AuthContextProvider = ({ children }) => {
         const avatarPosition = Math.floor(Math.random() * avatars.length);
         return avatars[avatarPosition];
     };
-    const avatar = generateAvatar();
 
     const createCometChatAccount = ({ userUuid, fullname, userAvatar }) => {
         const authKey = `${process.env.REACT_APP_COMETCHAT_AUTH_KEY}`;
@@ -43,7 +42,6 @@ export const AuthContextProvider = ({ children }) => {
         username: "",
         email: "",
         password: "",
-        avatar: avatar,
     });
 
     const [loginError, setLoginError] = useState(null);
@@ -82,7 +80,11 @@ export const AuthContextProvider = ({ children }) => {
         setIsRegisterLoading(true);
         setRegisterError(null)
 
-        const response = await postRequest(`${baseUrl}/users/register`, JSON.stringify(registerInfo))
+        const avatar = generateAvatar(); // Generate the avatar synchronously
+
+        const registerInfoWithAvatar = { ...registerInfo, avatar };
+
+        const response = await postRequest(`${baseUrl}/users/register`, JSON.stringify(registerInfoWithAvatar))
 
         if (response.error) {
             return setRegisterError(response);
@@ -90,12 +92,12 @@ export const AuthContextProvider = ({ children }) => {
 
         setIsRegisterLoading(false);
 
-        const userId = response.userId.toString(); // Convert userId to a string
-        createCometChatAccount({
-            userUuid: userId,
-            fullname: registerInfo.username,
-            userAvatar: registerInfo.avatar,
-        });
+        // const userId = response.userId.toString(); // Convert userId to a string
+        // createCometChatAccount({
+        //     userUuid: userId,
+        //     fullname: registerInfo.username,
+        //     userAvatar: registerInfo.avatar,
+        // });
 
         setUser(response)
     }, [registerInfo])

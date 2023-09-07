@@ -43,8 +43,8 @@ export default function Register(props) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         if (handleValidation()) {
-            registerUser();
-            navigate("/");
+            await registerUser();
+            toggleModal(false);
         }
     };
 
