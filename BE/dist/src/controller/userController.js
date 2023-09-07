@@ -8,8 +8,8 @@ const userService_1 = __importDefault(require("../Service/userService"));
 class UserController {
     constructor() {
         this.register = async (req, res) => {
-            await userService_1.default.register(req.body);
-            res.status(201).json('Create user success');
+            const user = await userService_1.default.register(req.body);
+            res.status(201).json({ message: 'Create user success', userId: user.id });
         };
         this.login = async (req, res) => {
             let resultCheck = await userService_1.default.checkUser(req.body);

@@ -12,34 +12,38 @@ const jwt_1 = require("../middleware/jwt");
 class UserService {
     constructor() {
         this.findAll = async () => {
-            return await this.repository.find();
+            return await this.userRepository.find();
         };
         this.update = async (id, user) => {
-            return await this.repository.update(id, user);
+            return await this.userRepository.update(id, user);
         };
         this.register = async (user) => {
             user.password = await bcrypt_1.default.hash(user.password, 10);
-            return this.repository.save(user);
+            user.passwordConfirm = user.password;
+            return this.userRepository.save(user);
+        };
+        this.findByEmail = async (email) => {
+            return await this.userRepository.findOne({ email });
         };
         this.checkUser = async (user) => {
-            let userFind = await this.repository.findOneBy({ username: user.username });
+            let userFind = await this.userRepository.findOneBy({ email: user.email });
             if (!userFind) {
-                return 'User is not exist';
+                return 'Email is not exist';
             }
             else {
                 let passWordCompare = await bcrypt_1.default.compare(user.password, userFind.password);
                 console.log(passWordCompare);
                 if (passWordCompare) {
                     let payload = {
-                        idUser: userFind.id,
-                        username: userFind.username,
+                        id: userFind.id,
+                        email: userFind.email,
                         role: 'admin'
                     };
                     return {
                         token: jsonwebtoken_1.default.sign(payload, jwt_1.SECRET, {
                             expiresIn: 36000 * 10 * 100
                         }),
-                        idUser: userFind.id,
+                        id: userFind.id,
                         name: userFind.name,
                         email: userFind.email,
                         username: userFind.username,
@@ -54,7 +58,7 @@ class UserService {
                 }
             }
         };
-        this.repository = data_source_1.AppDataSource.getRepository(user_1.User);
+        this.userRepository = data_source_1.AppDataSource.getRepository(user_1.User);
     }
 }
 exports.UserService = UserService;

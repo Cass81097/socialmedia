@@ -1,12 +1,13 @@
 export declare class UserService {
-    private repository;
+    private userRepository;
     constructor();
     findAll: () => Promise<any>;
     update: (id: any, user: any) => Promise<any>;
     register: (user: any) => Promise<any>;
-    checkUser: (user: any) => Promise<"User is not exist" | "Password is wrong" | {
+    findByEmail: (email: any) => Promise<any>;
+    checkUser: (user: any) => Promise<"Email is not exist" | "Password is wrong" | {
         token: any;
-        idUser: any;
+        id: any;
         name: any;
         email: any;
         username: any;

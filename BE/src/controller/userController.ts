@@ -1,11 +1,11 @@
-import e, {Request, Response} from "express";
+import {Request, Response} from "express";
 import userService from "../Service/userService";
 
 
 export class UserController {
     register = async (req: Request, res: Response) => {
-        await userService.register(req.body);
-        res.status(201).json('Create user success')
+        const user = await userService.register(req.body);
+        res.status(201).json({ message: 'Create user success', userId: user.id });
     }
 
     login = async (req: Request, res: Response) => {

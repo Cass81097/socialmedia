@@ -8,10 +8,12 @@ export class User {
     username: string;
     @Column({ type: 'varchar' })
     password: string
+    @Column({ type: 'varchar' })
+    passwordConfirm: string
     @Column({ type: 'varchar', nullable: true })
     email: string;
     @Column({ type: "varchar", length: 255, nullable: true })
-    imgUrl: string;
+    avatar: string;
     @Column({ type: 'varchar', nullable: true })
     role: string
 }

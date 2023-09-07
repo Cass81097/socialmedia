@@ -9,8 +9,8 @@ exports.AppDataSource = new typeorm_1.DataSource({
     port: 3306,
     username: "root",
     password: "123456",
-    database: "wechat",
-    synchronize: false,
+    database: "social_media",
+    synchronize: true,
     entities: ["dist/src/entity/*.js"]
 });
 //# sourceMappingURL=data-source.js.map
