@@ -11,13 +11,14 @@ export const ProfileContextProvider = ({ children, user }) => {
   const domain = window.location.pathname.split("/")[1];
   const username = domain || "";
 
-  // console.log(onlineUsers, "onlineUsers");
-
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await getRequest(`${baseUrl}/users/find/${username}`);
-        setUserProfile(response);
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          const response = await getRequest(`${baseUrl}/users/find/${username}`);
+          setUserProfile(response);
+        } else return;
       } catch (error) {
         console.error("Error fetching user profiles:", error);
       }
@@ -54,8 +55,8 @@ export const ProfileContextProvider = ({ children, user }) => {
 
 
   return (
-      <ProfileContext.Provider value={{userProfile, socket}}>
-        {children}
-      </ProfileContext.Provider>
+    <ProfileContext.Provider value={{ userProfile, socket }}>
+      {children}
+    </ProfileContext.Provider>
   );
 };
