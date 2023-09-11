@@ -131,7 +131,12 @@ export const AuthContextProvider = ({ children }) => {
             return;
         }
 
-        if (response.msg === "Invalid email or password") {
+        if (response === "Invalid email or password") {
+            setLoginError("Invalid email or password");
+            return;
+        }
+
+        if (response === "Email is not exist") {
             setLoginError("Invalid email or password");
             return;
         }

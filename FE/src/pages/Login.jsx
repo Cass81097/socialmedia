@@ -59,15 +59,12 @@ const Login = (props) => {
         }
     };
 
-    // useEffect(() => {
-    //     if (user) {
-    //         navigate(`/${user.username}`);
-    //     }
-    // }, [user, navigate]);
-
     return (
-        <>
-
+        <>  
+         <button onClick={() => {
+                googleLogout();
+                localStorage.clear();
+            }}>Logout</button>
             <form onSubmit={handleSubmit}>
                 <div className="login__container">
                     <div className="login__welcome">
