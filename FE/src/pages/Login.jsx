@@ -4,6 +4,10 @@ import withModal from "../components/common/Modal";
 import { AuthContext } from "../context/AuthContext";
 import Register from "./Register";
 import { ToastContainer, toast } from "react-toastify";
+import { GoogleLogin, googleLogout } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import jwt_decode from "jwt-decode"
+import { useNavigate } from "react-router-dom";
 
 function changeBackground(imageUrl) {
     document.body.style.backgroundImage = imageUrl;
@@ -11,6 +15,7 @@ function changeBackground(imageUrl) {
 changeBackground("https://i.ibb.co/m9YsjR8/Untitled.png");
 
 const Login = (props) => {
+    const navigate = useNavigate();
     const { toggleModal } = props;
     const { user, loginInfo, loginUser, loginError, updateLoginInfo, isLoginLoading } = useContext(AuthContext)
 
@@ -30,7 +35,7 @@ const Login = (props) => {
 
     const handleValidation = () => {
         const { password, email } = loginInfo;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (password === "" || email === "") {
             toast.error("Please input all options.", toastOptions);
             return false;
@@ -54,6 +59,12 @@ const Login = (props) => {
         }
     };
 
+    // useEffect(() => {
+    //     if (user) {
+    //         navigate(`/${user.username}`);
+    //     }
+    // }, [user, navigate]);
+
     return (
         <>
 
@@ -76,6 +87,19 @@ const Login = (props) => {
                             <button type="submit" className="login__submit-btn">
                                 {isLoginLoading ? "Login..." : "Login"}
                             </button>
+                            <div className="google_auth">
+                                <GoogleOAuthProvider clientId="120461066187-ae82t2psv39efgi1ljltk3q7g440h4ps.apps.googleusercontent.com">
+                                    <GoogleLogin
+                                        onSuccess={credentialResponse => {
+                                            const details = jwt_decode(credentialResponse.credential);
+                                            localStorage.setItem("User", JSON.stringify(details));
+                                        }}
+                                        onError={() => {
+                                            console.log('Login Failed');
+                                        }}
+                                    />
+                                </GoogleOAuthProvider>
+                            </div>
                             <span className="login__signup" onClick={() => toggleModal(true)}>Create a new account</span>
                         </div>
                     </div>

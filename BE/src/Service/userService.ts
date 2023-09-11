@@ -3,6 +3,7 @@ import { AppDataSource } from "../data-source";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { SECRET } from "../middleware/jwt";
+import { Like } from "typeorm";
 
 export class UserService {
     private userRepository;
@@ -15,18 +16,31 @@ export class UserService {
         return await this.userRepository.find();
     }
 
+    findAllUserName = async () => {
+        const users = await this.userRepository.find();
+        return users.map((user) => user.username);
+      }
+
     update = async (id, user) => {
         return await this.userRepository.update(id, user)
     }
 
     register = async (user) => {
+        const existingUser = await this.userRepository.findOneBy({ email: user.email });
+        if (existingUser) {
+            return 'User already exists';
+        }
         user.password = await bcrypt.hash(user.password, 10);
         user.passwordConfirm = user.password;
         return this.userRepository.save(user);
     }
 
-    findByEmail = async (email) => {
-        return await this.userRepository.findOne({ email });
+    findByUserName = async (username) => {
+        return await this.userRepository.find({
+            where: {
+                username: Like(`${username}`)
+            }
+        })
     }
 
     checkUser = async (user) => {

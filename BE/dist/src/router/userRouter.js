@@ -10,5 +10,7 @@ exports.userRouter = (0, express_1.Router)();
 exports.userRouter.post('/register', userController_1.default.register);
 exports.userRouter.post('/login', userController_1.default.login);
 exports.userRouter.put('/users/:id', userController_1.default.update);
-exports.userRouter.get('/users', userController_1.default.findAll);
+exports.userRouter.get('/', userController_1.default.findAll);
+exports.userRouter.get('/find/:username', userController_1.default.findByUserName);
+exports.userRouter.get('/username', userController_1.default.findAllUserName);
 //# sourceMappingURL=userRouter.js.map

@@ -9,7 +9,7 @@ class UserController {
     constructor() {
         this.register = async (req, res) => {
             const user = await userService_1.default.register(req.body);
-            res.status(201).json({ message: 'Create user success', userId: user.id });
+            res.status(201).json({ message: user, userId: user.id });
         };
         this.login = async (req, res) => {
             let resultCheck = await userService_1.default.checkUser(req.body);
@@ -23,6 +23,14 @@ class UserController {
         this.findAll = async (req, res) => {
             let list = await userService_1.default.findAll();
             res.json(list);
+        };
+        this.findByUserName = async (req, res) => {
+            let result = await userService_1.default.findByUserName(req.params.username);
+            res.json(result);
+        };
+        this.findAllUserName = async (req, res) => {
+            let result = await userService_1.default.findAllUserName();
+            res.json(result);
         };
     }
 }

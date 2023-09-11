@@ -5,4 +5,6 @@ export const userRouter = Router();
 userRouter.post('/register', userController.register);
 userRouter.post('/login', userController.login);
 userRouter.put('/users/:id', userController.update);
-userRouter.get('/users', userController.findAll);
+userRouter.get('/', userController.findAll);
+userRouter.get('/find/:username', userController.findByUserName);
+userRouter.get('/username', userController.findAllUserName);

@@ -1,11 +1,26 @@
 import React, { createContext, useCallback, useEffect, useState, useContext } from "react";
-import { baseUrl, postRequest } from "../utils/services";
+import { baseUrl, getRequest, postRequest } from "../utils/services";
 import { CometChatContext } from "./CometChatContext";
 // import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
+    const [allUser, setAllUser] = useState(null);
+
+    useEffect(() => {
+        const fetchAllUsers = async () => {
+            try {
+                const response = await getRequest(`${baseUrl}/users/username`);
+                setAllUser(response); // Assuming the response contains a "data" property with the user array
+            } catch (error) {
+                console.error("Error fetching all users:", error);
+            }
+        };
+
+        fetchAllUsers();
+    }, []);
+
     const { cometChat, setIsLoading } = useContext(CometChatContext);
 
     const generateAvatar = () => {
@@ -20,25 +35,26 @@ export const AuthContextProvider = ({ children }) => {
         return avatars[avatarPosition];
     };
 
-    const createCometChatAccount = ({ userUuid, fullname, userAvatar }) => {
-        const authKey = `${process.env.REACT_APP_COMETCHAT_AUTH_KEY}`;
-        const user = new cometChat.User(userUuid);
-        console.log(user);
-        user.setName(fullname);
-        user.setAvatar(userAvatar);
-        cometChat.createUser(user, authKey).then(
-            user => {
-                setIsLoading(false);
-            }, error => {
-                setIsLoading(false);
-            }
-        )
-    };
+    // const createCometChatAccount = ({ userUuid, fullname, userAvatar }) => {
+    //     const authKey = `${process.env.REACT_APP_COMETCHAT_AUTH_KEY}`;
+    //     const user = new cometChat.User(userUuid);
+    //     console.log(user);
+    //     user.setName(fullname);
+    //     user.setAvatar(userAvatar);
+    //     cometChat.createUser(user, authKey).then(
+    //         user => {
+    //             setIsLoading(false);
+    //         }, error => {
+    //             setIsLoading(false);
+    //         }
+    //     )
+    // };
 
     const [user, setUser] = useState(null);
     const [registerError, setRegisterError] = useState(null);
     const [isRegisterLoading, setIsRegisterLoading] = useState(false);
     const [registerInfo, setRegisterInfo] = useState({
+        fullname: "",
         username: "",
         email: "",
         password: "",
@@ -81,8 +97,9 @@ export const AuthContextProvider = ({ children }) => {
         setRegisterError(null)
 
         const avatar = generateAvatar(); // Generate the avatar synchronously
+        const username = registerInfo.email.split("@")[0]; // Extract the username part before the @ symbol
 
-        const registerInfoWithAvatar = { ...registerInfo, avatar };
+        const registerInfoWithAvatar = { ...registerInfo, avatar, username: username };
 
         const response = await postRequest(`${baseUrl}/users/register`, JSON.stringify(registerInfoWithAvatar))
 
@@ -92,12 +109,12 @@ export const AuthContextProvider = ({ children }) => {
 
         setIsRegisterLoading(false);
 
-        const userId = response.userId.toString(); // Convert userId to a string
-        createCometChatAccount({
-            userUuid: userId,
-            fullname: registerInfo.username,
-            userAvatar: registerInfo.avatar,
-        });
+        // const userId = response.userId.toString(); // Convert userId to a string
+        // createCometChatAccount({
+        //     userUuid: userId,
+        //     fullname: registerInfo.username,
+        //     userAvatar: registerInfo.avatar,
+        // });
 
         setUser(response)
     }, [registerInfo])
@@ -130,7 +147,7 @@ export const AuthContextProvider = ({ children }) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ user, registerInfo, registerUser, updateRegisterInfo, registerError, isRegisterLoading, logOutUser, loginUser, loginError, loginInfo, updateLoginInfo, isLoginLoading }}>
+        <AuthContext.Provider value={{ user, registerInfo, registerUser, updateRegisterInfo, registerError, isRegisterLoading, logOutUser, loginUser, loginError, loginInfo, updateLoginInfo, isLoginLoading, allUser }}>
             {children}
         </AuthContext.Provider>
     );

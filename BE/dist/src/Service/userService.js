@@ -9,21 +9,34 @@ const data_source_1 = require("../data-source");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const jwt_1 = require("../middleware/jwt");
+const typeorm_1 = require("typeorm");
 class UserService {
     constructor() {
         this.findAll = async () => {
             return await this.userRepository.find();
         };
+        this.findAllUserName = async () => {
+            const users = await this.userRepository.find();
+            return users.map((user) => user.username);
+        };
         this.update = async (id, user) => {
             return await this.userRepository.update(id, user);
         };
         this.register = async (user) => {
+            const existingUser = await this.userRepository.findOneBy({ email: user.email });
+            if (existingUser) {
+                return 'User already exists';
+            }
             user.password = await bcrypt_1.default.hash(user.password, 10);
             user.passwordConfirm = user.password;
             return this.userRepository.save(user);
         };
-        this.findByEmail = async (email) => {
-            return await this.userRepository.findOne({ email });
+        this.findByUserName = async (username) => {
+            return await this.userRepository.find({
+                where: {
+                    username: (0, typeorm_1.Like)(`${username}`)
+                }
+            });
         };
         this.checkUser = async (user) => {
             let userFind = await this.userRepository.findOneBy({ email: user.email });
