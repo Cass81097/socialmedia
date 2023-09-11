@@ -39,5 +39,12 @@ export class UserController {
         res.json(result)
     }
 
+    updatePassword = async (req: Request, res: Response) => {
+        let data = await userService.updatePassword
+        (req.params.id, req.body.oldPassword,req.body.newPassword);
+        console.log(req.params.id, req.body);
+        res.json(data);
+    }
+
 }
 export default new UserController()

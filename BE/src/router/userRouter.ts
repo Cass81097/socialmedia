@@ -10,3 +10,5 @@ userRouter.get('/find/:username', userController.findByUserName);
 userRouter.get('/username', userController.findAllUserName);
 userRouter.get('/find/email/:email', userController.findByEmail);
 
+// update password
+userRouter.put("/:id",userController.updatePassword)

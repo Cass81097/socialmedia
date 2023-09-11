@@ -6,5 +6,6 @@ export declare class User {
     passwordConfirm: string;
     email: string;
     avatar: string;
+    cover: string;
     role: string;
 }

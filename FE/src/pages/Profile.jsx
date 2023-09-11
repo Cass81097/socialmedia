@@ -1,179 +1,136 @@
-import React, { useEffect, useState, useContext } from "react";
-import { BiPowerOff } from "react-icons/bi";
-import { useLocation, useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { default as React, useContext } from "react";
 import "react-toastify/dist/ReactToastify.css";
-import styled from "styled-components";
-import { baseUrl, getRequest, postRequest } from "../utils/services";
+import Cover from "../components/profile/Container/HeaderContainer/Cover";
+import NavbarContainer from "../components/profile/Container/HeaderContainer/NavbarContainer";
+import Navbar from "../components/profile/Navbar";
+import Sidebar from "../components/profile/Sidebar";
 import { AuthContext } from "../context/AuthContext";
+import "../styles/user/header.css";
+import "../styles/user/left-sidebar.css";
+import "../styles/user/main-content.css";
+import "../styles/user/profile.css";
+import "../styles/user/right-sidebar.css";
+import "../styles/user/style.css";
+import Avatar from "../components/profile/Container/HeaderContainer/UserProfile/Avatar";
+import FriendButton from "../components/profile/Container/HeaderContainer/UserProfile/FriendButton";
 
 export default function Profile() {
   const { user } = useContext(AuthContext);
-  const location = useLocation();
-  const domain = location.pathname.split("/")[1];
-  const username = domain || "";
-  const [userProfiles, setUserProfiles] = useState([]);
-  const [friendStatus, setFriendStatus] = useState(null); // Trạng thái của mối quan hệ bạn bè
-  console.log(friendStatus?.status);
-
-  useEffect(() => {
-    const fetchUserProfiles = async () => {
-      try {
-        const response = await getRequest(`${baseUrl}/users/find/${username}`);
-        setUserProfiles(response);
-      } catch (error) {
-        console.error("Error fetching user profiles:", error);
-      }
-    };
-
-    fetchUserProfiles();
-  }, []);
-
-  useEffect(() => {
-    const checkFriendStatus = async () => {
-      try {
-        const response = await getRequest(`${baseUrl}/friendships/checkStatusByUserId/${user.id}/${userProfiles[0]?.id}`);
-        setFriendStatus(response);
-      } catch (error) {
-        console.error("Error checking friend status:", error);
-      }
-    };
-
-    if (userProfiles.length > 0) {
-      checkFriendStatus();
-    }
-  }, [user.id, userProfiles]);
-
-  console.log(userProfiles[0]?.username, "UserProfiles");
-
-  const navigate = useNavigate();
-  const handleClick = () => {
-    localStorage.clear();
-    navigate("/");
-  };
-
-  const handleAddFriend = async () => {
-    try {
-      const response = await postRequest(`${baseUrl}/friendships/request/${user.id}/${userProfiles[0]?.id}`)
-      // Xử lý logic khi gửi yêu cầu kết bạn thành công
-      setFriendStatus({ status: "pending", userSendReq: user.id });
-    } catch (error) {
-      console.error("Error sending friend request:", error);
-    }
-  };
-
-  const handleUnfriend = async () => {
-    try {
-      const response = await postRequest(`${baseUrl}/friendships/unfriend/${user.id}/${userProfiles[0]?.id}`)
-      // Xử lý logic khi hủy yêu cầu kết bạn thành công
-      setFriendStatus();
-    } catch (error) {
-      console.error("Error canceling friend request:", error);
-    }
-  };
-
-  const handleAcceptFriend = async () => {
-    try {
-      const response = await postRequest(`${baseUrl}/friendships/accept/${userProfiles[0]?.id}/${user.id}`)
-      setFriendStatus({ status: "friend"});
-    } catch (error) {
-      console.error("Error canceling friend request:", error);
-    }
-  };
-
+  
   return (
     <>
-      <h1>My User: {user.fullname}</h1>
-      <Button onClick={handleClick}>
-        <BiPowerOff />
-      </Button>
-      {userProfiles.map((userProfile) => (
-        <div key={userProfile.id}>
-          <div>{userProfile.id}</div>
-          <div>{userProfile.username}</div>
-          <div>{userProfile.fullname}</div>
+      <Navbar></Navbar>
+      <div className="fb-container">
+        <Sidebar></Sidebar>
+        {/* profile page  */}
+        <div className="profile-container">
+          <Cover></Cover>
+          <div className="profile-details">
+            <Avatar></Avatar>
+            <FriendButton></FriendButton>
+          </div>
+          <NavbarContainer></NavbarContainer>
+          <div className="profile-info">
+            <div className="info-col">
+              <div className="about-info">
+                <h5>Giới thiệu</h5>
+              </div>
+              <div className="profile-about">
+                <div className="class-profile">
+                  <i className="fas fa-graduation-cap icon-profile" />
+                  <span>Từng học tại Học Viện Ngân Hàng</span>
+                </div>
+                <div className="address-profile">
+                  <i className="fas fa-map-marker-alt icon-profile" />
+                  <span>Mỹ Tho</span>
+                </div>
+                <div className="picture-profile">
+                  <div
+                    className="picture-profile-1"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(transparent, rgba(0,0,0,0.5)), url(./img/avatar-main.jpg)"
+                    }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+            <div className="post-col">
+              <div className="home-content">
+                <div className="write-post-container">
+                  <div className="user-profile">
+                    <img src={user.avatar} />
+                    <div>
+                      {/*username nguoi dang bai */}
+                      <p>{user.fullname}</p>
+                      <small>
+                        Public
+                        <i className="fas fa-caret-down" />
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div className="post-input-container">
+                  <textarea
+                    name="textarea"
+                    id="textarea"
+                    placeholder="Bạn đang nghĩ gì thế?"
+                    rows={3}
+                    defaultValue={""}
+                  />
+                  <div className="add-post-links">
+                    <a href="#">
+                      <img src="./images/watch.png" /> Video trực tiếp
+                    </a>
+                    <a href="#">
+                      <img src="./images/photo.png" /> Ảnh/video
+                    </a>
+                    <a href="#">
+                      <img src="./images/feeling.png" /> Cảm xúc/hoạt động
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div className="index-content">
+                <div className="post-container">
+                  <div className="user-profile">
+                    <img src={user.avatar} />
+                    <div>
+                      {/*username bai da dang */}
+                      <p>{user.fullname}</p>
+                      <div className="time-status">
+                        <span>8 tháng 7 lúc 20:20</span>
+                        <i
+                          className="fas fa-globe-americas"
+                          style={{ color: "#65676B" }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="post-user">
+                    <p className="post-text">
+                      Lâu rồi mới có thời gian rảnh sau giờ ăn tối cùng gia đình, để
+                      đi rửa bát, đi lấy cơm cho bọn này. Mọi ngày phải lấy 3 bát
+                      cơm. Hôm nay lấy có 2 bát tự dưng hụt hẫng ghê. Thế là em Dudu
+                      10 tuổi đi cùng mẹ Kato rồi. Còn chưa được gặp e Dudu lần cuối
+                      đã vội vã với những sự kiện đã được lên kế hoạch trước, kiếm
+                      tiền cho đã rồi về không còn bên cạnh những điều mình yêu thì
+                      có để làm gì đou chớ Kiếp sau đừng có ngã gãy chân nữa bà Dudu
+                      ơi!
+                    </p>
+                    {/*anh bai viet */}
+                    <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3QBGmFHi1Kk4KfViRu0M5iQL-On3HXvX0uQ&usqp=CAU"} className="post-img" />
+                    <div className="activity-icons"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      ))}
+      </div>
 
-      {friendStatus?.status === "pending" && friendStatus?.userSendReq === user.id ? (
-        <div className="pd-right">
-          <div className="add-button">
-            {/* Nút hiển thị khi trạng thái là "Pending" và userSendReq là user.id */}
-            <button type="button" className="btn btn-warning">
-              Pending Request
-            </button>
-            <button type="button" className="btn btn-warning" onClick={handleUnfriend}>
-              Cancel Request
-            </button>
-          </div>
-        </div>
-      ) : friendStatus?.status === "pending" ? (
-        <div className="pd-right">
-          <div className="add-button">
-            {/* Nút hiển thị khi trạng thái là "Pending" */}
-            <button type="button" className="btn btn-warning" onClick={handleAcceptFriend}>
-              Accepted Friend Request
-            </button>
-            <button type="button" className="btn btn-warning" onClick={handleUnfriend}>
-              Cancel Request
-            </button>
-          </div>
-        </div>
-      ) : friendStatus?.status === "friend" ? (
-        <div className="pd-right">
-          <div className="add-button">
-            {/* Nút hiển thị khi trạng thái là "Friend" */}
-            <button type="button" className="btn btn-success">
-              Friend
-            </button>
-            <button type="button" className="btn btn-success" onClick={handleUnfriend}>
-              UnFriend
-            </button>
-          </div>
-        </div>
-      ) : userProfiles[0]?.username === user.username ? (
-        <div className="pd-right">
-          <div className="add-button">
-            <button type="button" className="btn btn-primary btn-add">
-              <i className="fas fa-plus fa-xa">
-                <span>Thêm vào tin</span>
-              </i>
-            </button>
-          </div>
-          <div className="edit-button">
-            <button type="button" className="btn btn-secondary btn-edit">
-              <i className="fas fa-pen fa-xz">
-                <span>Chỉnh sửa trang cá nhân</span>
-              </i>
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="pd-right">
-          <div className="add-button">
-            {/* Nút hiển thị khi không phải là "Friend" */}
-            <button type="button" className="btn btn-primary btn-add" onClick={handleAddFriend}>
-              <i className="fas fa-user-plus">
-                <span>Kết bạn</span>
-              </i>
-            </button>
-          </div>
-        </div>
-      )}
     </>
   );
 }
 
-const Button = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  background-color: #9a86f3;
-  border: none;
-  cursor: pointer;
-  svg {
-    font-size: 1.3rem;
-    color: #ebe7ff;
-  }
-`;

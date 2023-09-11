@@ -51,6 +51,44 @@ export class UserService {
         });
     }
 
+    findUserById = async (id) => {
+        return await this.userRepository.find({
+            where : {
+                id : id
+            }
+        })
+    }
+
+    updatePassword = async (userId, oldPassword, newPassword) =>{
+        console.log("oldPass",oldPassword)
+        console.log("newPass",newPassword)
+        const user = await this.findUserById(userId);
+        console.log(user,"userService")
+        if (!user) {
+            throw new Error('Không tìm thấy người dùng.');
+        }
+        console.log(user[0].password)
+
+
+        // Kiểm tra xem mật khẩu cũ có đúng không
+        const isPasswordValid = await bcrypt.compare(oldPassword, user[0].password);
+
+        if (!isPasswordValid) {
+            throw new Error('Mật khẩu cũ không đúng.');
+        }
+
+        // Mã hóa mật khẩu mới
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+        // Cập nhật mật khẩu mới vào cơ sở dữ liệu
+        user.password = hashedNewPassword;
+
+        // Lưu thông tin người dùng đã được cập nhật vào cơ sở dữ liệu
+        await this.userRepository.update(userId, { password: hashedNewPassword });
+
+        return "mat khau da duoc cap nhat" ;
+    }
+
     checkUser = async (user) => {
         let userFind = await this.userRepository.findOneBy({ email: user.email });
         if (!userFind) {
@@ -74,7 +112,8 @@ export class UserService {
                     username: userFind.username,
                     password: userFind.password,
                     status: userFind.status,
-                    image: userFind.image,
+                    avatar: userFind.avatar,
+                    cover: userFind.cover,
                     gender: userFind.gender
                 }
             } else {

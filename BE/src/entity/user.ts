@@ -16,6 +16,8 @@ export class User {
     email: string;
     @Column({ type: "varchar", length: 255, nullable: true })
     avatar: string;
+    @Column({ type: "varchar", length: 255, nullable: true })
+    cover: string;
     @Column({ type: 'varchar', nullable: true })
     role: string
 }

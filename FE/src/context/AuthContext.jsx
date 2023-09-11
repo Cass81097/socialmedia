@@ -1,12 +1,29 @@
 import React, { createContext, useCallback, useEffect, useState, useContext } from "react";
 import { baseUrl, getRequest, postRequest } from "../utils/services";
 import { CometChatContext } from "./CometChatContext";
-// import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
     const [allUser, setAllUser] = useState(null);
+    const [user, setUser] = useState(null);
+    const [registerError, setRegisterError] = useState(null);
+    const [isRegisterLoading, setIsRegisterLoading] = useState(false);
+    const [registerInfo, setRegisterInfo] = useState({
+        fullname: "",
+        username: "",
+        email: "",
+        password: "",
+        cover: "https://i.bloganchoi.com/bloganchoi.com/wp-content/uploads/2020/09/anh-bia-dep-11-696x435.jpg?fit=700%2C20000&quality=95&ssl=1"
+    });
+
+    const [loginError, setLoginError] = useState(null);
+    const [isLoginLoading, setIsLoginLoading] = useState(false);
+    const [loginInfo, setLoginInfo] = useState(
+        {
+            email: "",
+            password: ""
+        });
 
     useEffect(() => {
         const fetchAllUsers = async () => {
@@ -50,26 +67,6 @@ export const AuthContextProvider = ({ children }) => {
     //     )
     // };
 
-    const [user, setUser] = useState(null);
-    const [registerError, setRegisterError] = useState(null);
-    const [isRegisterLoading, setIsRegisterLoading] = useState(false);
-    const [registerInfo, setRegisterInfo] = useState({
-        fullname: "",
-        username: "",
-        email: "",
-        password: "",
-    });
-
-    const [loginError, setLoginError] = useState(null);
-    const [isLoginLoading, setIsLoginLoading] = useState(false);
-    const [loginInfo, setLoginInfo] = useState(
-        {
-            email: "",
-            password: ""
-        });
-
-    // console.log("User", user);
-    // console.log("Login", loginInfo);
 
     useEffect(() => {
         const user = localStorage.getItem("User")

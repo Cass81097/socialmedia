@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import withModal from "../components/common/Modal";
 import { AuthContext } from "../context/AuthContext";
 import "../styles/buttonGoogle.css";
+import "../index.css";
 import Register from "./Register";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
