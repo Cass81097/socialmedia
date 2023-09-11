@@ -14,7 +14,7 @@ export const ProfileContextProvider = ({ children, user }) => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const storedUser = localStorage.getItem('user');
+        const storedUser = localStorage.getItem('User');
         if (storedUser) {
           const response = await getRequest(`${baseUrl}/users/find/${username}`);
           setUserProfile(response);
@@ -41,7 +41,6 @@ export const ProfileContextProvider = ({ children, user }) => {
   // Add online user
 
   useEffect(() => {
-
     if (socket === null) return;
     socket.emit("addNewUser", user?.id)
     socket.on("getOnlineUsers", (res) => {
@@ -52,7 +51,6 @@ export const ProfileContextProvider = ({ children, user }) => {
       socket.off("getOnlineUsers");
     };
   }, [socket])
-
 
   return (
     <ProfileContext.Provider value={{ userProfile, socket }}>

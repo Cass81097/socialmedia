@@ -102,37 +102,52 @@ export default function FriendButton() {
     <>
       {friendStatus?.status === "pending" && friendStatus?.userSendReq === user.id ? (
         <div className="pd-right">
-          <div className="add-button">
-            {/* Nút hiển thị khi trạng thái là "Pending" và userSendReq là user.id */}
-            <button type="button" className="btn btn-warning">
-              Pending Request
-            </button>
-            <button type="button" className="btn btn-warning" onClick={handleUnfriend}>
-              Cancel Request
-            </button>
-          </div>
+        <div className="add-button">
+          <button type="button" className="btn btn-primary btn-add" >
+            <i className="fas fa-plus fa-xa">
+              <span>Đã gửi lời mời</span>
+            </i>
+          </button>
         </div>
+        <div className="edit-button">
+          <button type="button" className="btn btn-secondary btn-edit" onClick={handleUnfriend}>
+            <i className="fas fa-pen fa-xz">
+              <span>Hủy lời mời</span>
+            </i>
+          </button>
+        </div>
+      </div>
       ) : friendStatus?.status === "pending" ? (
         <div className="pd-right">
           <div className="add-button">
-            {/* Nút hiển thị khi trạng thái là "Pending" */}
-            <button type="button" className="btn btn-warning" onClick={handleAcceptFriend}>
-              Accepted Friend Request
+            <button type="button" className="btn btn-primary btn-add"  onClick={handleAcceptFriend}>
+              <i className="fas fa-plus fa-xa">
+                <span>Đồng ý kết bạn</span>
+              </i>
             </button>
-            <button type="button" className="btn btn-warning" onClick={handleCancelRequest}>
-              Cancel Request
+          </div>
+          <div className="edit-button">
+            <button type="button" className="btn btn-secondary btn-edit" onClick={handleCancelRequest}>
+              <i className="fas fa-pen fa-xz">
+                <span>Từ chối kết bạn</span>
+              </i>
             </button>
           </div>
         </div>
       ) : friendStatus?.status === "friend" ? (
         <div className="pd-right">
-          <div className="add-button">
-            {/* Nút hiển thị khi trạng thái là "Friend" */}
-            <button type="button" className="btn btn-success">
-              Friend
+         <div className="add-button">
+            <button type="button" className="btn btn-primary btn-add">
+              <i className="fas fa-plus fa-xa">
+                <span>Bạn bè</span>
+              </i>
             </button>
-            <button type="button" className="btn btn-success" onClick={handleUnfriend}>
-              UnFriend
+          </div>
+          <div className="edit-button">
+            <button type="button" className="btn btn-secondary btn-edit" onClick={handleUnfriend}>
+              <i className="fas fa-pen fa-xz">
+                <span>Hủy kết bạn</span>
+              </i>
             </button>
           </div>
         </div>

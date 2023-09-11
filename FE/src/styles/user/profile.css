@@ -68,7 +68,7 @@ header {
 
 .pd-right {
     display: flex;
-    width: 510px;
+    /* width: 510px; */
 }
 
 .add-button {

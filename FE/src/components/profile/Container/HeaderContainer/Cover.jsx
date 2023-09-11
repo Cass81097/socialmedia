@@ -7,6 +7,6 @@ export default function Cover() {
     const { userProfile } = useContext(ProfileContext);
 
     return (
-        <img src={userProfile[0].cover} className="cover-img" />
+        <img src={userProfile[0]?.cover} className="cover-img" />
     )
 }

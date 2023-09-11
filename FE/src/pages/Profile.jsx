@@ -17,7 +17,7 @@ import FriendButton from "../components/profile/Container/HeaderContainer/UserPr
 
 export default function Profile() {
   const { user } = useContext(AuthContext);
-  
+
   return (
     <>
       <Navbar></Navbar>
