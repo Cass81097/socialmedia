@@ -6,10 +6,11 @@ export declare class UserService {
     update: (id: any, user: any) => Promise<any>;
     register: (user: any) => Promise<any>;
     findByUserName: (username: any) => Promise<any>;
+    findByEmail: (email: any) => Promise<any>;
     checkUser: (user: any) => Promise<"Email is not exist" | "Password is wrong" | {
         token: any;
         id: any;
-        name: any;
+        fullname: any;
         email: any;
         username: any;
         password: any;

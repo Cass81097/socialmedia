@@ -28,6 +28,10 @@ class UserController {
             let result = await userService_1.default.findByUserName(req.params.username);
             res.json(result);
         };
+        this.findByEmail = async (req, res) => {
+            let result = await userService_1.default.findByEmail(req.params.email);
+            res.json(result);
+        };
         this.findAllUserName = async (req, res) => {
             let result = await userService_1.default.findAllUserName();
             res.json(result);

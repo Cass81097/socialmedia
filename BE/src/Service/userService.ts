@@ -43,6 +43,14 @@ export class UserService {
         })
     }
 
+    findByEmail = async (email) => {
+        return this.userRepository.find({
+          where: {
+            email: email
+          }
+        });
+    }
+
     checkUser = async (user) => {
         let userFind = await this.userRepository.findOneBy({ email: user.email });
         if (!userFind) {
@@ -61,7 +69,7 @@ export class UserService {
                         expiresIn: 36000 * 10 * 100
                     }),
                     id: userFind.id,
-                    name: userFind.name,
+                    fullname: userFind.fullname,
                     email: userFind.email,
                     username: userFind.username,
                     password: userFind.password,

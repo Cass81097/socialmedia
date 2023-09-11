@@ -114,12 +114,11 @@ input {
   color: #2563eb;
   display: block;
   font-size: 0.9375rem;
-  padding: 1.25rem 0;
+  /* padding: 1.25rem 0; */
   text-align: center;
 }
 
 .login__signup:hover {
-  cursor: pointer;
   opacity: 0.8;
 }
 
@@ -1232,4 +1231,17 @@ input {
   right: 0;
   top: 0;
 }
+
+/* Login with Email */
+.firebaseui-idp-button {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  max-width: 1000px !important;
+}
+
+.firebaseui-card-content {
+  padding: 0 !important;
+}
+
 

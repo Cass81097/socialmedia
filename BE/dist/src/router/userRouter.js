@@ -13,4 +13,5 @@ exports.userRouter.put('/users/:id', userController_1.default.update);
 exports.userRouter.get('/', userController_1.default.findAll);
 exports.userRouter.get('/find/:username', userController_1.default.findByUserName);
 exports.userRouter.get('/username', userController_1.default.findAllUserName);
+exports.userRouter.get('/find/email/:email', userController_1.default.findByEmail);
 //# sourceMappingURL=userRouter.js.map

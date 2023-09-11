@@ -1,7 +1,8 @@
 import { User } from "./user";
 export declare class FriendShip {
     id: number;
-    user1_id: User;
-    user2_id: User;
+    user1: User;
+    user2: User;
+    userSendReq: number;
     status: string;
 }

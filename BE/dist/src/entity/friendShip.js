@@ -22,11 +22,15 @@ __decorate([
 __decorate([
     (0, typeorm_1.ManyToOne)(() => user_1.User, (user) => user.id),
     __metadata("design:type", user_1.User)
-], FriendShip.prototype, "user1_id", void 0);
+], FriendShip.prototype, "user1", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => user_1.User, (user) => user.id),
     __metadata("design:type", user_1.User)
-], FriendShip.prototype, "user2_id", void 0);
+], FriendShip.prototype, "user2", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'integer' }),
+    __metadata("design:type", Number)
+], FriendShip.prototype, "userSendReq", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'varchar' }),
     __metadata("design:type", String)

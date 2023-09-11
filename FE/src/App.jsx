@@ -6,7 +6,6 @@ import Profile from "./pages/Profile";
 
 export default function App() {
   const { user, allUser } = useContext(AuthContext);
-  console.log(allUser);
 
   return (
     <Router>

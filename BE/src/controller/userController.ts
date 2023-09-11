@@ -29,6 +29,11 @@ export class UserController {
         res.json(result)
     }
 
+    findByEmail = async (req,res)=>{
+        let result = await userService.findByEmail(req.params.email)
+        res.json(result)
+    }
+
     findAllUserName = async (req,res)=>{
         let result = await userService.findAllUserName()
         res.json(result)
