@@ -11,7 +11,7 @@ export const SearchBar = ({ setResults, results }) => {
   }, [results]);
 
   useEffect(() => {
-    setInput(""); // Clear the input value when navigating to a new page
+    setInput(""); 
   }, [window.location.pathname]);
 
   const fetchData = (value) => {

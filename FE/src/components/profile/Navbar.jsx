@@ -36,6 +36,9 @@ export default function Navbar() {
         setUserProfile(res)
     };
 
+    const clearSearchResult = () => {
+        setResults([]);
+    }
     return (
         <>
             <header>
@@ -53,7 +56,7 @@ export default function Navbar() {
                     </div> */}
                     <div className="search-box">
                         <SearchBar setResults={setResults} results={results} />
-                        {results && results.length > 0 && <SearchResultsList results={results} />}
+                        <SearchResultsList results={results} clearSearchResult={clearSearchResult}/>
                     </div>
                     <div className="home-media">
                         <div className="social-media">

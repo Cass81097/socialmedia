@@ -42,22 +42,24 @@ header {
 .pd-image {
     width: 150px;
     margin-right: 20px;
-    height: 115px;
+    height: 130px;
     border-radius: 50%;
+    border: 1px solid #ebe1e1;
 }
 
 .pd-row div h3 {
     font-size: 25px;
-    font-weight: 600;
+    font-weight: 700;
+    color: black;
 }
 
 .pd-row div p {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
 }
 
 .pd-row div img {
-    width: 10%;
+    width: 9%;
     border-radius: 50%;
     margin-top: 12px;
 }

@@ -13,6 +13,11 @@
     cursor: pointer;
 }
 
+.toast-avatar {
+    border: 1px solid #ebe1e1;
+    border-radius: 50%;
+}
+
 .toast-avatar img {
     width: 80px;
     height: 80px;

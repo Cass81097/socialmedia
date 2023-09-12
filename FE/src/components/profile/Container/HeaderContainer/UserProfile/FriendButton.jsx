@@ -30,17 +30,6 @@ export default function FriendButton() {
     }
   }, [friendRequest]);
 
-<<<<<<< HEAD
-  const toastOptions = {
-    position: "bottom-left",
-    autoClose: 8000,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "dark", 
-  };
-=======
->>>>>>> ee2cecf258c254464a27cfe8e07d0647047ab35c
-
   useEffect(() => {
     if (socket === null) return;
     socket.emit("sendFriendRequest", user?.id)
@@ -222,7 +211,7 @@ export default function FriendButton() {
               <div className="toast-avatar">
                 <img src={userRequest[0]?.avatar} alt="" />
               </div>
-              <div className="toast-content" style={{ color: "black" }}>
+              <div className="toast-content" style={{ color: "black", marginLeft:"5px" }}>
                 <p><span style={{ fontWeight: "600" }}>{userRequest[0]?.fullname}</span> vừa mới gửi lời mời kết bạn</p>
                 <span style={{ color: "#0D6EFD" }}>vài giây trước</span>
               </div>

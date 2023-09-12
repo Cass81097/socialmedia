@@ -9,3 +9,7 @@
   max-height: 300px;
   overflow-y: auto;
 }
+
+.results-list--hidden {
+  display: none;
+}
