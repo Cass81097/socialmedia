@@ -14,4 +14,5 @@ exports.friendShipRouter.post('/listFriend', friendShipController_1.default.find
 exports.friendShipRouter.post('/findId', friendShipController_1.default.findById);
 exports.friendShipRouter.get('/checkStatusByUserId/:userId1/:userId2', friendShipController_1.default.checkStatusByUserId);
 exports.friendShipRouter.post('/block/:userId1/:userId2', friendShipController_1.default.blockFriend);
+exports.friendShipRouter.get('/blocklist/:id', friendShipController_1.default.getBlockList);
 //# sourceMappingURL=friendShipRouter.js.map

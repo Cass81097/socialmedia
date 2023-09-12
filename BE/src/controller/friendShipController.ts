@@ -42,5 +42,10 @@ export class FriendShipController {
         let data = await friendShipService.blockFriend(userId1, userId2);
         res.json(data);
     };
+
+    getBlockList = async (req: Request, res: Response) => {
+        let data = await friendShipService.findBlockedUsers(req.params.id);
+        res.json(data);
+    };
 }
 export default new FriendShipController()

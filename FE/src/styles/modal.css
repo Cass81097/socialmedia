@@ -1,8 +1,5 @@
 .modal-block-container {
     margin-top: 50px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
 .modal-block-container img {
@@ -11,6 +8,13 @@
     border-radius: 50%;
 }
 .modal-block-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0 5px 0;
+}
+
+.modal-block-user {
     display: flex;
     justify-content: center;
     align-items: center;

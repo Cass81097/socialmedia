@@ -91,6 +91,18 @@ class FriendShipService {
             }
             return null;
         };
+        this.findBlockedUsers = async (userId) => {
+            const blockedUsers = await this.friendRepository.find({
+                relations: {
+                    user2: true,
+                },
+                where: [
+                    { user1: { id: userId }, status: 'block' },
+                    { user2: { id: userId }, status: 'block' },
+                ],
+            });
+            return blockedUsers.map((friendship) => friendship.user2);
+        };
         this.friendRepository = data_source_1.AppDataSource.getRepository(friendShip_1.FriendShip);
     }
 }
