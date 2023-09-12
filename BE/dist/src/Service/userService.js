@@ -38,6 +38,13 @@ class UserService {
                 }
             });
         };
+        this.findByName = async (username) => {
+            return await this.userRepository.find({
+                where: {
+                    username: (0, typeorm_1.Like)(`%${username}%`)
+                }
+            });
+        };
         this.findByEmail = async (email) => {
             return this.userRepository.find({
                 where: {

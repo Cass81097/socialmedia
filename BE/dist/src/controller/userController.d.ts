@@ -7,6 +7,8 @@ export declare class UserController {
     findByUserName: (req: any, res: any) => Promise<void>;
     findByEmail: (req: any, res: any) => Promise<void>;
     findAllUserName: (req: any, res: any) => Promise<void>;
+    findUserByName: (req: any, res: any) => Promise<void>;
+    findUserById: (req: any, res: any) => Promise<void>;
     updatePassword: (req: Request, res: Response) => Promise<void>;
 }
 declare const _default: UserController;

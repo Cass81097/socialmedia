@@ -39,6 +39,16 @@ export class UserController {
         res.json(result)
     }
 
+    findUserByName = async (req,res)=>{
+        let result = await userService.findByName(req.params.name)
+        res.json(result)
+    }
+
+    findUserById = async (req,res)=>{
+        let result = await userService.findUserById(req.params.id)
+        res.json(result)
+    }
+
     updatePassword = async (req: Request, res: Response) => {
         let data = await userService.updatePassword
         (req.params.id, req.body.oldPassword,req.body.newPassword);

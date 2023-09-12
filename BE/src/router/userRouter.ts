@@ -9,6 +9,8 @@ userRouter.get('/', userController.findAll);
 userRouter.get('/find/:username', userController.findByUserName);
 userRouter.get('/username', userController.findAllUserName);
 userRouter.get('/find/email/:email', userController.findByEmail);
+userRouter.get('/find/name/:name', userController.findUserByName);
+userRouter.get('/find/id/:id', userController.findUserById);
 
 // update password
 userRouter.put("/:id",userController.updatePassword)

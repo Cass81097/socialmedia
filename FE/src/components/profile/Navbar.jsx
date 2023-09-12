@@ -1,16 +1,39 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { BiPowerOff } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "../../context/AuthContext";
+import { ProfileContext } from "../../context/ProfileContext";
 import styled from "styled-components";
+import { SearchBar } from "../search/SearchBar"
+import { SearchResultsList } from "../search/SearchResultsList"
+import $ from 'jquery';
 
 export default function Navbar() {
     const { user } = useContext(AuthContext);
+    const { setUserProfile } = useContext(ProfileContext);
+    const [results, setResults] = useState([]);
+
     const navigate = useNavigate();
-    const handleClick = () => {
-      localStorage.clear();
-      navigate("/");
+
+    const showInfo = () => {
+        $('.profile-menu').toggle();
+    };
+
+    const logout = async () => {
+        try {
+            // await firebase.auth().signOut();
+            localStorage.clear();
+            navigate("/");
+            window.location.reload();
+        } catch (error) {
+            console.error("Error :", error);
+        }
+    };
+
+    const goUserInfo = (res) => {
+        navigate(`/${user?.username}`);
+        setUserProfile(res)
     };
 
     return (
@@ -20,44 +43,51 @@ export default function Navbar() {
                     <div className="title">
                         <Link to={"/"}>F4kebook</Link>
                     </div>
-                    <div className="search-box">
+                    {/* <div className="search-box">
                         <i className="fas fa-search icon-search" />
                         <input
                             id="search-card"
                             type="search"
                             placeholder="Tìm kiếm trên F4kebook"
                         />
+                    </div> */}
+                    <div className="search-box">
+                        <SearchBar setResults={setResults} results={results} />
+                        {results && results.length > 0 && <SearchResultsList results={results} />}
                     </div>
                     <div className="home-media">
                         <div className="social-media">
-                            <a
-                                href=""
+                            <Link
+                                to=""
                                 data-toggle="tooltip"
                                 data-placement="bottom"
                                 title="Messenger"
                                 style={{ transform: "translateY(-7px)" }}
                             >
                                 <i className="fab fa-facebook-messenger"></i>
-                            </a>
-                            <a
-                                href=""
+                            </Link>
+                            <Link
+                                to=""
                                 data-toggle="tooltip"
                                 data-placement="bottom"
                                 title="Thông báo"
                                 style={{ transform: "translateY(-7px)" }}
                             >
                                 <i className="fas fa-bell"></i>
-                            </a>
-                            <a
-                                href=""
+                            </Link>
+                            <div
                                 data-toggle="tooltip"
                                 data-placement="bottom"
                                 title="Avatar"
                             >
-                                <img src={user.avatar} style={{ width: "40px", height: "40px" }}></img>
-                            </a>
-                            <a
-                                href=""
+                                <img src={user.avatar} style={{ width: "40px", height: "40px" }} alt="Avatar" onClick={() => showInfo()} />
+                                <ol className="profile-menu" style={{ display: "none" }}>
+                                    <li onClick={goUserInfo}>Thông tin</li>
+                                    <li data-toggle="modal" data-target="#myModal" onClick={() => logout()}>Đăng xuất</li>
+                                </ol>
+                            </div>
+                            {/* <Link
+                                to=""
                                 data-toggle="tooltip"
                                 data-placement="bottom"
                                 title="LogOut"
@@ -66,7 +96,7 @@ export default function Navbar() {
                                 <Button onClick={handleClick}>
                                     <BiPowerOff />
                                 </Button>
-                            </a>
+                            </Link> */}
 
                         </div>
 
