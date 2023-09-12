@@ -19,7 +19,7 @@ export class UserService {
     findAllUserName = async () => {
         const users = await this.userRepository.find();
         return users.map((user) => user.username);
-      }
+    }
 
     update = async (id, user) => {
         return await this.userRepository.update(id, user)
@@ -53,25 +53,40 @@ export class UserService {
 
     findByEmail = async (email) => {
         return this.userRepository.find({
-          where: {
-            email: email
-          }
+            where: {
+                email: email
+            }
         });
     }
 
     findUserById = async (id) => {
         return await this.userRepository.find({
-            where : {
-                id : id
+            where: {
+                id: id
             }
         })
     }
 
-    updatePassword = async (userId, oldPassword, newPassword) =>{
-        console.log("oldPass",oldPassword)
-        console.log("newPass",newPassword)
+    updateAvatar = async (userId, avatar) => {
+        const user = this.userRepository.find({
+            where: {
+                id: userId
+            }
+        })
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        user.avatar = avatar;
+        await this.userRepository.update(userId, { avatar: avatar });
+        return "Thay Avatar thành công";
+    }
+
+    updatePassword = async (userId, oldPassword, newPassword) => {
+        console.log("oldPass", oldPassword)
+        console.log("newPass", newPassword)
         const user = await this.findUserById(userId);
-        console.log(user,"userService")
+        console.log(user, "userService")
         if (!user) {
             throw new Error('Không tìm thấy người dùng.');
         }
@@ -94,7 +109,7 @@ export class UserService {
         // Lưu thông tin người dùng đã được cập nhật vào cơ sở dữ liệu
         await this.userRepository.update(userId, { password: hashedNewPassword });
 
-        return "mat khau da duoc cap nhat" ;
+        return "mat khau da duoc cap nhat";
     }
 
     checkUser = async (user) => {

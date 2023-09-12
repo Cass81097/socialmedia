@@ -1,14 +1,15 @@
+import $ from 'jquery';
 import React, { useContext, useEffect, useState } from "react";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../../context/AuthContext";
 import { ProfileContext } from "../../../../context/ProfileContext";
-import { baseUrl, getRequest, postRequest } from "../../../../utils/services"
-import $ from 'jquery';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
-import "../../../../styles/modal.css"
+import "../../../../styles/modalNavbar.css";
+import { baseUrl, getRequest, postRequest } from "../../../../utils/services";
 
 export default function NavbarContainer() {
+    const navigate = useNavigate();
     const { user } = useContext(AuthContext);
     const { userProfile, checkFriendStatus } = useContext(ProfileContext);
     const [friendStatus, setFriendStatus] = useState(null);
@@ -25,6 +26,21 @@ export default function NavbarContainer() {
         try {
             const response = await postRequest(`${baseUrl}/friendShips/block/${user.id}/${userProfile[0]?.id}`)
             setFriendStatus({ status: "block" });
+            navigate('/')
+            console.log("Chặn thành công!")
+        } catch (error) {
+            console.error("Error canceling friend request:", error);
+        }
+    };
+
+    const handleUnblockUser = async (index) => {
+        try {
+            const response = await postRequest(`${baseUrl}/friendships/unfriend/${user.id}/${blocklist[index]?.id}`)
+            setFriendStatus();
+            console.log("Bỏ chặn thành công!")
+            handleClose();
+            setBlockList()
+            $('.profile-block').hide();
         } catch (error) {
             console.error("Error canceling friend request:", error);
         }
@@ -84,23 +100,24 @@ export default function NavbarContainer() {
                 </Modal.Header>
                 <Modal.Body>
                     <div className="modal-block-top">
-                        <p>Once you block someone, that person can no longer see things you post on  your timeline, tag you, invite you to events or groups, start a conversation with you, or add you as a friend. Note: Does not include apps, games or groups you both participate in.</p>
+                        <p>Sau khi bạn chặn ai đó, người đó sẽ không thể xem nội dung bạn đăng trên dòng thời gian, gắn thẻ bạn, mời bạn tham gia sự kiện hoặc nhóm, bắt đầu cuộc trò chuyện với bạn hoặc thêm bạn làm bạn bè nữa. Lưu ý: Không bao gồm các ứng dụng, trò chơi hoặc nhóm mà cả hai bạn cùng tham gia..</p>
                     </div>
                     <div className="modal-block-container">
-                        {blocklist.map((blockedUser) => (
+                        {blocklist?.map((blockedUser, index) => (
                             <div className="modal-block-main" key={blockedUser.id}>
                                 <div className="modal-block-user">
-                                    <img src={blockedUser.avatar} alt="" />
-                                    <p>{blockedUser.fullname}</p>
+                                    <img src={blockedUser?.avatar} alt="" />
+                                    <p>{blockedUser?.fullname}</p>
                                 </div>
 
                                 <button
                                     type="button"
                                     className="btn btn-secondary btn-edit block-edit"
                                     style={{ background: "#dbdbdc" }}
+                                    onClick={() => handleUnblockUser(index)}
                                 >
                                     <i className="fas fa-unlock-alt" style={{ color: "black" }}>
-                                        <span style={{ fontWeight: "600", marginLeft: "5px" }}>Unblock</span>
+                                        <span style={{ fontWeight: "600", marginLeft: "5px" }}>Bỏ chặn</span>
                                     </i>
                                 </button>
                             </div>

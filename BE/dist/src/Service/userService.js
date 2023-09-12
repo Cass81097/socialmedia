@@ -59,6 +59,19 @@ class UserService {
                 }
             });
         };
+        this.updateAvatar = async (userId, avatar) => {
+            const user = this.userRepository.find({
+                where: {
+                    id: userId
+                }
+            });
+            if (!user) {
+                throw new Error('User not found');
+            }
+            user.avatar = avatar;
+            await this.userRepository.update(userId, { avatar: avatar });
+            return "Thay Avatar thành công";
+        };
         this.updatePassword = async (userId, oldPassword, newPassword) => {
             console.log("oldPass", oldPassword);
             console.log("newPass", newPassword);

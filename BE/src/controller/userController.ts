@@ -56,5 +56,12 @@ export class UserController {
         res.json(data);
     }
 
+    updateAvatar = async (req: Request, res: Response) => {
+        const userId = req.params.id;
+        const avatar = req.body.avatar;
+        let data = await userService.updateAvatar(userId, avatar);
+        res.json(data);
+    }
+
 }
 export default new UserController()

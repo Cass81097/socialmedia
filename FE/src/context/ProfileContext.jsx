@@ -14,9 +14,23 @@ export const ProfileContextProvider = ({ children, user }) => {
   const domain = window.location.pathname.split("/")[1];
   const username = domain || "";
 
+  const fetchUserProfile = async () => {
+    try {
+      const storedUser = localStorage.getItem('User');
+      if (storedUser && username) {
+        const response = await getRequest(`${baseUrl}/users/find/${username}`);
+        setUserProfile(response);
+      } else {
+        return;
+      }
+    } catch (error) {
+      console.error("Error fetching user profiles:", error);
+    }
+  };
+
   useEffect(() => {
     if (checkFriendStatus?.status === "block") {
-      navigate("/home");
+      navigate("/404");
     }
   }, [checkFriendStatus, navigate]);
 
@@ -27,7 +41,9 @@ export const ProfileContextProvider = ({ children, user }) => {
         if (storedUser && username) {
           const response = await getRequest(`${baseUrl}/users/find/${username}`);
           setUserProfile(response);
-        } else return;
+        } else {
+          return;
+        }
       } catch (error) {
         console.error("Error fetching user profiles:", error);
       }
@@ -76,7 +92,7 @@ export const ProfileContextProvider = ({ children, user }) => {
   }, [socket])
 
   return (
-    <ProfileContext.Provider value={{ userProfile, socket, setUserProfile, checkFriendStatus }}>
+    <ProfileContext.Provider value={{ userProfile, socket, setUserProfile, checkFriendStatus, fetchUserProfile }}>
       {children}
     </ProfileContext.Provider>
   );

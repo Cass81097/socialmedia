@@ -15,6 +15,8 @@ export default function FriendButton() {
   const [friendRequest, setFriendRequest] = useState([])
   const [userRequest, setUserRequest] = useState([])
 
+  console.log(friendRequest);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -32,15 +34,20 @@ export default function FriendButton() {
 
   useEffect(() => {
     if (socket === null) return;
-    socket.emit("sendFriendRequest", user?.id)
+  
     socket.on("friendRequest", (res) => {
-      setFriendRequest(res)
-    })
+      setFriendRequest(res);
+      setFriendStatus({ status: "pending", userSendReq: res.senderId });
+    });
 
+    socket.on("friendRequestAccepted", (res) => {
+      setFriendStatus({ status: "friend", userSendReq: res.senderId });
+    });
+  
     return () => {
-      socket.off("getOnlineUsers");
+      socket.off("friendRequest");
     };
-  }, [socket])
+  }, [socket]);
 
   useEffect(() => {
     if (friendRequest.senderId) {
@@ -69,6 +76,7 @@ export default function FriendButton() {
     try {
       const response = await postRequest(`${baseUrl}/friendships/request/${user.id}/${userProfile[0]?.id}`)
       setFriendStatus({ status: "pending", userSendReq: user.id });
+
       if (socket) {
         console.log(user.id, userProfile[0]?.id);
         socket.emit("sendFriendRequest", {
@@ -76,6 +84,7 @@ export default function FriendButton() {
           receiverId: userProfile[0]?.id,
         });
       }
+
     } catch (error) {
       console.error("Error sending friend request:", error);
     }
@@ -86,6 +95,13 @@ export default function FriendButton() {
       const response1 = await postRequest(`${baseUrl}/friendships/unfriend/${user.id}/${userProfile[0]?.id}`)
       const response2 = await postRequest(`${baseUrl}/friendships/unfriend/${userProfile[0]?.id}/${user.id}`)
       setFriendStatus();
+
+      // if (socket) {
+      //   socket.emit("cancelFriendRequest", {
+      //     senderId: user.id,
+      //     receiverId: userProfile[0]?.id,
+      //   });
+      // }
     } catch (error) {
       console.error("Error canceling friend request:", error);
     }
@@ -95,6 +111,13 @@ export default function FriendButton() {
     try {
       const response = await postRequest(`${baseUrl}/friendships/unfriend/${userProfile[0]?.id}/${user.id}/`)
       setFriendStatus();
+
+      // if (socket) {
+      //   socket.emit("cancelFriendRequest", {
+      //     senderId: user.id,
+      //     receiverId: userProfile[0]?.id,
+      //   });
+      // }
     } catch (error) {
       console.error("Error canceling friend request:", error);
     }
@@ -104,6 +127,15 @@ export default function FriendButton() {
     try {
       const response = await postRequest(`${baseUrl}/friendships/accept/${userProfile[0]?.id}/${user.id}`)
       setFriendStatus({ status: "friend" });
+
+      if (socket) {
+        console.log(user.id, userProfile[0]?.id);
+        socket.emit("acceptFriendRequest", {
+          senderId: user.id,
+          receiverId: userProfile[0]?.id,
+        });
+      }
+
     } catch (error) {
       console.error("Error canceling friend request:", error);
     }

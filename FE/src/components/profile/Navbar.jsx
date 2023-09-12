@@ -32,13 +32,19 @@ export default function Navbar() {
     };
 
     const goUserInfo = (res) => {
-        navigate(`/${user?.username}`);
-        setUserProfile(res)
+        const currentDomain = window.location.pathname.split("/")[1];
+        if (`/${user?.username}` !== `/${currentDomain}`) {
+            navigate(`/${user?.username}`);
+            setUserProfile(res)
+        } else {
+            $('.profile-menu').hide();
+        };
     };
 
     const clearSearchResult = () => {
         setResults([]);
     }
+
     return (
         <>
             <header>
@@ -55,8 +61,8 @@ export default function Navbar() {
                         />
                     </div> */}
                     <div className="search-box">
-                        <SearchBar setResults={setResults} results={results} />
-                        <SearchResultsList results={results} clearSearchResult={clearSearchResult}/>
+                        <SearchBar setResults={setResults} results={results} clearSearchResult={clearSearchResult} />
+                        <SearchResultsList results={results} clearSearchResult={clearSearchResult} />
                     </div>
                     <div className="home-media">
                         <div className="social-media">
@@ -82,8 +88,9 @@ export default function Navbar() {
                                 data-toggle="tooltip"
                                 data-placement="bottom"
                                 title="Avatar"
+                                s style={{ transform: "translateY(3px)" }}
                             >
-                                <img src={user.avatar} style={{ width: "40px", height: "40px" }} alt="Avatar" onClick={() => showInfo()} />
+                                <img src={user.avatar} style={{ width: "100%", height: "100%", borderRadius:"50%", overflow:"hidden" }} alt="Avatar" onClick={() => showInfo()} />
                                 <ol className="profile-menu" style={{ display: "none" }}>
                                     <li onClick={goUserInfo}>Thông tin</li>
                                     <li data-toggle="modal" data-target="#myModal" onClick={() => logout()}>Đăng xuất</li>

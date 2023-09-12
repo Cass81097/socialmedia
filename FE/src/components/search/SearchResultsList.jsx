@@ -15,7 +15,7 @@ export const SearchResultsList = ({ results, clearSearchResult }) => {
   useEffect(() => {
     setFilteredResults(results.filter((result) => {
       const storedId = JSON.parse(localStorage.getItem("User"));
-      return result?.id !== storedId?.id && userProfile[0]?.id !== result?.id;
+      return result?.id !== storedId?.id ;
     }));
   }, [results, userProfile, window.location.pathname]);
 

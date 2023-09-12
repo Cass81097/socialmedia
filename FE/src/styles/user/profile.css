@@ -13,6 +13,7 @@ header {
 }
 
 .profile-container {
+    width: 100%;
     padding: 20px 17%;
     color: #626262;
     position: absolute;
@@ -40,6 +41,7 @@ header {
 }
 
 .pd-image {
+    position: relative;
     width: 150px;
     margin-right: 20px;
     height: 130px;
@@ -386,7 +388,7 @@ header {
     margin-bottom: unset;
     border-radius: 5px;
     background: white;
-    margin-top: 5px;
+    margin-top: -8px;
     color: black;
     box-shadow: 0px 0px 8px #ddd;
     font-weight: 600;
@@ -444,4 +446,24 @@ header {
 
 .fa-list {
     margin: 3px 5px 0px 0px
+}
+
+/* Avatar */
+.change-avatar {
+    position: absolute;
+    top: 645px;
+    left: 450px;
+    padding: 5px 8px 5px 8px;
+    border-radius: 50%;
+    background: #E4E6EB;
+    cursor: pointer;
+}
+
+.change-avatar:hover {
+    background-color: #d4dae0 !important;
+    border-color: #d4dae0 !important;
+}
+
+.fa-camera {
+    color: black;
 }

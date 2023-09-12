@@ -31,7 +31,7 @@ export default function Profile() {
             <FriendButton></FriendButton>
           </div>
           <NavbarContainer></NavbarContainer>
-          <div className="profile-info">
+          {/* <div className="profile-info">
             <div className="info-col">
               <div className="about-info">
                 <h5>Giới thiệu</h5>
@@ -62,7 +62,7 @@ export default function Profile() {
                   <div className="user-profile">
                     <img src={user.avatar} />
                     <div>
-                      {/*username nguoi dang bai */}
+                    
                       <p>{user.fullname}</p>
                       <small>
                         Public
@@ -97,7 +97,7 @@ export default function Profile() {
                   <div className="user-profile">
                     <img src={user.avatar} />
                     <div>
-                      {/*username bai da dang */}
+                     
                       <p>{user.fullname}</p>
                       <div className="time-status">
                         <span>8 tháng 7 lúc 20:20</span>
@@ -119,14 +119,14 @@ export default function Profile() {
                       có để làm gì đou chớ Kiếp sau đừng có ngã gãy chân nữa bà Dudu
                       ơi!
                     </p>
-                    {/*anh bai viet */}
+                  
                     <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3QBGmFHi1Kk4KfViRu0M5iQL-On3HXvX0uQ&usqp=CAU"} className="post-img" />
                     <div className="activity-icons"></div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 const { Server } = require("socket.io");
 
-// Specify the desired port number
+// Chỉ định số cổng mong muốn
 const port = 3000;
 
 const io = new Server({
@@ -14,11 +14,13 @@ io.on("connection", (socket) => {
 
     socket.on("addNewUser", (userId) => {
         if (userId !== null) {
-            !onlineUsers.some(user => user.userId === userId) &&
+            const existingUser = onlineUsers.find(user => user.userId === userId);
+            if (!existingUser) {
                 onlineUsers.push({
                     userId,
                     socketId: socket.id
                 });
+            }
             // console.log("onlineUsers", onlineUsers);
 
             io.emit("getOnlineUsers", onlineUsers);
@@ -33,21 +35,32 @@ io.on("connection", (socket) => {
     socket.on("sendFriendRequest", (data) => {
         // Lấy thông tin từ dữ liệu yêu cầu kết bạn
         const { senderId, receiverId } = data;
-        console.log(data);
-        
+
         // Kiểm tra xem người nhận yêu cầu kết bạn có đang trực tuyến hay không
         const receiver = onlineUsers.find(user => user.userId === receiverId);
         if (receiver) {
-            // Người nhận đang trực tuyến, gửi yêu cầu kết bạn tới socket của người nhận
             io.to(receiver.socketId).emit("friendRequest", { senderId });
-            // io.emit("friendRequest", senderId);
+        } else {
+            // Người nhận không trực tuyến, thực hiện các xử lý khác (ví dụ: gửi thông báo, lưu vào cơ sở dữ liệu, vv.)
+        }
+    });
+
+    socket.on("acceptFriendRequest", (data) => {
+        // Lấy thông tin từ dữ liệu yêu cầu kết bạn
+        const { senderId, receiverId } = data;
+        console.log(data, "cancel");
+
+        // Kiểm tra xem người nhận yêu cầu kết bạn có đang trực tuyến hay không
+        const receiver = onlineUsers.find(user => user.userId === receiverId);
+        if (receiver) {
+            io.to(receiver.socketId).emit("friendRequestAccepted", { senderId });
         } else {
             // Người nhận không trực tuyến, thực hiện các xử lý khác (ví dụ: gửi thông báo, lưu vào cơ sở dữ liệu, vv.)
         }
     });
 });
 
-// Start the server on the specified port
+// Khởi động máy chủ trên cổng đã chỉ định
 io.listen(port, () => {
     console.log(`Socket.IO server is running on port ${port}`);
 });

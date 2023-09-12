@@ -1,20 +1,20 @@
 import React, { useContext } from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { AuthContext } from "./context/AuthContext";
-import { ProfileContext } from "./context/ProfileContext";
-import Login from "./pages/Login";
-import Profile from "./pages/Profile";
 import { ProfileContextProvider } from "./context/ProfileContext";
-import { useLocation, useNavigate } from "react-router-dom";
 import Home from "./pages/Home";
+import Login from "./pages/Login";
+import PageNotFound from "./pages/PageNotFound";
+import Profile from "./pages/Profile";
 
 export default function App() {
   const { user, allUser } = useContext(AuthContext);
 
   return (
     <Router>
-    <ProfileContextProvider user={user}>
+      <ProfileContextProvider user={user}>
         <Routes>
+          <Route path="/404" element={<PageNotFound />} />
           <Route path="/" element={user ? <Home /> : <Login />} />
           <Route path="/login" element={user ? <Home /> : <Login />} />
           <Route path="/home" element={user ? <Home /> : <Login />} />
@@ -28,7 +28,7 @@ export default function App() {
             ))}
           {/* <Route path="*" element={<Navigate to="/" />} /> */}
         </Routes>
-    </ProfileContextProvider>
+      </ProfileContextProvider>
     </Router>
   );
 }

@@ -12,5 +12,7 @@ userRouter.get('/find/email/:email', userController.findByEmail);
 userRouter.get('/find/name/:name', userController.findUserByName);
 userRouter.get('/find/id/:id', userController.findUserById);
 
+userRouter.put('/avatar/:id', userController.updateAvatar);
+
 // update password
 userRouter.put("/:id",userController.updatePassword)
