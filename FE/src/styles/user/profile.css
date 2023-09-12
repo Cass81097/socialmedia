@@ -42,6 +42,7 @@ header {
 .pd-image {
     width: 150px;
     margin-right: 20px;
+    height: 115px;
     border-radius: 50%;
 }
 
@@ -77,7 +78,7 @@ header {
 }
 
 .edit-button {
-    min-width: 220px;
+    min-width: 240px;
 }
 
 .pd-right span {
@@ -116,9 +117,22 @@ header {
 .all-task {
     border-top: 1px solid #CED0D4;
     display: flex;
+    align-items: center;
     background: #fff;
     margin-bottom: 10px;
     border-bottom: 1px solid #CED0D4;
+    justify-content: space-between
+}
+
+.icon-block {
+    position: relative;
+    margin-right: 30px;
+}
+
+.left-all-task {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .all-task a {
@@ -389,4 +403,43 @@ header {
 
 .profile-menu li:hover {
     background: rgb(105, 105, 170, .1);
+}
+
+/* Block */
+.profile-block {
+    z-index: 1000;
+    width: 160px;
+    padding: 5px;
+    position: absolute;
+    left: -57px;
+    margin-bottom: unset;
+    border-radius: 5px;
+    background: white;
+    margin-top: 5px;
+    color: black;
+    box-shadow: 0px 0px 8px #ddd;
+    font-weight: 600;
+}
+
+.profile-block li {
+    font-size: 15px;
+    padding: 5px 3px 5px 3px;
+    cursor: pointer;
+    transition: 0.2s linear;
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+.profile-block li:hover {
+    background: rgb(105, 105, 170, .1);
+}
+
+.fa-user-lock {
+    margin-right: 5px;
+}
+
+.fa-list {
+    margin: 3px 5px 0px 0px
 }

@@ -1,19 +1,16 @@
-import React, { useEffect, useState, useContext } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useContext, useEffect, useState } from "react";
+import Toast from 'react-bootstrap/Toast';
 import "react-toastify/dist/ReactToastify.css";
-import { baseUrl, getRequest, postRequest } from "../../../../../utils/services";
 import { AuthContext } from "../../../../../context/AuthContext";
 import { ProfileContext } from "../../../../../context/ProfileContext";
-import $ from 'jquery';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Toast from 'react-bootstrap/Toast';
-import "../../../../../styles/toast.css"
+import "../../../../../styles/toast.css";
+import { baseUrl, getRequest, postRequest } from "../../../../../utils/services";
 
 export default function FriendButton() {
-  const [showToast, setShowToast] = useState(false);
   const { user } = useContext(AuthContext);
   const { userProfile, socket } = useContext(ProfileContext);
+  const [showToast, setShowToast] = useState(false);
   const [friendStatus, setFriendStatus] = useState(null);
   const [friendRequest, setFriendRequest] = useState([])
   const [userRequest, setUserRequest] = useState([])
@@ -151,16 +148,16 @@ export default function FriendButton() {
         </div>
       ) : friendStatus?.status === "friend" ? (
         <div className="pd-right">
-          <div className="add-button">
+          <div className="add-button" style={{minWidth:"100px"}}>
             <button type="button" className="btn btn-primary btn-add">
-              <i className="fas fa-plus fa-xa">
+              <i className="fas fa-user">
                 <span>Bạn bè</span>
               </i>
             </button>
           </div>
-          <div className="edit-button">
+          <div className="edit-button" style={{minWidth:"160px"}}>
             <button type="button" className="btn btn-secondary btn-edit" onClick={handleUnfriend}>
-              <i className="fas fa-pen fa-xz">
+              <i className="fas fa-user-slash" style={{ color: "black" }}>
                 <span>Hủy kết bạn</span>
               </i>
             </button>

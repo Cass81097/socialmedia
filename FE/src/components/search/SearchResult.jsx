@@ -2,12 +2,14 @@ import "../../styles/search-bar/SearchResult.css"
 import React, { useEffect, useState, useContext } from "react";
 import { baseUrl, getRequest, postRequest } from "../../utils/services"
 import { Link, useNavigate } from "react-router-dom";
+import { ProfileContext } from "../../context/ProfileContext";
 
 export const SearchResult = ({ result, userId }) => {
-  const navigate = useNavigate();
-  const [userSearched, setUserSearched] = useState([])
+  const { userProfile, setUserProfile } = useContext(ProfileContext);
 
-  console.log(userSearched[0]);
+  const navigate = useNavigate();
+  const [userSearched, setUserSearched] = useState([]);
+  const [isSearchClosed, setIsSearchClosed] = useState(false); // Add new state
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,9 +23,30 @@ export const SearchResult = ({ result, userId }) => {
     fetchData();
   }, [userId]);
 
-  const handleSearchUser = () => {
-    window.location.href = `/${userSearched[0].username}`;
+  const handleSearchUser = (res) => {
+    navigate(`/${userSearched[0].username}`);
+    setUserProfile(res);
+    setIsSearchClosed(true); // Set the search closed state to true
   };
+
+  useEffect(() => {
+    const handleCloseSearch = (event) => {
+      // Check if the click is outside the search result component
+      if (!event.target.closest(".search-result")) {
+        setIsSearchClosed(true);
+      }
+    };
+
+    // Attach the event listener when the search result is open
+    if (!isSearchClosed) {
+      document.addEventListener("click", handleCloseSearch);
+    }
+
+    // Detach the event listener when the search result is closed
+    return () => {
+      document.removeEventListener("click", handleCloseSearch);
+    };
+  }, [isSearchClosed]);
 
   return (
     <div className="search-result" onClick={handleSearchUser}>

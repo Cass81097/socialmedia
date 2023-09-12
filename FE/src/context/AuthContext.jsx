@@ -34,7 +34,6 @@ export const AuthContextProvider = ({ children }) => {
                 console.error("Error fetching all users:", error);
             }
         };
-
         fetchAllUsers();
     }, []);
 

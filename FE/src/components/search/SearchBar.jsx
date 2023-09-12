@@ -10,6 +10,10 @@ export const SearchBar = ({ setResults, results }) => {
     setHasResults(results.length > 0);
   }, [results]);
 
+  useEffect(() => {
+    setInput(""); // Clear the input value when navigating to a new page
+  }, [window.location.pathname]);
+
   const fetchData = (value) => {
     fetch("http://localhost:5000/users/")
       .then((response) => response.json())

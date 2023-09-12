@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { AuthContext } from "./context/AuthContext";
+import { ProfileContext } from "./context/ProfileContext";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import { ProfileContextProvider } from "./context/ProfileContext";
@@ -11,8 +12,8 @@ export default function App() {
   const { user, allUser } = useContext(AuthContext);
 
   return (
+    <Router>
     <ProfileContextProvider user={user}>
-      <Router>
         <Routes>
           <Route path="/" element={user ? <Home /> : <Login />} />
           <Route path="/login" element={user ? <Home /> : <Login />} />
@@ -27,7 +28,7 @@ export default function App() {
             ))}
           {/* <Route path="*" element={<Navigate to="/" />} /> */}
         </Routes>
-      </Router>
     </ProfileContextProvider>
+    </Router>
   );
 }
