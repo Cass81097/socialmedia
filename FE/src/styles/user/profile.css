@@ -373,6 +373,7 @@ header {
     margin-top: 5px;
     color: black;
     box-shadow: 0px 0px 8px #ddd;
+    font-weight: 600;
 }
 
 .profile-menu li {
