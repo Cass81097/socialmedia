@@ -17,7 +17,7 @@ export default function FriendButton() {
     autoClose: 8000,
     pauseOnHover: true,
     draggable: true,
-    theme: "dark",
+    theme: "dark", 
   };
 
   useEffect(() => {
