@@ -12,7 +12,7 @@ export default function Sidebar() {
                         <a href="">
                             <i
                                 className="fas fa-home icon"
-                                style={{ color: "black" }}
+                                style={{ color: "black", minWidth:"50px" }}
                             />
                         </a>
                     </li>
@@ -46,13 +46,8 @@ export default function Sidebar() {
                             <i className="game icon" />
                         </a>
                     </li>
-                    <li>
-                        <a href="">
-                            <i className="all-list icon" />
-                        </a>
-                    </li>
                 </div>
-                <div className="bottom-content">
+                {/* <div className="bottom-content">
                     <li>
                         <a href="">
                             <i className="bx bx-group icon" />
@@ -63,7 +58,7 @@ export default function Sidebar() {
                             <i className="shortcut icon" />
                         </a>
                     </li>
-                </div>
+                </div> */}
             </div>
         </>
     )

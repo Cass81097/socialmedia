@@ -5,20 +5,34 @@ import "react-toastify/dist/ReactToastify.css";
 import { baseUrl, getRequest, postRequest } from "../../../../../utils/services";
 import { AuthContext } from "../../../../../context/AuthContext";
 import { ProfileContext } from "../../../../../context/ProfileContext";
+import $ from 'jquery';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Toast from 'react-bootstrap/Toast';
+import "../../../../../styles/toast.css"
 
 export default function FriendButton() {
+  const [showToast, setShowToast] = useState(false);
   const { user } = useContext(AuthContext);
   const { userProfile, socket } = useContext(ProfileContext);
   const [friendStatus, setFriendStatus] = useState(null);
   const [friendRequest, setFriendRequest] = useState([])
+  const [userRequest, setUserRequest] = useState([])
 
-  const toastOptions = {
-    position: "bottom-left",
-    autoClose: 8000,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "dark",
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getRequest(`${baseUrl}/users/find/id/${friendRequest?.senderId}`);
+        setUserRequest(response);
+      } catch (error) {
+        console.error("Error checking friend status:", error);
+      }
+    };
+
+    if (friendRequest.senderId) {
+      fetchData();
+    }
+  }, [friendRequest]);
+
 
   useEffect(() => {
     if (socket === null) return;
@@ -34,9 +48,11 @@ export default function FriendButton() {
 
   useEffect(() => {
     if (friendRequest.senderId) {
-      toast.info("Bạn có một lời mời kết bạn.", toastOptions);
+      setShowToast(true);
+    } else {
+      setShowToast(false);
     }
-  }, [friendRequest]);
+  }, [friendRequest.senderId]);
 
   useEffect(() => {
     const checkFriendStatus = async () => {
@@ -52,7 +68,6 @@ export default function FriendButton() {
       checkFriendStatus();
     }
   }, [user.id, userProfile]);
-
 
   const handleAddFriend = async () => {
     try {
@@ -102,33 +117,33 @@ export default function FriendButton() {
     <>
       {friendStatus?.status === "pending" && friendStatus?.userSendReq === user.id ? (
         <div className="pd-right">
-        <div className="add-button">
-          <button type="button" className="btn btn-primary btn-add" >
-            <i className="fas fa-plus fa-xa">
-              <span>Đã gửi lời mời</span>
-            </i>
-          </button>
+          <div className="add-button" style={{ minWidth: "150px" }}>
+            <button type="button" className="btn btn-primary btn-add" >
+              <i className="fas fa-user-check">
+                <span>Đã gửi lời mời</span>
+              </i>
+            </button>
+          </div>
+          <div className="edit-button" style={{ minWidth: "160px" }}>
+            <button type="button" className="btn btn-secondary btn-edit" style={{ background: "#dbdbdc" }} onClick={handleUnfriend}>
+              <i className="fas fa-user-times" style={{ color: "black" }}>
+                <span>Hủy lời mời</span>
+              </i>
+            </button>
+          </div>
         </div>
-        <div className="edit-button">
-          <button type="button" className="btn btn-secondary btn-edit" onClick={handleUnfriend}>
-            <i className="fas fa-pen fa-xz">
-              <span>Hủy lời mời</span>
-            </i>
-          </button>
-        </div>
-      </div>
       ) : friendStatus?.status === "pending" ? (
         <div className="pd-right">
           <div className="add-button">
-            <button type="button" className="btn btn-primary btn-add"  onClick={handleAcceptFriend}>
-              <i className="fas fa-plus fa-xa">
+            <button type="button" className="btn btn-primary btn-add" onClick={handleAcceptFriend}>
+              <i className="fas fa-user-plus">
                 <span>Đồng ý kết bạn</span>
               </i>
             </button>
           </div>
-          <div className="edit-button">
-            <button type="button" className="btn btn-secondary btn-edit" onClick={handleCancelRequest}>
-              <i className="fas fa-pen fa-xz">
+          <div className="edit-button" style={{ minWidth: "185px" }}>
+            <button type="button" className="btn btn-secondary btn-edit" style={{ background: "#dbdbdc" }} onClick={handleCancelRequest}>
+              <i className="fas fa-user-slash" style={{ color: "black" }}>
                 <span>Từ chối kết bạn</span>
               </i>
             </button>
@@ -136,7 +151,7 @@ export default function FriendButton() {
         </div>
       ) : friendStatus?.status === "friend" ? (
         <div className="pd-right">
-         <div className="add-button">
+          <div className="add-button">
             <button type="button" className="btn btn-primary btn-add">
               <i className="fas fa-plus fa-xa">
                 <span>Bạn bè</span>
@@ -153,7 +168,7 @@ export default function FriendButton() {
         </div>
       ) : userProfile[0]?.username === user.username ? (
         <div className="pd-right">
-          <div className="add-button">
+          <div className="add-button" style={{ minWidth: "140px" }}>
             <button type="button" className="btn btn-primary btn-add">
               <i className="fas fa-plus fa-xa">
                 <span>Thêm vào tin</span>
@@ -170,17 +185,45 @@ export default function FriendButton() {
         </div>
       ) : (
         <div className="pd-right">
-          <div className="add-button">
-            {/* Nút hiển thị khi không phải là "Friend" */}
+          <div className="add-button" style={{ minWidth: "110px" }}>
             <button type="button" className="btn btn-primary btn-add" onClick={handleAddFriend}>
               <i className="fas fa-user-plus">
                 <span>Kết bạn</span>
               </i>
             </button>
           </div>
+          <div className="edit-button" style={{ minWidth: "135px" }}>
+            <button type="button" className="btn btn-secondary btn-edit" style={{ background: "#dbdbdc" }}>
+              {/* <i className="fas fa-pen fa-xz"> */}
+              <i className="fab fa-facebook-messenger" style={{ color: "black" }}>
+                <span>Nhắn tin</span>
+              </i>
+            </button>
+          </div>
         </div>
       )}
-      <ToastContainer/>
+      {/* Toast  */}
+      {showToast && (
+        <Toast onClose={() => setShowToast(false)}>
+          <div className="toast-header">
+            <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
+            <strong className="me-auto">Thông báo mới</strong>
+            <button type="button" className="btn-close" onClick={() => setShowToast(false)}></button>
+          </div>
+          <Toast.Body>
+            <div className="toast-container">
+              <div className="toast-avatar">
+                <img src={userRequest[0]?.avatar} alt="" />
+              </div>
+              <div className="toast-content" style={{ color: "black" }}>
+                <p><span style={{ fontWeight: "600" }}>{userRequest[0]?.fullname}</span> vừa mới gửi lời mời kết bạn</p>
+                <span style={{ color: "#0D6EFD" }}>vài giây trước</span>
+              </div>
+              <i className="fas fa-circle"></i>
+            </div>
+          </Toast.Body>
+        </Toast>
+      )}
     </>
   );
 }

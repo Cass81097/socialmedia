@@ -39,8 +39,8 @@ io.on("connection", (socket) => {
         const receiver = onlineUsers.find(user => user.userId === receiverId);
         if (receiver) {
             // Người nhận đang trực tuyến, gửi yêu cầu kết bạn tới socket của người nhận
-            // io.to(receiver.socketId).emit("friendRequest", { senderId });
-            io.emit("friendRequest", senderId);
+            io.to(receiver.socketId).emit("friendRequest", { senderId });
+            // io.emit("friendRequest", senderId);
         } else {
             // Người nhận không trực tuyến, thực hiện các xử lý khác (ví dụ: gửi thông báo, lưu vào cơ sở dữ liệu, vv.)
         }

@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import { ProfileContextProvider } from "./context/ProfileContext";
 import { useLocation, useNavigate } from "react-router-dom";
+import Home from "./pages/Home";
 
 export default function App() {
   const { user, allUser } = useContext(AuthContext);
@@ -13,8 +14,9 @@ export default function App() {
     <ProfileContextProvider user={user}>
       <Router>
         <Routes>
-          <Route path="/" element={user ? <Profile /> : <Login />} />
-          <Route path="/login" element={user ? <Profile /> : <Login />} />
+          <Route path="/" element={user ? <Home /> : <Login />} />
+          <Route path="/login" element={user ? <Home /> : <Login />} />
+          <Route path="/home" element={user ? <Home /> : <Login />} />
           {allUser?.length > 0 &&
             allUser.map((username) => (
               <Route
@@ -23,7 +25,6 @@ export default function App() {
                 element={<Profile user={username} />}
               />
             ))}
-          {/* <Route path={"/password"} element={<EditPassword></EditPassword>}></Route> */}
           {/* <Route path="*" element={<Navigate to="/" />} /> */}
         </Routes>
       </Router>

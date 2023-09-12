@@ -6,6 +6,7 @@ export declare class UserService {
     update: (id: any, user: any) => Promise<any>;
     register: (user: any) => Promise<any>;
     findByUserName: (username: any) => Promise<any>;
+    findByName: (username: any) => Promise<any>;
     findByEmail: (email: any) => Promise<any>;
     findUserById: (id: any) => Promise<any>;
     updatePassword: (userId: any, oldPassword: any, newPassword: any) => Promise<string>;

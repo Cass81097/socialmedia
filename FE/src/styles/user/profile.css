@@ -27,7 +27,7 @@ header {
 
 .profile-details {
     background: #fff;
-    padding: 20px;
+    padding: 20px 0px 20px 20px;
     border-radius: 4px;
     display: flex;
     align-items: flex-start;
@@ -72,12 +72,13 @@ header {
 }
 
 .add-button {
-    margin-right: 10px;
+    min-width: 160px;
+
 }
 
-/* .edit-button {
-    border: 1px solid white
-} */
+.edit-button {
+    min-width: 220px;
+}
 
 .pd-right span {
     font-weight: 500;
@@ -351,4 +352,40 @@ header {
 
 .left-icons {
     display: flex;
+}
+
+.btn-edit:hover {
+    background-color: #d4dae0 !important;
+    border-color: #d4dae0 !important;
+}
+
+/* LogOut */
+.profile-menu {
+    z-index: 1000;
+    width: 80px;
+    padding: 5px;
+    position: absolute;
+    top: 60px;
+    /* right: -25px; */
+    margin-bottom: unset;
+    border-radius: 5px;
+    background: white;
+    margin-top: 5px;
+    color: black;
+    box-shadow: 0px 0px 8px #ddd;
+}
+
+.profile-menu li {
+    font-size: 12px;
+    padding: 5px 3px 5px 3px;
+    cursor: pointer;
+    transition: 0.2s linear;
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+.profile-menu li:hover {
+    background: rgb(105, 105, 170, .1);
 }

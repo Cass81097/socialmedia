@@ -43,6 +43,14 @@ export class UserService {
         })
     }
 
+    findByName = async (username) => {
+        return await this.userRepository.find({
+            where: {
+                username: Like(`%${username}%`)
+            }
+        })
+    }
+
     findByEmail = async (email) => {
         return this.userRepository.find({
           where: {

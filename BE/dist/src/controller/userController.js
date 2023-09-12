@@ -36,6 +36,14 @@ class UserController {
             let result = await userService_1.default.findAllUserName();
             res.json(result);
         };
+        this.findUserByName = async (req, res) => {
+            let result = await userService_1.default.findByName(req.params.name);
+            res.json(result);
+        };
+        this.findUserById = async (req, res) => {
+            let result = await userService_1.default.findUserById(req.params.id);
+            res.json(result);
+        };
         this.updatePassword = async (req, res) => {
             let data = await userService_1.default.updatePassword(req.params.id, req.body.oldPassword, req.body.newPassword);
             console.log(req.params.id, req.body);

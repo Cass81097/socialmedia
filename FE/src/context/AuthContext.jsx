@@ -112,7 +112,7 @@ export const AuthContextProvider = ({ children }) => {
         //     fullname: registerInfo.username,
         //     userAvatar: registerInfo.avatar,
         // });
-
+        // localStorage.setItem("User", JSON.stringify(response));
         setUser(response)
     }, [registerInfo])
 
