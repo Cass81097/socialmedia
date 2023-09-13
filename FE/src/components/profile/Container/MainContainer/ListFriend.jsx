@@ -86,8 +86,10 @@ export default function ListFriend() {
                                         </div>
                                         <div className="friend-detail">
                                             <h6 onClick={() => goFriendProfile(listFriend?.username)}>{listFriend?.fullname}</h6>
-                                            {listCommonFriend?.find(friend => friend.username === listFriend?.username) && (
+                                            {listCommonFriend?.find(friend => friend.username === listFriend?.username) ? (
                                                 <h6>{listCommonFriend?.length} bạn chung</h6>
+                                            ) : (
+                                                <h6>0 bạn chung</h6>
                                             )}
                                         </div>
                                     </div>
