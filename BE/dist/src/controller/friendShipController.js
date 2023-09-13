@@ -31,11 +31,6 @@ class FriendShipController {
             let data = await friendShipService_1.default.findById(user1Id, user2Id);
             res.json(data);
         };
-        this.findFriend = async (req, res) => {
-            const { user1: { id: user1Id }, status: status } = req.body;
-            let data = await friendShipService_1.default.findFriend(user1Id, status);
-            res.json(data);
-        };
         this.checkStatusByUserId = async (req, res) => {
             const userId1 = req.params.userId1;
             const userId2 = req.params.userId2;
@@ -50,6 +45,10 @@ class FriendShipController {
         };
         this.getBlockList = async (req, res) => {
             let data = await friendShipService_1.default.findBlockedUsers(req.params.id);
+            res.json(data);
+        };
+        this.findFriendByUsername = async (req, res) => {
+            let data = await friendShipService_1.default.findFriendByUsername(req.params.username);
             res.json(data);
         };
     }

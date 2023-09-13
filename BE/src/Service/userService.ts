@@ -82,6 +82,21 @@ export class UserService {
         return "Thay Avatar thành công";
     }
 
+    updateCover = async (userId, cover) => {
+        const user = this.userRepository.find({
+            where: {
+                id: userId
+            }
+        })
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        user.cover = cover;
+        await this.userRepository.update(userId, { cover: cover });
+        return "Thay Cover thành công";
+    }
+
     updatePassword = async (userId, oldPassword, newPassword) => {
         console.log("oldPass", oldPassword)
         console.log("newPass", newPassword)

@@ -39,7 +39,7 @@ io.on("connection", (socket) => {
         // Kiểm tra xem người nhận yêu cầu kết bạn có đang trực tuyến hay không
         const receiver = onlineUsers.find(user => user.userId === receiverId);
         if (receiver) {
-            io.to(receiver.socketId).emit("friendRequest", { senderId });
+            io.to(receiver.socketId).emit("friendRequest", { senderId, receiverId });
         } else {
             // Người nhận không trực tuyến, thực hiện các xử lý khác (ví dụ: gửi thông báo, lưu vào cơ sở dữ liệu, vv.)
         }
@@ -53,7 +53,7 @@ io.on("connection", (socket) => {
         // Kiểm tra xem người nhận yêu cầu kết bạn có đang trực tuyến hay không
         const receiver = onlineUsers.find(user => user.userId === receiverId);
         if (receiver) {
-            io.to(receiver.socketId).emit("friendRequestAccepted", { senderId });
+            io.to(receiver.socketId).emit("friendRequestAccepted", { senderId, receiverId });
         } else {
             // Người nhận không trực tuyến, thực hiện các xử lý khác (ví dụ: gửi thông báo, lưu vào cơ sở dữ liệu, vv.)
         }

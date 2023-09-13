@@ -71,7 +71,7 @@ export default function Navbar() {
                                 data-toggle="tooltip"
                                 data-placement="bottom"
                                 title="Messenger"
-                                style={{ transform: "translateY(-7px)" }}
+                            style={{ transform: "translateY(7px)" }}
                             >
                                 <i className="fab fa-facebook-messenger"></i>
                             </Link>
@@ -80,51 +80,26 @@ export default function Navbar() {
                                 data-toggle="tooltip"
                                 data-placement="bottom"
                                 title="Thông báo"
-                                style={{ transform: "translateY(-7px)" }}
+                            style={{ transform: "translateY(7px)" }}
                             >
                                 <i className="fas fa-bell"></i>
                             </Link>
-                            <div
-                                data-toggle="tooltip"
-                                data-placement="bottom"
-                                title="Avatar"
-                                style={{ transform: "translateY(3px)" }}
-                            >
-                                <img src={user.avatar} style={{ width: "100%", height: "100%", borderRadius:"50%", overflow:"hidden" }} alt="Avatar" onClick={() => showInfo()} />
+
+                            <div className="avatar-nav" style={{ transform: "translateY(-6px)" }}>
+                                <div
+                                    className="avatar-navbar"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="Avatar"
+                                >
+                                    <img src={user.avatar} alt="Avatar" onClick={() => showInfo()} />
+                                </div>
                                 <ol className="profile-menu" style={{ display: "none" }}>
                                     <li onClick={goUserInfo}>Thông tin</li>
                                     <li data-toggle="modal" data-target="#myModal" onClick={() => logout()}>Đăng xuất</li>
                                 </ol>
-                            </div>
-                            {/* <Link
-                                to=""
-                                data-toggle="tooltip"
-                                data-placement="bottom"
-                                title="LogOut"
-                                style={{ transform: "translateY(-9px)" }}
-                            >
-                                <Button onClick={handleClick}>
-                                    <BiPowerOff />
-                                </Button>
-                            </Link> */}
-
+                            </div>    
                         </div>
-
-                        {/* <div className="ava">
-                            <a href="">
-                                <i
-                                    className="bx avatar online"
-                                    data-toggle="tooltip"
-                                    data-placement="bottom"
-                                    title="Tài khoản"
-                                    // avatar header
-                                    style={{
-                                        backgroundImage:
-                                            "url(https://data-us.cometchat.io/assets/images/avatars/ironman.png)",
-                                    }}
-                                />
-                            </a>
-                        </div> */}
                     </div>
                 </div>
             </header>

@@ -38,7 +38,9 @@ export const SearchResult = ({ result, userId, onClickSearchResult }) => {
   return (
     <div className="search-result" onClick={handleSearchUser}>
       <div className="search-result-container">
-        <img src={userSearched[0]?.avatar} alt="" />
+        <div className="search-result-avatar">
+          <img src={userSearched[0]?.avatar} alt="" />
+        </div>
         <p>{result}</p>
       </div>
     </div>

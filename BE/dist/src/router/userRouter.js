@@ -17,5 +17,6 @@ exports.userRouter.get('/find/email/:email', userController_1.default.findByEmai
 exports.userRouter.get('/find/name/:name', userController_1.default.findUserByName);
 exports.userRouter.get('/find/id/:id', userController_1.default.findUserById);
 exports.userRouter.put('/avatar/:id', userController_1.default.updateAvatar);
+exports.userRouter.put('/cover/:id', userController_1.default.updateCover);
 exports.userRouter.put("/:id", userController_1.default.updatePassword);
 //# sourceMappingURL=userRouter.js.map

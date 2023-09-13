@@ -16,13 +16,19 @@ export default function Sidebar() {
                             />
                         </a>
                     </li>
-                    <li className="links link-avatar">
+                    {/* <li className="links link-avatar">
                         <a href="" className="select" style={{position:"relative"}}>
                             <div className="left-ava">
                                 <img className="left-avatar"
                                     src={user.avatar} alt="load" />
                             </div>
                         </a>
+                    </li> */}
+                    <li className="links link-avatar select" style={{transform:"translate(6px)"}}>
+                            <div className="sidebar-avatar">
+                                <img 
+                                    src={user.avatar} alt="load" />
+                            </div>
                     </li>
                 </div>
                 <div className="mid-content">

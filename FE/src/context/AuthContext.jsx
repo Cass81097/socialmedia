@@ -1,10 +1,12 @@
 import React, { createContext, useCallback, useEffect, useState, useContext } from "react";
 import { baseUrl, getRequest, postRequest } from "../utils/services";
 import { CometChatContext } from "./CometChatContext";
+import { Link, useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
+    const [registerFinish, setRegisterFinish] = useState(false);
     const [allUser, setAllUser] = useState(null);
     const [user, setUser] = useState(null);
     const [registerError, setRegisterError] = useState(null);
@@ -111,7 +113,7 @@ export const AuthContextProvider = ({ children }) => {
         //     fullname: registerInfo.username,
         //     userAvatar: registerInfo.avatar,
         // });
-        // localStorage.setItem("User", JSON.stringify(response));
+        setRegisterFinish(true);
         setUser(response)
     }, [registerInfo])
 
@@ -148,7 +150,7 @@ export const AuthContextProvider = ({ children }) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ user, registerInfo, registerUser, updateRegisterInfo, registerError, isRegisterLoading, logOutUser, loginUser, loginError, loginInfo, updateLoginInfo, isLoginLoading, allUser, setUser }}>
+        <AuthContext.Provider value={{ user, registerInfo, registerUser, updateRegisterInfo, registerError, isRegisterLoading, logOutUser, loginUser, loginError, loginInfo, updateLoginInfo, isLoginLoading, allUser, setUser, registerFinish }}>
             {children}
         </AuthContext.Provider>
     );

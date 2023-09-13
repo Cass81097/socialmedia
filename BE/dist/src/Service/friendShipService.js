@@ -17,17 +17,23 @@ class FriendShipService {
                 }
             });
         };
-        this.findFriend = async (user1Id, status) => {
-            return await this.friendRepository.find({
-                relations: {
-                    user1: true,
-                    user2: true
-                },
-                where: {
-                    user1: { id: user1Id },
-                    status: status
+        this.findFriendByUsername = async (username) => {
+            const friends = await this.friendRepository
+                .createQueryBuilder("friendShip")
+                .innerJoinAndSelect("friendShip.user1", "user1")
+                .innerJoinAndSelect("friendShip.user2", "user2")
+                .where("user1.username = :username1 AND friendShip.status = 'friend'", { username1: username })
+                .orWhere("user2.username = :username2 AND friendShip.status = 'friend'", { username2: username })
+                .getMany();
+            const friendUsers = friends.map((friendShip) => {
+                if (friendShip.user1.username === username) {
+                    return friendShip.user2;
+                }
+                else {
+                    return friendShip.user1;
                 }
             });
+            return friendUsers;
         };
         this.sendFriendRequest = async (userId1, userId2) => {
             const data = {

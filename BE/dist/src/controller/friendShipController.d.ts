@@ -4,10 +4,10 @@ export declare class FriendShipController {
     cancelFriendship: (req: any, res: any) => Promise<void>;
     acceptFriendRequest: (req: any, res: any) => Promise<void>;
     findById: (req: any, res: any) => Promise<void>;
-    findFriend: (req: any, res: any) => Promise<void>;
     checkStatusByUserId: (req: Request, res: Response) => Promise<void>;
     blockFriend: (req: Request, res: Response) => Promise<void>;
     getBlockList: (req: Request, res: Response) => Promise<void>;
+    findFriendByUsername: (req: any, res: any) => Promise<void>;
 }
 declare const _default: FriendShipController;
 export default _default;

@@ -10,6 +10,7 @@ export const ProfileContextProvider = ({ children, user }) => {
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUser] = useState([])
   const [userProfile, setUserProfile] = useState([]);
+  const [countFriend, setCountFriend] = useState([]);
   const [checkFriendStatus, setCheckFriendStatus] = useState(null);
   const domain = window.location.pathname.split("/")[1];
   const username = domain || "";
@@ -66,9 +67,23 @@ export const ProfileContextProvider = ({ children, user }) => {
     fetchFriendStatus();
   }, [user, userProfile]);
 
+  useEffect(() => {
+    const fetchCountFriend = async () => {
+      try {
+        const storedUser = localStorage.getItem('User');
+        if (storedUser) {
+          const response = await getRequest(`${baseUrl}/friendShips/listFriend/${username}`);
+          setCountFriend(response);
+        } else return;
+      } catch (error) {
+        console.error("Error fetching user profiles:", error);
+      }
+    };
+    fetchCountFriend();
+  }, [username]);
+
   // Socket
   useEffect(() => {
-
     const newSocket = io("http://localhost:3000")
     setSocket(newSocket)
 
@@ -92,7 +107,7 @@ export const ProfileContextProvider = ({ children, user }) => {
   }, [socket])
 
   return (
-    <ProfileContext.Provider value={{ userProfile, socket, setUserProfile, checkFriendStatus, fetchUserProfile }}>
+    <ProfileContext.Provider value={{ userProfile, socket, setUserProfile, checkFriendStatus, fetchUserProfile, countFriend }}>
       {children}
     </ProfileContext.Provider>
   );

@@ -10,6 +10,7 @@ export declare class UserService {
     findByEmail: (email: any) => Promise<any>;
     findUserById: (id: any) => Promise<any>;
     updateAvatar: (userId: any, avatar: any) => Promise<string>;
+    updateCover: (userId: any, cover: any) => Promise<string>;
     updatePassword: (userId: any, oldPassword: any, newPassword: any) => Promise<string>;
     checkUser: (user: any) => Promise<"Email is not exist" | "Password is wrong" | {
         token: any;

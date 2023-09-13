@@ -15,8 +15,11 @@ export default function FriendButton() {
   const [friendStatus, setFriendStatus] = useState(null);
   const [friendRequest, setFriendRequest] = useState([])
   const [userRequest, setUserRequest] = useState([])
+  const [userAccepted, setUserAccepted] = useState(false)
 
-  console.log(friendRequest);
+  // console.log(friendRequest, "friendReq");
+  // console.log(userRequest, "userReq");
+  // console.log(userAccepted, "userAcc");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,24 +31,27 @@ export default function FriendButton() {
       }
     };
 
-    if (friendRequest.senderId) {
+    if (friendRequest.senderId && friendRequest.receiverId) {
       fetchData();
     }
   }, [friendRequest]);
 
   useEffect(() => {
     if (socket === null) return;
-  
+
     socket.on("friendRequest", (res) => {
       setFriendRequest(res);
-      setFriendStatus({ status: "pending", userSendReq: res.senderId });
+      if (user?.id === userProfile[0]?.id) {
+        setFriendStatus({ status: "pending", userSendReq: res.senderId });
+      }
     });
 
     socket.on("friendRequestAccepted", (res) => {
-      setFriendRequest("Accepted");
+      setUserAccepted(true)
+      setFriendRequest(res);
       setFriendStatus({ status: "friend", userSendReq: res.senderId });
     });
-  
+
     return () => {
       socket.off("friendRequest");
     };
@@ -54,13 +60,13 @@ export default function FriendButton() {
   useEffect(() => {
     if (friendRequest.senderId) {
       setShowToast(true);
-    } if (friendRequest === "Accepted") {
-      setShowToastAccepted(true);
+      return;
     }
     else {
       setShowToast(false);
+      return;
     }
-  }, [friendRequest.senderId]);
+  }, [friendRequest]);
 
   useEffect(() => {
     const checkFriendStatus = async () => {
@@ -184,14 +190,14 @@ export default function FriendButton() {
         </div>
       ) : friendStatus?.status === "friend" ? (
         <div className="pd-right">
-          <div className="add-button" style={{minWidth:"100px"}}>
+          <div className="add-button" style={{ minWidth: "100px" }}>
             <button type="button" className="btn btn-primary btn-add">
               <i className="fas fa-user">
                 <span>Bạn bè</span>
               </i>
             </button>
           </div>
-          <div className="edit-button" style={{minWidth:"160px"}}>
+          <div className="edit-button" style={{ minWidth: "160px" }}>
             <button type="button" className="btn btn-secondary btn-edit" onClick={handleUnfriend}>
               <i className="fas fa-user-slash" style={{ color: "black" }}>
                 <span>Hủy kết bạn</span>
@@ -235,6 +241,7 @@ export default function FriendButton() {
           </div>
         </div>
       )}
+
       {/* Toast  */}
       {showToast && (
         <Toast onClose={() => setShowToast(false)}>
@@ -248,8 +255,8 @@ export default function FriendButton() {
               <div className="toast-avatar">
                 <img src={userRequest[0]?.avatar} alt="" />
               </div>
-              <div className="toast-content" style={{ color: "black", marginLeft:"5px" }}>
-                <p><span style={{ fontWeight: "600" }}>{userRequest[0]?.fullname}</span> vừa mới gửi lời mời kết bạn</p>
+              <div className="toast-content" style={{ color: "black", marginLeft: "5px" }}>
+                <p><span style={{ fontWeight: "600" }}>{userRequest[0]?.fullname}</span> {userAccepted ? "đã đồng ý" : "vừa mới gửi"} lời mời kết bạn</p>
                 <span style={{ color: "#0D6EFD" }}>vài giây trước</span>
               </div>
               <i className="fas fa-circle"></i>

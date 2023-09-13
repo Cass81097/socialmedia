@@ -11,6 +11,7 @@ export declare class UserController {
     findUserById: (req: any, res: any) => Promise<void>;
     updatePassword: (req: Request, res: Response) => Promise<void>;
     updateAvatar: (req: Request, res: Response) => Promise<void>;
+    updateCover: (req: Request, res: Response) => Promise<void>;
 }
 declare const _default: UserController;
 export default _default;

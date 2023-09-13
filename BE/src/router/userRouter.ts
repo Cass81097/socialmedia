@@ -13,6 +13,7 @@ userRouter.get('/find/name/:name', userController.findUserByName);
 userRouter.get('/find/id/:id', userController.findUserById);
 
 userRouter.put('/avatar/:id', userController.updateAvatar);
+userRouter.put('/cover/:id', userController.updateCover);
 
 // update password
 userRouter.put("/:id",userController.updatePassword)

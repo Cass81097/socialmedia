@@ -63,5 +63,12 @@ export class UserController {
         res.json(data);
     }
 
+    updateCover = async (req: Request, res: Response) => {
+        const userId = req.params.id;
+        const cover = req.body.cover;
+        let data = await userService.updateCover(userId, cover);
+        res.json(data);
+    }
+
 }
 export default new UserController()

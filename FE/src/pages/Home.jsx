@@ -22,6 +22,7 @@ const Home = (props) => {
     const { toggleModal } = props;
     const { user, loginInfo, loginUser, loginError, updateLoginInfo, isLoginLoading } = useContext(AuthContext)
 
+    
     return (
         <Navbar></Navbar>
     );

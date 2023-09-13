@@ -55,6 +55,12 @@ class UserController {
             let data = await userService_1.default.updateAvatar(userId, avatar);
             res.json(data);
         };
+        this.updateCover = async (req, res) => {
+            const userId = req.params.id;
+            const cover = req.body.cover;
+            let data = await userService_1.default.updateCover(userId, cover);
+            res.json(data);
+        };
     }
 }
 exports.UserController = UserController;

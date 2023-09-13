@@ -2,22 +2,72 @@ import $ from 'jquery';
 import React, { useContext, useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../../context/AuthContext";
 import { ProfileContext } from "../../../../context/ProfileContext";
 import "../../../../styles/modalNavbar.css";
 import { baseUrl, getRequest, postRequest } from "../../../../utils/services";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function NavbarContainer() {
+export default function NavbarContainer(props) {
+    const { isPost, setIsPost, isFriend, setIsFriend } = props
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
     const { userProfile, checkFriendStatus } = useContext(ProfileContext);
     const [friendStatus, setFriendStatus] = useState(null);
     const [blocklist, setBlockList] = useState([])
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-    
+    const [showAlert, setShowAlert] = useState(false);
+    const [showAlertUser, setIsShowAlertUser] = useState(false);
+    const [userIndex, setUserIndex] = useState(null);
+
+    const toastOptions = {
+        position: "top-center",
+        autoClose: 8000,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+    };
+
+    const handleClose = () => {
+        setShow(false);
+        setShowAlert(false);
+    }
+
+    const handleCloseAlert = () => {
+        setShowAlert(false);
+    }
+
+    const handleCloseAlertUser = () => {
+        setIsShowAlertUser(false);
+    }
+
+    const handleShowAlertUser = () => {
+        setIsShowAlertUser(true);
+        $('.profile-block').hide();
+    }
+
+    const handleShow = () => {
+        setShow(true);
+        $('.profile-block').hide();
+    }
+
+    const handleShowAlert = (index) => {
+        setShowAlert(true);
+        setUserIndex(index);
+    }
+
+    const handleFriendClick = () => {
+        setIsFriend(true);
+        setIsPost(false);
+    };
+
+    const handlePostClick = () => {
+        setIsFriend(false);
+        setIsPost(true);
+    };
+
     const fetchBlockList = async () => {
         try {
             const response = await getRequest(`${baseUrl}/friendShips/blocklist/${user?.id}`)
@@ -34,20 +84,22 @@ export default function NavbarContainer() {
     const handleBlockUser = async () => {
         try {
             const response = await postRequest(`${baseUrl}/friendShips/block/${user.id}/${userProfile[0]?.id}`)
-            setFriendStatus({ status: "block" });
-            navigate('/')
-            console.log("Chặn thành công!")
+            // setFriendStatus({ status: "block" });
+            setIsToast(true);
+            navigate(`/${user.username}`);
+            setIsShowAlertUser(false);
+            toast.success("Chặn thành công", toastOptions);
             fetchBlockList();
         } catch (error) {
             console.error("Error canceling friend request:", error);
         }
     };
 
-    const handleUnblockUser = async (index) => {
+    const handleUnblockUser = async (userIndex) => {
         try {
-            const response = await postRequest(`${baseUrl}/friendships/unfriend/${user.id}/${blocklist[index]?.id}`)
+            const response = await postRequest(`${baseUrl}/friendships/unfriend/${user.id}/${blocklist[userIndex]?.id}`)
             setFriendStatus();
-            console.log("Bỏ chặn thành công!")
+            toast.success("Bỏ chặn thành công", toastOptions);
             handleClose();
             fetchBlockList();
             setBlockList()
@@ -70,77 +122,126 @@ export default function NavbarContainer() {
     }, [user?.id]);
 
     return (
-        <div className="all-task">
-            <div className="left-all-task">
-                <div className="post-task">
-                    <a href="#">
-                        <span>Bài viết</span>
-                    </a>
-                </div>
-                <div className="profile-task">
-                    <a href="#">
-                        <span>Giới thiệu</span>
-                    </a>
-                </div>
-            </div>
-            <div className="icon-block">
-                <button
-                    type="button"
-                    className="btn btn-secondary btn-edit"
-                    style={{ background: "#dbdbdc" }}
-                    onClick={() => showInfo()}
-                >
-                    <i className="fas fa-ellipsis-h" style={{ color: "black" }} />
-                </button>
-                <ol className="profile-block" style={{ display: "none" }}>
-                    {user?.id !== userProfile[0]?.id ? (
-                        <li onClick={handleBlockUser}>
-                            <i className="fas fa-user-lock" />Chặn người dùng
-                        </li>
-                    ) : (
-                        <li onClick={handleShow}>
-                            <i className="fas fa-list" />Danh sách Block
-                        </li>
-                    )}
-                </ol>
-            </div>
-
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Block Users</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="modal-block-top">
-                        <p>Sau khi bạn chặn ai đó, người đó sẽ không thể xem nội dung bạn đăng trên dòng thời gian, gắn thẻ bạn, mời bạn tham gia sự kiện hoặc nhóm, bắt đầu cuộc trò chuyện với bạn hoặc thêm bạn làm bạn bè nữa. Lưu ý: Không bao gồm các ứng dụng, trò chơi hoặc nhóm mà cả hai bạn cùng tham gia..</p>
+        <>
+            <div className="all-task">
+                <div className="left-all-task">
+                    <div className="post-task">
+                        <Link to='' onClick={handlePostClick}>
+                            <span>Bài viết</span>
+                        </Link>
                     </div>
-                    <div className="modal-block-container">
-                        {blocklist?.map((blockedUser, index) => (
-                            <div className="modal-block-main" key={blockedUser.id}>
-                                <div className="modal-block-user">
-                                    <img src={blockedUser?.avatar} alt="" />
-                                    <p>{blockedUser?.fullname}</p>
-                                </div>
-
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary btn-edit block-edit"
-                                    style={{ background: "#dbdbdc" }}
-                                    onClick={() => handleUnblockUser(index)}
-                                >
-                                    <i className="fas fa-unlock-alt" style={{ color: "black" }}>
-                                        <span style={{ fontWeight: "600", marginLeft: "5px" }}>Bỏ chặn</span>
-                                    </i>
-                                </button>
-                            </div>
-                        ))}
+                    <div className="profile-task">
+                        <Link to='' >
+                            <span>Giới thiệu</span>
+                        </Link>
                     </div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="primary" onClick={handleClose}>
-                        Close
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </div>
+                    <div className="profile-task">
+                        <Link to='' onClick={handleFriendClick}>
+                            <span>Bạn bè</span>
+                        </Link>
+                    </div>
+                </div>
+                <div className="icon-block">
+                    <button
+                        type="button"
+                        className="btn btn-secondary btn-edit"
+                        style={{ background: "#dbdbdc" }}
+                        onClick={() => showInfo()}
+                    >
+                        <i className="fas fa-ellipsis-h" style={{ color: "black" }} />
+                    </button>
+                    <ol className="profile-block" style={{ display: "none" }}>
+                        {user?.id !== userProfile[0]?.id ? (
+                            <li onClick={handleShowAlertUser}>
+                                <i className="fas fa-user-lock" />Chặn người dùng
+                            </li>
+                        ) : (
+                            <li onClick={handleShow}>
+                                <i className="fas fa-list" />Danh sách chặn
+                            </li>
+                        )}
+                    </ol>
+                </div>
+
+                {/* Modal Block */}
+                <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Danh sách chặn</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="modal-block-top">
+                            <p>Sau khi bạn chặn ai đó, người đó sẽ không thể xem nội dung bạn đăng trên dòng thời gian, gắn thẻ bạn, mời bạn tham gia sự kiện hoặc nhóm, bắt đầu cuộc trò chuyện với bạn hoặc thêm bạn làm bạn bè nữa. Lưu ý: Không bao gồm các ứng dụng, trò chơi hoặc nhóm mà cả hai bạn cùng tham gia..</p>
+                        </div>
+                        <div className="modal-block-container">
+                            {blocklist && blocklist.length > 0 ? (
+                                blocklist.map((blockedUser, index) => (
+                                    <div className="modal-block-main" key={blockedUser.id}>
+                                        <div className="modal-block-user">
+                                            <div className="modal-block-avatar">
+                                                <img src={blockedUser?.avatar} alt="" />
+                                            </div>
+                                            <p>{blockedUser?.fullname}</p>
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            className="btn btn-secondary btn-edit block-edit"
+                                            style={{ background: "#dbdbdc" }}
+                                            onClick={() => handleShowAlert(index)}
+                                        >
+                                            <i className="fas fa-unlock-alt" style={{ color: "black" }}>
+                                                <span style={{ fontWeight: "600", marginLeft: "5px" }}>
+                                                    Bỏ chặn
+                                                </span>
+                                            </i>
+                                        </button>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className='none-block'>Không có tài khoản nào bị chặn</p>
+                            )}
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onClick={handleClose}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+
+                {/* Modal Confirm Block */}
+                <Modal show={showAlert} onHide={handleCloseAlert}>
+                    <Modal.Header closeButton>
+                        <Modal.Title style={{transform:"translateX(170px)"}}>Xác nhận</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Bạn có chắc chắn muốn bỏ chặn ?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleCloseAlert}>
+                            Đóng
+                        </Button>
+                        <Button variant="primary" onClick={() => handleUnblockUser(userIndex)}>
+                            Lưu
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+
+                {/* Modal Block User  */}
+                <Modal show={showAlertUser} onHide={handleCloseAlertUser}>
+                    <Modal.Header closeButton>
+                        <Modal.Title style={{transform:"translateX(170px)"}}>Xác nhận</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Bạn có chắc chắn muốn chặn ?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleCloseAlertUser}>
+                            Đóng
+                        </Button>
+                        <Button variant="primary" onClick={() => handleBlockUser()}>
+                            Lưu
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
+            <ToastContainer />
+        </>
     )
 }
