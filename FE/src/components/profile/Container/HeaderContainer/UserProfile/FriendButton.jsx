@@ -11,6 +11,7 @@ export default function FriendButton() {
   const { user } = useContext(AuthContext);
   const { userProfile, socket } = useContext(ProfileContext);
   const [showToast, setShowToast] = useState(false);
+  const [showToastAccepted, setShowToastAccepted] = useState(false);
   const [friendStatus, setFriendStatus] = useState(null);
   const [friendRequest, setFriendRequest] = useState([])
   const [userRequest, setUserRequest] = useState([])
@@ -41,6 +42,7 @@ export default function FriendButton() {
     });
 
     socket.on("friendRequestAccepted", (res) => {
+      setFriendRequest("Accepted");
       setFriendStatus({ status: "friend", userSendReq: res.senderId });
     });
   
@@ -52,7 +54,10 @@ export default function FriendButton() {
   useEffect(() => {
     if (friendRequest.senderId) {
       setShowToast(true);
-    } else {
+    } if (friendRequest === "Accepted") {
+      setShowToastAccepted(true);
+    }
+    else {
       setShowToast(false);
     }
   }, [friendRequest.senderId]);

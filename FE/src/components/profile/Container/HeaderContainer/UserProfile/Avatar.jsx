@@ -46,11 +46,13 @@ export default function Avatar() {
     return (
         <div className="pd-left">
             <div className="pd-row">
-                <div style={{position:"relative"}}>
+                <div style={{ position: "relative" }}>
                     <img className="pd-image" src={userProfile[0]?.avatar} />
-                    <div className="change-avatar" onClick={handleShow}>
-                        <i className="fas fa-camera"></i>
-                    </div>
+                    {userProfile[0]?.username && user.username && userProfile[0]?.username === user.username ? (
+                        <div className="change-avatar" onClick={handleShow}>
+                            <i className="fas fa-camera"></i>
+                        </div>
+                    ) : ""}
                 </div>
                 <div className="user-profile-status">
                     <h3>{userProfile[0]?.fullname}</h3>
@@ -67,12 +69,6 @@ export default function Avatar() {
                     <Modal.Title className="modal-avatar-title">Cập nhật ảnh đại diện</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {/* <div className="modal-avatar-top">
-                        <Button variant="info">+ Tải ảnh lên</Button>
-                    </div>
-                    <div className="modal-avatar-container">
-
-                    </div> */}
                     <div className="form-group mb-avatar">
                         <label htmlFor="formFile" className="form-label inputCode"><span></span></label>
                         <input type="file" id="image-upload" onChange={handleImageUpload} hidden />

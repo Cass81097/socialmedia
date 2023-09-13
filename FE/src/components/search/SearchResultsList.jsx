@@ -25,7 +25,7 @@ export const SearchResultsList = ({ results, clearSearchResult }) => {
   };
 
   return (
-    <div className={`results-list ${resultList ? "" : "results-list--hidden"}`}>
+    <div className="results-list">
       {filteredResults.map((result, id) => {
         return <SearchResult result={result.fullname} userId={result.id} key={id} onClickSearchResult={onClickSearchResult} />;
       })}

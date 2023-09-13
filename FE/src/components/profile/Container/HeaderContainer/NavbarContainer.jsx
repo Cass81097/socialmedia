@@ -17,9 +17,7 @@ export default function NavbarContainer() {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
-    console.log(blocklist);
-
+    
     const fetchBlockList = async () => {
         try {
             const response = await getRequest(`${baseUrl}/friendShips/blocklist/${user?.id}`)

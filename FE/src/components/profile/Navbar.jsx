@@ -88,7 +88,7 @@ export default function Navbar() {
                                 data-toggle="tooltip"
                                 data-placement="bottom"
                                 title="Avatar"
-                                s style={{ transform: "translateY(3px)" }}
+                                style={{ transform: "translateY(3px)" }}
                             >
                                 <img src={user.avatar} style={{ width: "100%", height: "100%", borderRadius:"50%", overflow:"hidden" }} alt="Avatar" onClick={() => showInfo()} />
                                 <ol className="profile-menu" style={{ display: "none" }}>
