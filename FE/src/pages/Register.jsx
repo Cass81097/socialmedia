@@ -9,8 +9,6 @@ export default function Register(props) {
     const { registerInfo, registerUser, updateRegisterInfo, isRegisterLoading, registerFinish } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    console.log(registerFinish);
-
     const toastOptions = {
         position: "bottom-right",
         autoClose: 8000,
@@ -46,7 +44,7 @@ export default function Register(props) {
         if (handleValidation()) {
             await registerUser();
             toggleModal(false);
-            navigate('/login')
+            // navigate('/login')
         }
     };
 

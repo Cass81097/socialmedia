@@ -127,27 +127,34 @@ class FriendShipService {
             return mutualFriends;
         };
         this.findFriend = async (user1Id) => {
-            const friends = await this.friendRepository.find({
-                relations: {
-                    user1: true,
-                    user2: true
-                },
-                where: [
-                    { user1: { id: user1Id }, status: "friend" },
-                    { user2: { id: user1Id }, status: "friend" }
-                ]
-            });
-            const users = friends.map(friend => {
-                const user = friend.user1.id === user1Id ? friend.user2 : friend.user1;
-                return {
-                    id: user.id,
-                    username: user.username,
-                    fullname: user.fullname,
-                    email: user.email,
-                    avatar: user.avatar,
-                    cover: user.cover
-                };
-            });
+            const friends = await this.friendRepository.createQueryBuilder('friendship')
+                .leftJoinAndSelect('friendship.user1', 'user1')
+                .leftJoinAndSelect('friendship.user2', 'user2')
+                .where('friendship.status = "friend"')
+                .andWhere('(user1.id = :userId1 OR user2.id = :userId2)', { userId1: user1Id, userId2: user1Id })
+                .getMany();
+            const users = friends.flatMap(friendship => {
+                const user1 = friendship.user1;
+                const user2 = friendship.user2;
+                const filteredUsers = [];
+                if (user1.id !== user1Id) {
+                    filteredUsers.push({
+                        id: user1.id,
+                        username: user1.username,
+                        fullname: user1.fullname,
+                        avatar: user1.avatar
+                    });
+                }
+                if (user2.id !== user1Id && user2.id !== user1.id) {
+                    filteredUsers.push({
+                        id: user2.id,
+                        username: user2.username,
+                        fullname: user2.fullname,
+                        avatar: user2.avatar
+                    });
+                }
+                return filteredUsers;
+            }).filter((user, index, self) => user.id !== user1Id && self.findIndex(u => u.id === user.id) === index);
             return users;
         };
         this.friendRepository = data_source_1.AppDataSource.getRepository(friendShip_1.FriendShip);

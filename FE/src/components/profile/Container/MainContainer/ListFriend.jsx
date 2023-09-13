@@ -13,6 +13,8 @@ export default function ListFriend() {
     const [searchValue, setSearchValue] = useState('');
     const [filteredData, setFilteredData] = useState([]);
 
+    const filterListFriend = listFriend.filter(friend => friend.id !== user.id);
+
     // Hàm xử lý khi giá trị của ô input thay đổi
     const handleInputChange = (event) => {
         const value = event.target.value;
@@ -22,6 +24,7 @@ export default function ListFriend() {
         const filtered = listFriend.filter(item => item.user2.username.includes(value));
         setFilteredData(filtered);
     };
+
     useEffect(() => {
 
         const findFriend = async () => {
@@ -72,16 +75,16 @@ export default function ListFriend() {
                 </nav>
                 <div className="friend-container">
                     {searchValue === '' ? (
-                        listFriend.map(listFriend => (
-                            <div className="friend-container-left" key={listFriend.user2.id}>
+                        filterListFriend.map(listFriend => (
+                            <div className="friend-container-left" key={listFriend?.id}>
                                 <div>
                                     <div className="friend-container-avatar">
                                         <div className="friend-avatar">
-                                            <img src={listFriend.user2.avatar} alt="Avatar" />
+                                            <img src={listFriend?.avatar} alt="Avatar" />
                                         </div>
                                         <div className="friend-detail">
-                                            <h6>{listFriend.user2.fullname}</h6>
-                                            <h6>{listFriend.matualFriends} bạn chung</h6>
+                                            <h6>{listFriend?.fullname}</h6>
+                                            <h6>{listFriend?.matualFriends} bạn chung</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -89,15 +92,15 @@ export default function ListFriend() {
                         ))
                     ) : (
                         filteredData.map(listFriend => (
-                            <div className="friend-container-left" key={listFriend.user2.id}>
+                            <div className="friend-container-left" key={listFriend?.id}>
                                 <div>
                                     <div className="friend-container-avatar">
                                         <div className="friend-avatar">
-                                            <img src={listFriend.user2.avatar} alt="Avatar" />
+                                            <img src={listFriend?.avatar} alt="Avatar" />
                                         </div>
                                         <div className="friend-detail">
-                                            <h6>{listFriend.user2.fullname}</h6>
-                                            <h6>{listFriend.matualFriends} bạn chung</h6>
+                                            <h6>{listFriend?.fullname}</h6>
+                                            <h6>{listFriend?.matualFriends} bạn chung</h6>
                                         </div>
                                     </div>
                                 </div>

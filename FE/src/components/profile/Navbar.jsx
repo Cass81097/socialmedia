@@ -92,7 +92,7 @@ export default function Navbar() {
                                     data-placement="bottom"
                                     title="Avatar"
                                 >
-                                    <img src={user.avatar} alt="Avatar" onClick={() => showInfo()} />
+                                    <img src={user?.avatar}  alt="Avatar" onClick={() => showInfo()} />
                                 </div>
                                 <ol className="profile-menu" style={{ display: "none" }}>
                                     <li onClick={goUserInfo}>Thông tin</li>

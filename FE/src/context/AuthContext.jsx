@@ -113,8 +113,6 @@ export const AuthContextProvider = ({ children }) => {
         //     fullname: registerInfo.username,
         //     userAvatar: registerInfo.avatar,
         // });
-        setRegisterFinish(true);
-        setUser(response)
     }, [registerInfo])
 
     const loginUser = useCallback(async () => {
