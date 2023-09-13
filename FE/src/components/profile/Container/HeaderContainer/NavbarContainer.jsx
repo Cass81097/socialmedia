@@ -18,6 +18,17 @@ export default function NavbarContainer() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    console.log(blocklist);
+
+    const fetchBlockList = async () => {
+        try {
+            const response = await getRequest(`${baseUrl}/friendShips/blocklist/${user?.id}`)
+            setBlockList(response);
+        } catch (error) {
+            console.error('Lỗi khi lấy danh sách người dùng bị chặn:', error);
+        }
+    };
+
     const showInfo = () => {
         $('.profile-block').toggle();
     };
@@ -28,6 +39,7 @@ export default function NavbarContainer() {
             setFriendStatus({ status: "block" });
             navigate('/')
             console.log("Chặn thành công!")
+            fetchBlockList();
         } catch (error) {
             console.error("Error canceling friend request:", error);
         }
@@ -39,6 +51,7 @@ export default function NavbarContainer() {
             setFriendStatus();
             console.log("Bỏ chặn thành công!")
             handleClose();
+            fetchBlockList();
             setBlockList()
             $('.profile-block').hide();
         } catch (error) {
