@@ -46,12 +46,13 @@ export default function Avatar() {
     return (
         <div className="pd-left">
             <div className="pd-row">
-                <img className="pd-image" src={userProfile[0]?.avatar} />
-                <div className="change-avatar" onClick={handleShow}>
-                    <i className="fas fa-camera"></i>
+                <div style={{position:"relative"}}>
+                    <img className="pd-image" src={userProfile[0]?.avatar} />
+                    <div className="change-avatar" onClick={handleShow}>
+                        <i className="fas fa-camera"></i>
+                    </div>
                 </div>
-
-                <div>
+                <div className="user-profile-status">
                     <h3>{userProfile[0]?.fullname}</h3>
                     <p>1000 bạn bè - 20 bạn chung</p>
                     {/*lay avatar cua cac user */}
