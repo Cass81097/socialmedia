@@ -36,6 +36,7 @@ export default function Navbar() {
         if (`/${user?.username}` !== `/${currentDomain}`) {
             navigate(`/${user?.username}`);
             setUserProfile(res)
+            $('.profile-menu').hide();
         } else {
             $('.profile-menu').hide();
         };
@@ -85,7 +86,7 @@ export default function Navbar() {
                                 <i className="fas fa-bell"></i>
                             </Link>
 
-                            <div className="avatar-nav" style={{ transform: "translateY(-6px)" }}>
+                            <div className="avatar-nav" style={{ transform: "translateY(-7px)" }}>
                                 <div
                                     className="avatar-navbar"
                                     data-toggle="tooltip"

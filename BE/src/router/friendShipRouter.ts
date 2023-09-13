@@ -10,7 +10,11 @@ friendShipRouter.post('/findId', friendShipController.findById);
 friendShipRouter.get('/checkStatusByUserId/:userId1/:userId2', friendShipController.checkStatusByUserId);
 friendShipRouter.post('/block/:userId1/:userId2', friendShipController.blockFriend);
 friendShipRouter.get('/blocklist/:id', friendShipController.getBlockList);
+friendShipRouter.post('/unfriend/:userId1/:userId2', friendShipController.cancelFriendship);
 
-friendShipRouter.get('/listFriend/:username', friendShipController.findFriendByUsername);
-friendShipRouter.get('/mutual-friends/:user1/:user2', friendShipController.findMutualFriend);
-friendShipRouter.get('/listFriend/id/:user1Id', friendShipController.findFriend);
+friendShipRouter.get('/listFriend/username/:username', friendShipController.findFriendByUsername);
+// friendShipRouter.get('/listFriend/id/:id', friendShipController.findFriendById);
+friendShipRouter.get('/commonFriend/username/:username1/:username2', friendShipController.findCommonFriendsByUsername);
+
+friendShipRouter.get('/', friendShipController.findAll);
+// friendShipRouter.get('/listFriend/id/:user1Id', friendShipController.findFriend);

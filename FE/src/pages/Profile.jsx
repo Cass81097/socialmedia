@@ -6,6 +6,7 @@ import NavbarContainer from "../components/profile/Container/HeaderContainer/Nav
 import Navbar from "../components/profile/Navbar";
 import Sidebar from "../components/profile/Sidebar";
 import { AuthContext } from "../context/AuthContext";
+import { ProfileContext } from "../context/ProfileContext";
 import "../styles/user/header.css";
 import "../styles/user/left-sidebar.css";
 import "../styles/user/main-content.css";
@@ -18,8 +19,9 @@ import ListFriend from "../components/profile/Container/MainContainer/ListFriend
 
 export default function Profile() {
   const { user } = useContext(AuthContext);
-  const [isPost, setIsPost] = useState(false);
-  const [isFriend, setIsFriend] = useState(true);
+  // const { listFriend } = useContext(ProfileContext);
+  const [isPost, setIsPost] = useState(true);
+  const [isFriend, setIsFriend] = useState(false);
 
   return (
     <>

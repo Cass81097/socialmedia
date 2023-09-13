@@ -13,7 +13,8 @@ exports.friendShipRouter.post('/findId', friendShipController_1.default.findById
 exports.friendShipRouter.get('/checkStatusByUserId/:userId1/:userId2', friendShipController_1.default.checkStatusByUserId);
 exports.friendShipRouter.post('/block/:userId1/:userId2', friendShipController_1.default.blockFriend);
 exports.friendShipRouter.get('/blocklist/:id', friendShipController_1.default.getBlockList);
-exports.friendShipRouter.get('/listFriend/:username', friendShipController_1.default.findFriendByUsername);
-exports.friendShipRouter.get('/mutual-friends/:user1/:user2', friendShipController_1.default.findMutualFriend);
-exports.friendShipRouter.get('/listFriend/id/:user1Id', friendShipController_1.default.findFriend);
+exports.friendShipRouter.post('/unfriend/:userId1/:userId2', friendShipController_1.default.cancelFriendship);
+exports.friendShipRouter.get('/listFriend/username/:username', friendShipController_1.default.findFriendByUsername);
+exports.friendShipRouter.get('/commonFriend/username/:username1/:username2', friendShipController_1.default.findCommonFriendsByUsername);
+exports.friendShipRouter.get('/', friendShipController_1.default.findAll);
 //# sourceMappingURL=friendShipRouter.js.map

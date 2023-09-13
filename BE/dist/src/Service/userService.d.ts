@@ -12,7 +12,7 @@ export declare class UserService {
     updateAvatar: (userId: any, avatar: any) => Promise<string>;
     updateCover: (userId: any, cover: any) => Promise<string>;
     updatePassword: (userId: any, oldPassword: any, newPassword: any) => Promise<string>;
-    checkUser: (user: any) => Promise<"Email is not exist" | "Password is wrong" | {
+    checkUser: (user: any) => Promise<"Emailkhông tồn tại" | "Mật khẩu không đúng" | {
         token: any;
         id: any;
         fullname: any;

@@ -49,7 +49,7 @@ export default function FriendButton() {
     socket.on("friendRequestAccepted", (res) => {
       setUserAccepted(true)
       setFriendRequest(res);
-      setFriendStatus({ status: "friend", userSendReq: res.senderId });
+      // setFriendStatus({ status: "friend", userSendReq: res.senderId });
     });
 
     return () => {
