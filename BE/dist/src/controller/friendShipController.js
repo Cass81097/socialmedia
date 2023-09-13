@@ -51,6 +51,17 @@ class FriendShipController {
             let data = await friendShipService_1.default.findFriendByUsername(req.params.username);
             res.json(data);
         };
+        this.findMutualFriend = async (req, res) => {
+            const user1Id = req.params.user1;
+            const user2Id = req.params.user2;
+            let data = await friendShipService_1.default.findMutualFriend(user1Id, user2Id);
+            res.json(data);
+        };
+        this.findFriend = async (req, res) => {
+            const user1Id = req.params.user1Id;
+            let data = await friendShipService_1.default.findFriend(user1Id);
+            res.json(data);
+        };
     }
 }
 exports.FriendShipController = FriendShipController;

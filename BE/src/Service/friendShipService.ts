@@ -20,26 +20,26 @@ export class FriendShipService {
             }
         })
     }
-    
+
     findFriendByUsername = async (username) => {
         const friends = await this.friendRepository
-          .createQueryBuilder("friendShip")
-          .innerJoinAndSelect("friendShip.user1", "user1")
-          .innerJoinAndSelect("friendShip.user2", "user2")
-          .where("user1.username = :username1 AND friendShip.status = 'friend'", { username1: username })
-          .orWhere("user2.username = :username2 AND friendShip.status = 'friend'", { username2: username })
-          .getMany();
-      
+            .createQueryBuilder("friendShip")
+            .innerJoinAndSelect("friendShip.user1", "user1")
+            .innerJoinAndSelect("friendShip.user2", "user2")
+            .where("user1.username = :username1 AND friendShip.status = 'friend'", { username1: username })
+            .orWhere("user2.username = :username2 AND friendShip.status = 'friend'", { username2: username })
+            .getMany();
+
         const friendUsers = friends.map((friendShip) => {
-          if (friendShip.user1.username === username) {
-            return friendShip.user2;
-          } else {
-            return friendShip.user1;
-          }
+            if (friendShip.user1.username === username) {
+                return friendShip.user2;
+            } else {
+                return friendShip.user1;
+            }
         });
-      
+
         return friendUsers;
-      };
+    };
 
     // Gửi lời mời kết bạn
     sendFriendRequest = async (userId1, userId2) => {
@@ -120,18 +120,64 @@ export class FriendShipService {
 
     findBlockedUsers = async (userId) => {
         const blockedUsers = await this.friendRepository.find({
-          relations: {
-            user2: true,
-          },
-          where: [
-            { user1: { id: userId }, status: 'block' },
-            { user2: { id: userId }, status: 'block' },
-          ],
+            relations: {
+                user2: true,
+            },
+            where: [
+                { user1: { id: userId }, status: 'block' },
+                { user2: { id: userId }, status: 'block' },
+            ],
         });
-      
-        return blockedUsers.map((friendship) => friendship.user2);
-      };
 
-     
+        return blockedUsers.map((friendship) => friendship.user2);
+    };
+
+
+    findMutualFriend = async (user1Id, user2Id) => {
+        const user1Friends = await this.friendRepository
+            .createQueryBuilder('friendship')
+            .select('friendship.user2', 'user2')
+            .leftJoinAndSelect('friendship.user2', 'user')
+            .where('friendship.user1 = :user1Id', { user1Id })
+            .getRawMany();
+
+        const mutualFriends = await this.friendRepository
+            .createQueryBuilder('friendship')
+            .select('friendship.user2', 'user2')
+            .leftJoinAndSelect('friendship.user2', 'user')
+            .where('friendship.user1 = :user2Id', { user2Id })
+            .andWhere('friendship.user2 IN (:...user1Friends)', { user1Friends: user1Friends.map(friend => friend.user2) })
+            .andWhere('friendship.status = :friendStatus', { friendStatus: 'friend' })
+            .getRawMany();
+        return mutualFriends
+    }
+
+    findFriend = async (user1Id) => {
+        const friends = await this.friendRepository.find({
+            relations: {
+                user1: true,
+                user2: true
+            },
+            where: [
+                { user1: { id: user1Id }, status: "friend" },
+                { user2: { id: user1Id }, status: "friend" }
+            ]
+        });
+    
+        const users = friends.map(friend => {
+            const user = friend.user1.id === user1Id ? friend.user2 : friend.user1;
+            return {
+                id: user.id,
+                username: user.username,
+                fullname: user.fullname,
+                email: user.email,
+                avatar: user.avatar,
+                cover: user.cover
+            };
+        });
+    
+        return users;
+    };
+
 }
 export default new FriendShipService();

@@ -12,6 +12,8 @@ export declare class FriendShipService {
         userSendReq: any;
     }>;
     findBlockedUsers: (userId: any) => Promise<any>;
+    findMutualFriend: (user1Id: any, user2Id: any) => Promise<any>;
+    findFriend: (user1Id: any) => Promise<any>;
 }
 declare const _default: FriendShipService;
 export default _default;

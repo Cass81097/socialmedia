@@ -152,6 +152,7 @@ const Login = (props) => {
         event.preventDefault();
         if (handleValidation()) {
             loginUser();
+            navigate('/login')
         }
     };
 

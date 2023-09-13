@@ -14,11 +14,12 @@ import "../styles/user/right-sidebar.css";
 import "../styles/user/style.css";
 import Avatar from "../components/profile/Container/HeaderContainer/UserProfile/Avatar";
 import FriendButton from "../components/profile/Container/HeaderContainer/UserProfile/FriendButton";
+import ListFriend from "../components/profile/Container/MainContainer/ListFriend"
 
 export default function Profile() {
   const { user } = useContext(AuthContext);
-  const [isPost, setIsPost] = useState(true);
-  const [isFriend, setIsFriend] = useState(false);
+  const [isPost, setIsPost] = useState(false);
+  const [isFriend, setIsFriend] = useState(true);
 
   return (
     <>
@@ -44,11 +45,8 @@ export default function Profile() {
             </div>
           ) : (
             <div className="profile-info">
-              <div className="info-col">
-                Friend
-              </div>
-              <div className="post-col" style={{ background: "white" }}>
-                Friend
+              <div className="post-col" style={{ background: "white", width:"100%" }}>
+                <ListFriend></ListFriend>
               </div>
             </div>
           )}

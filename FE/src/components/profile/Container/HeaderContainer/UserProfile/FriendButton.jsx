@@ -41,9 +41,9 @@ export default function FriendButton() {
 
     socket.on("friendRequest", (res) => {
       setFriendRequest(res);
-      if (user?.id === userProfile[0]?.id) {
-        setFriendStatus({ status: "pending", userSendReq: res.senderId });
-      }
+      // if (user?.id === userProfile[0]?.id) {
+      //   setFriendStatus({ status: "pending", userSendReq: res.senderId });
+      // }
     });
 
     socket.on("friendRequestAccepted", (res) => {

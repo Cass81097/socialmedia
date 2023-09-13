@@ -6,8 +6,10 @@ import { AuthContext } from "../context/AuthContext";
 
 export default function Register(props) {
     const { toggleModal } = props;
-    const { registerInfo, registerUser, updateRegisterInfo, isRegisterLoading } = useContext(AuthContext);
+    const { registerInfo, registerUser, updateRegisterInfo, isRegisterLoading, registerFinish } = useContext(AuthContext);
     const navigate = useNavigate();
+
+    console.log(registerFinish);
 
     const toastOptions = {
         position: "bottom-right",

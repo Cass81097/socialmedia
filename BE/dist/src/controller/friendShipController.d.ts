@@ -8,6 +8,8 @@ export declare class FriendShipController {
     blockFriend: (req: Request, res: Response) => Promise<void>;
     getBlockList: (req: Request, res: Response) => Promise<void>;
     findFriendByUsername: (req: any, res: any) => Promise<void>;
+    findMutualFriend: (req: any, res: any) => Promise<void>;
+    findFriend: (req: any, res: any) => Promise<void>;
 }
 declare const _default: FriendShipController;
 export default _default;

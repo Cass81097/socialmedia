@@ -84,8 +84,7 @@ export default function NavbarContainer(props) {
     const handleBlockUser = async () => {
         try {
             const response = await postRequest(`${baseUrl}/friendShips/block/${user.id}/${userProfile[0]?.id}`)
-            // setFriendStatus({ status: "block" });
-            setIsToast(true);
+            setFriendStatus({ status: "block" });
             navigate(`/${user.username}`);
             setIsShowAlertUser(false);
             toast.success("Chặn thành công", toastOptions);

@@ -109,6 +109,47 @@ class FriendShipService {
             });
             return blockedUsers.map((friendship) => friendship.user2);
         };
+        this.findMutualFriend = async (user1Id, user2Id) => {
+            const user1Friends = await this.friendRepository
+                .createQueryBuilder('friendship')
+                .select('friendship.user2', 'user2')
+                .leftJoinAndSelect('friendship.user2', 'user')
+                .where('friendship.user1 = :user1Id', { user1Id })
+                .getRawMany();
+            const mutualFriends = await this.friendRepository
+                .createQueryBuilder('friendship')
+                .select('friendship.user2', 'user2')
+                .leftJoinAndSelect('friendship.user2', 'user')
+                .where('friendship.user1 = :user2Id', { user2Id })
+                .andWhere('friendship.user2 IN (:...user1Friends)', { user1Friends: user1Friends.map(friend => friend.user2) })
+                .andWhere('friendship.status = :friendStatus', { friendStatus: 'friend' })
+                .getRawMany();
+            return mutualFriends;
+        };
+        this.findFriend = async (user1Id) => {
+            const friends = await this.friendRepository.find({
+                relations: {
+                    user1: true,
+                    user2: true
+                },
+                where: [
+                    { user1: { id: user1Id }, status: "friend" },
+                    { user2: { id: user1Id }, status: "friend" }
+                ]
+            });
+            const users = friends.map(friend => {
+                const user = friend.user1.id === user1Id ? friend.user2 : friend.user1;
+                return {
+                    id: user.id,
+                    username: user.username,
+                    fullname: user.fullname,
+                    email: user.email,
+                    avatar: user.avatar,
+                    cover: user.cover
+                };
+            });
+            return users;
+        };
         this.friendRepository = data_source_1.AppDataSource.getRepository(friendShip_1.FriendShip);
     }
 }
