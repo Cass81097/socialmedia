@@ -39,3 +39,51 @@
     object-fit: cover;
     cursor: pointer;
 }
+
+/* Modal Common Friend */
+.modal-commonFriend-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0 5px 0;
+}
+
+.modal-commonFriend-user {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-commonFriend-main p {
+    font-weight: 600;
+    font-size: 15px;
+    margin-left: 5px;
+}
+
+.modal-commonFriend-avatar {
+    overflow: hidden;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    border: 1px solid #e1dddd;
+}
+
+.modal-commonFriend-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.modal-commonFriend-main .fa-user {
+    font-weight: 500;
+}
+
+.modal-commonFriend-main span {
+    margin-left: 5px;
+}
+
+.modal-commonFriend-user p:hover {
+    text-decoration: underline !important;
+    cursor: pointer;
+}

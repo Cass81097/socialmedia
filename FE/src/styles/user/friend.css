@@ -24,6 +24,7 @@
     color: black;
     font-weight: 500;
     display: inline-block;
+    width: fit-content;
     cursor: pointer;
 }
 
@@ -62,4 +63,3 @@
     display: flex;
     justify-content: flex-end;
 }
-

@@ -7,6 +7,7 @@ export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
     const [registerFinish, setRegisterFinish] = useState(false);
+    const [loginFinish, setLoginFinish] = useState(false);
     const [allUser, setAllUser] = useState(null);
     const [user, setUser] = useState(null);
     const [registerError, setRegisterError] = useState(null);
@@ -31,13 +32,13 @@ export const AuthContextProvider = ({ children }) => {
         const fetchAllUsers = async () => {
             try {
                 const response = await getRequest(`${baseUrl}/users/username`);
-                setAllUser(response); // Assuming the response contains a "data" property with the user array
+                setAllUser(response); 
             } catch (error) {
                 console.error("Error fetching all users:", error);
             }
         };
         fetchAllUsers();
-    }, []);
+    }, [user]);
 
     const { cometChat, setIsLoading } = useContext(CometChatContext);
 
@@ -147,6 +148,7 @@ export const AuthContextProvider = ({ children }) => {
         setIsLoginLoading(false);
         localStorage.setItem("User", JSON.stringify(response));
         setUser(response);
+        setLoginFinish(true)
     }, [loginInfo]);
 
     const logOutUser = useCallback((info) => {
@@ -155,7 +157,7 @@ export const AuthContextProvider = ({ children }) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ user, registerInfo, registerUser, updateRegisterInfo, registerError, isRegisterLoading, logOutUser, loginUser, loginError, loginInfo, updateLoginInfo, isLoginLoading, allUser, setUser, registerFinish }}>
+        <AuthContext.Provider value={{ user, registerInfo, registerUser, updateRegisterInfo, registerError, isRegisterLoading, logOutUser, loginUser, loginError, loginInfo, updateLoginInfo, isLoginLoading, allUser, setUser, registerFinish, loginFinish }}>
             {children}
         </AuthContext.Provider>
     );

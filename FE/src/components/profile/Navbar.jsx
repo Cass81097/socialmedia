@@ -8,6 +8,9 @@ import styled from "styled-components";
 import { SearchBar } from "../search/SearchBar"
 import { SearchResultsList } from "../search/SearchResultsList"
 import $ from 'jquery';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 
 export default function Navbar() {
     const { user } = useContext(AuthContext);
@@ -22,9 +25,9 @@ export default function Navbar() {
 
     const logout = async () => {
         try {
-            // await firebase.auth().signOut();
+            await firebase.auth().signOut();
             localStorage.clear();
-            navigate("/");
+            navigate("/loading");
             window.location.reload();
         } catch (error) {
             console.error("Error :", error);
@@ -53,14 +56,6 @@ export default function Navbar() {
                     <div className="title">
                         <Link to={"/"}>F4kebook</Link>
                     </div>
-                    {/* <div className="search-box">
-                        <i className="fas fa-search icon-search" />
-                        <input
-                            id="search-card"
-                            type="search"
-                            placeholder="Tìm kiếm trên F4kebook"
-                        />
-                    </div> */}
                     <div className="search-box">
                         <SearchBar setResults={setResults} results={results} clearSearchResult={clearSearchResult} />
                         <SearchResultsList results={results} clearSearchResult={clearSearchResult} />
@@ -107,18 +102,3 @@ export default function Navbar() {
         </>
     );
 }
-
-const Button = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  background-color: #9a86f3;
-  border: none;
-  cursor: pointer;
-  svg {
-    font-size: 1.3rem;
-    color: #ebe7ff;
-  }
-`;

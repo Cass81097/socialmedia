@@ -20,11 +20,29 @@ import Navbar from "../components/profile/Navbar";
 const Home = (props) => {
     const navigate = useNavigate();
     const { toggleModal } = props;
-    const { user, loginInfo, loginUser, loginError, updateLoginInfo, isLoginLoading } = useContext(AuthContext)
+    const { user, loginFinish } = useContext(AuthContext)
 
-    
+    const toastOptions = {
+        position: "top-center",
+        autoClose: 8000,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+    };
+
+    useEffect(() => {
+        if (loginFinish) {
+            toast.success("Đăng nhập thành công !", toastOptions);
+        }
+    }, [loginFinish]);
+
+
     return (
-        <Navbar></Navbar>
+        <>
+            <Navbar></Navbar>
+            <ToastContainer />
+        </>
+
     );
 }
 

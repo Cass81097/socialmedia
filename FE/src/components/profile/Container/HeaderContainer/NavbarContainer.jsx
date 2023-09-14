@@ -163,7 +163,7 @@ export default function NavbarContainer(props) {
                 </div>
 
                 {/* Modal Block */}
-                <Modal show={show} onHide={handleClose}>
+                <Modal show={show} onHide={handleClose} centered>
                     <Modal.Header closeButton>
                         <Modal.Title>Danh sách chặn</Modal.Title>
                     </Modal.Header>
@@ -203,13 +203,13 @@ export default function NavbarContainer(props) {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="primary" onClick={handleClose}>
-                            Close
+                            Đóng
                         </Button>
                     </Modal.Footer>
                 </Modal>
 
                 {/* Modal Confirm Block */}
-                <Modal show={showAlert} onHide={handleCloseAlert}>
+                <Modal show={showAlert} onHide={handleCloseAlert} centered>
                     <Modal.Header closeButton>
                         <Modal.Title style={{transform:"translateX(170px)"}}>Xác nhận</Modal.Title>
                     </Modal.Header>
@@ -225,7 +225,7 @@ export default function NavbarContainer(props) {
                 </Modal>
 
                 {/* Modal Block User  */}
-                <Modal show={showAlertUser} onHide={handleCloseAlertUser}>
+                <Modal show={showAlertUser} onHide={handleCloseAlertUser} centered>
                     <Modal.Header closeButton>
                         <Modal.Title style={{transform:"translateX(170px)"}}>Xác nhận</Modal.Title>
                     </Modal.Header>
@@ -235,7 +235,7 @@ export default function NavbarContainer(props) {
                             Đóng
                         </Button>
                         <Button variant="primary" onClick={() => handleBlockUser()}>
-                            Lưu
+                            Có
                         </Button>
                     </Modal.Footer>
                 </Modal>

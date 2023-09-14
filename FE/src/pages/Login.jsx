@@ -62,43 +62,30 @@ const Login = (props) => {
             console.log(existingUser);
 
             if (existingUser) {
+                console.log("1");
                 const { email } = existingUser;
                 const loginData = { email, password: email };
                 console.log(loginData, 'Login Data');
                 const resLogin = await axios.post(`${baseUrl}/users/login`, loginData);
-                console.log(resLogin);
-                // const token = resLogin.data;
-                // localStorage.setItem('token', token);    
-                // const decodedToken = jwt_decode(token);
-                // const userId = decodedToken.idUser;
-                // localStorage.setItem('userId', userId);
+                localStorage.setItem('User', JSON.stringify(existingUser)); 
                 // axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-                // navigate('/home');   
+                navigate('/home');
             } else {
-                // const hashedToken = shortid.generate();
-                // console.log(hashedToken);
+               console.log("dang ky moi");
                 const username = email.split("@")[0]; // Extract the username part before the @ symbol
                 const data = {
                     username: username,
                     password: email,
-                    avatar: '../assets/images/avatar-default.jpg',
+                    avatar: 'https://img.pikbest.com/png-images/qianku/black-and-white-avatar_2407270.png!w700wp',
+                    cover : 'https://inkythuatso.com/uploads/thumbnails/800/2022/04/top-50-hanh-anh-hanh-na-n-mau-trang-aap-nhayt-14-04-16-13-21.jpg',
                     email,
                     fullname: username,
                 };
-
                 const res = await axios.post(`${baseUrl}/users/register`, data);
-                console.log('Registration response:', res.data);
-
                 const resLogin = await axios.post(`${baseUrl}/users/login`, data);
-                console.log(resLogin);
-                // const token = resLogin.data;
-                // localStorage.setItem('token', token);
-                // const decodedToken = jwt_decode(token);
-                // const userId = decodedToken.idUser;
-                // console.log('User ID:', userId);
-                // localStorage.setItem('userId', userId);
+                localStorage.setItem('User', JSON.stringify(data)); 
                 // axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-                // navigate('/home');
+                navigate('/home');
             }
         } catch (error) {
             console.error('Error during registration:', error);
@@ -140,16 +127,16 @@ const Login = (props) => {
         const { password, email } = loginInfo;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (password === "" || email === "") {
-            toast.error("Please input all options.", toastOptions);
+            toast.error("Vui lòng nhập hết các trường.", toastOptions);
             return false;
         } else if (email.length < 3) {
-            toast.error("Email should be greater than 3 characters.", toastOptions);
+            toast.error("Địa chỉ Email không được dưới 3 kí tự.", toastOptions);
             return false;
         } else if (!emailRegex.test(email)) { // Check if email format is valid
-            toast.error("Please enter a valid email address.", toastOptions);
+            toast.error("Vui lòng nhập đúng định dạng địa chỉ Email.", toastOptions);
             return false;
         } else if (password.length < 6) {
-            toast.error("Password should be equal or greater than 6 characters.", toastOptions);
+            toast.error("Mật khẩu không được dưới 6 kí tự.", toastOptions);
             return false;
         }
         return true;

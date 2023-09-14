@@ -1,13 +1,17 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useContext, useEffect, useState } from "react";
 import Toast from 'react-bootstrap/Toast';
+import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "../../../../../context/AuthContext";
 import { ProfileContext } from "../../../../../context/ProfileContext";
 import "../../../../../styles/toast.css";
 import { baseUrl, getRequest, postRequest } from "../../../../../utils/services";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 export default function FriendButton() {
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const { userProfile, socket } = useContext(ProfileContext);
   const [showToast, setShowToast] = useState(false);
@@ -16,10 +20,20 @@ export default function FriendButton() {
   const [friendRequest, setFriendRequest] = useState([])
   const [userRequest, setUserRequest] = useState([])
   const [userAccepted, setUserAccepted] = useState(false)
+  const [showAlertUnFriend, setShowAlertUnFriend] = useState(false);
 
-  // console.log(friendRequest, "friendReq");
-  // console.log(userRequest, "userReq");
-  // console.log(userAccepted, "userAcc");
+  const handleCloseAlertUnfriend = () => {
+    setShowAlertUnFriend(false);
+  }
+
+  const handleShowAlertUnfriend = () => {
+    setShowAlertUnFriend(true);
+  }
+  
+  const goProfileUser = (username) => {
+    setShowToast(false)
+    navigate(`/${username}`);
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -198,7 +212,7 @@ export default function FriendButton() {
             </button>
           </div>
           <div className="edit-button" style={{ minWidth: "160px" }}>
-            <button type="button" className="btn btn-secondary btn-edit" onClick={handleUnfriend}>
+            <button type="button" className="btn btn-secondary btn-edit" onClick={handleShowAlertUnfriend}>
               <i className="fas fa-user-slash" style={{ color: "black" }}>
                 <span>Hủy kết bạn</span>
               </i>
@@ -250,7 +264,7 @@ export default function FriendButton() {
             <strong className="me-auto">Thông báo mới</strong>
             <button type="button" className="btn-close" onClick={() => setShowToast(false)}></button>
           </div>
-          <Toast.Body>
+          <Toast.Body onClick={() => goProfileUser(userRequest[0]?.username)}>
             <div className="toast-container">
               <div className="toast-avatar">
                 <img src={userRequest[0]?.avatar} alt="" />
@@ -264,6 +278,22 @@ export default function FriendButton() {
           </Toast.Body>
         </Toast>
       )}
+
+      {/* Modal Block User  */}
+      <Modal show={showAlertUnFriend} onHide={handleCloseAlertUnfriend} centered>
+        <Modal.Header closeButton>
+          <Modal.Title style={{ transform: "translateX(170px)" }}>Xác nhận</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Bạn có chắc chắn muốn hủy kết bạn ?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseAlertUnfriend}>
+            Đóng
+          </Button>
+          <Button variant="primary" onClick={() => handleUnfriend()}>
+            Lưu
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

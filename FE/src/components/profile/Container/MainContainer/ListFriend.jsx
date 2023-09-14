@@ -5,20 +5,38 @@ import { AuthContext } from "../../../../context/AuthContext";
 import { ProfileContext } from "../../../../context/ProfileContext";
 import "../../../../styles/user/friend.css";
 import { baseUrl, getRequest } from "../../../../utils/services";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 export default function ListFriend() {
     const { userProfile, countFriend } = useContext(ProfileContext);
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
-    const [listCommonFriend, setListCommonFriend] = useState([]);
+    const [commonFriendNumber, setCommonFriendNumber] = useState([]);
     const [searchValue, setSearchValue] = useState('');
     const [filteredData, setFilteredData] = useState([]);
+    const [commonFriendList, setCommonFriendList] = useState([]);
+    const [show, setShow] = useState(false);
 
-    console.log(countFriend);
-    console.log(listCommonFriend);
+    const handleClose = () => {
+        setShow(false);
+    }
+
+    const handleShow = async (username) => {
+        if (username && userProfile && userProfile.length > 0 && userProfile[0].username) {
+          try {
+            const response = await getRequest(`${baseUrl}/users/find/${username}`);
+            setCommonFriendList(response);
+          } catch (error) {
+            console.log(error);
+            return null;
+          }
+          setShow(true);
+        }
+      };
 
     const goFriendProfile = (username) => {
-        console.log(username);
+        setShow(false);
         navigate(`/${username}`);
     };
 
@@ -32,18 +50,26 @@ export default function ListFriend() {
     };
 
     useEffect(() => {
-        const findCommonFriend = async (index) => {
+        const findCommonFriendNumber = async (index) => {
             try {
                 const response = await getRequest(`${baseUrl}/friendShips/commonFriend/username/${userProfile[0].username}/${countFriend[index].username}`);
-                setListCommonFriend(response);
+                return response;
             } catch (error) {
                 console.log(error);
+                return null;
             }
         };
 
-        for (let i = 0; i < countFriend.length; i++) {
-            findCommonFriend(i);
-        }
+        const getCommonFriendNumbers = async () => {
+            const commonFriendNumbers = [];
+            for (let i = 0; i < countFriend.length; i++) {
+                const commonFriendNumber = await findCommonFriendNumber(i);
+                commonFriendNumbers.push(commonFriendNumber);
+            }
+            setCommonFriendNumber(commonFriendNumbers);
+        };
+
+        getCommonFriendNumbers();
     }, [userProfile, countFriend]);
 
     return (
@@ -70,14 +96,12 @@ export default function ListFriend() {
                                     aria-label="Search" />
                             </div>
                             <Link to="/listPendFriend"><button type="button" className="btn btn-link"><span style={{ fontWeight: "500" }}>Lời mời kết bạn</span></button></Link>
-
                         </div>
-
                     </div>
                 </nav>
                 <div className="friend-container">
                     {searchValue === '' ? (
-                        countFriend.map(listFriend => (
+                        countFriend.map((listFriend, index) => (
                             <div className="friend-container-left" key={listFriend?.id}>
                                 <div>
                                     <div className="friend-container-avatar">
@@ -86,10 +110,10 @@ export default function ListFriend() {
                                         </div>
                                         <div className="friend-detail">
                                             <h6 onClick={() => goFriendProfile(listFriend?.username)}>{listFriend?.fullname}</h6>
-                                            {listCommonFriend?.find(friend => friend.username === listFriend?.username) ? (
-                                                <h6>{listCommonFriend?.length} bạn chung</h6>
+                                            {commonFriendNumber?.[index] ? (
+                                                <h6 onClick={() => handleShow(commonFriendNumber?.[index][0].username)}>{commonFriendNumber?.[index].length} bạn chung</h6>
                                             ) : (
-                                                <h6>0 bạn chung</h6>
+                                                <span>0 bạn chung</span>
                                             )}
                                         </div>
                                     </div>
@@ -97,7 +121,7 @@ export default function ListFriend() {
                             </div>
                         ))
                     ) : (
-                        filteredData.map(listFriend => (
+                        filteredData.map((listFriend, index) => (
                             <div className="friend-container-left" key={listFriend?.id}>
                                 <div>
                                     <div className="friend-container-avatar">
@@ -105,11 +129,11 @@ export default function ListFriend() {
                                             <img src={listFriend?.avatar} alt="Avatar" />
                                         </div>
                                         <div className="friend-detail">
-                                            <h6>{listFriend?.fullname}</h6>
-                                            {listCommonFriend?.find(friend => friend.username === listFriend?.username) ? (
-                                                <h6>{listCommonFriend?.length} bạn chung</h6>
+                                            <h6 onClick={() => goFriendProfile(listFriend?.username)}>{listFriend?.fullname}</h6>
+                                            {commonFriendNumber?.[index] ? (
+                                                <h6 onClick={() => handleShow(commonFriendNumber?.[index].username)}>{commonFriendNumber?.[index].length} bạn chung</h6>
                                             ) : (
-                                                <h6>0 bạn chung</h6>
+                                                <span>0 bạn chung</span>
                                             )}
                                         </div>
                                     </div>
@@ -119,6 +143,42 @@ export default function ListFriend() {
                     )}
                 </div>
             </div>
+
+            {/* Modal Common Friend */}
+            <Modal show={show} onHide={handleClose} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title style={{ transform: "translateX(92px)" }}>Danh sách bạn chung</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="modal-commonFriend-container">
+                        {commonFriendList && commonFriendList.length > 0 ? (
+                            commonFriendList.map((commonFriend, index) => (
+                                <div className="modal-commonFriend-main" key={commonFriend.id}>
+                                    <div className="modal-commonFriend-user" onClick={() => goFriendProfile(commonFriend?.username)}>
+                                        <div className="modal-commonFriend-avatar">
+                                            <img src={commonFriend?.avatar} alt="" />
+                                        </div>
+                                        <p>{commonFriend?.fullname}</p>
+                                    </div>
+
+                                    <button type="button" className="btn btn-primary btn-add">
+                                        <i className="fas fa-user">
+                                            <span>Bạn bè</span>
+                                        </i>
+                                    </button>
+                                </div>
+                            ))
+                        ) : (
+                            <p className='none-block'>Không có User bị chặn</p>
+                        )}
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handleClose}>
+                        Đóng
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     )
 }

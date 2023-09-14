@@ -43,7 +43,9 @@ export default function Cover() {
 
     return (
         <div style={{ position: "relative" }}>
-            <img src={userProfile[0]?.cover} className="cover-img" />
+            <div className="cover-image">
+                <img src={userProfile[0]?.cover} className="cover-img" />
+            </div> 
             <div className="edit-profile-cover">
                 {userProfile[0]?.username && user.username && userProfile[0]?.username === user.username ? (
                     <Button variant="light" onClick={handleShow}>
