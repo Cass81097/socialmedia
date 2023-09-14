@@ -39,7 +39,8 @@ changeBackground("https://i.ibb.co/m9YsjR8/Untitled.png");
 const Login = (props) => {
     const navigate = useNavigate();
     const { toggleModal } = props;
-    const { user, loginInfo, loginUser, loginError, updateLoginInfo, isLoginLoading } = useContext(AuthContext)
+    const { user, loginInfo, loginUser, loginError, updateLoginInfo, isLoginLoading, registerFinish } = useContext(AuthContext)
+
     // Login with Email
     const [isSignedIn, setIsSignedIn] = useState(false);
 
@@ -121,8 +122,14 @@ const Login = (props) => {
         }
     }, [loginError]);
 
+    useEffect(() => {
+        if (registerFinish) {
+            toast.success("Đăng ký thành công !", toastOptions);
+        }
+    }, [registerFinish]);
+
     const toastOptions = {
-        position: "bottom-right",
+        position: "top-center",
         autoClose: 8000,
         pauseOnHover: true,
         draggable: true,
@@ -179,7 +186,7 @@ const Login = (props) => {
                                     placeholder="Email"
                                     onChange={(e) => updateLoginInfo({ email: e.target.value })}
                                 />
-                                <input type="password" placeholder="Password" onChange={(e) => updateLoginInfo({ password: e.target.value })} />
+                                <input type="password" placeholder="Mật khẩu" onChange={(e) => updateLoginInfo({ password: e.target.value })} />
                                 <button type="submit" className="login__submit-btn">
                                     {isLoginLoading ? "Login..." : "Login"}
                                 </button>

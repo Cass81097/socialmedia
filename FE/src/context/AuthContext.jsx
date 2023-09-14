@@ -113,6 +113,8 @@ export const AuthContextProvider = ({ children }) => {
         //     fullname: registerInfo.username,
         //     userAvatar: registerInfo.avatar,
         // });
+
+        setRegisterFinish(true)
     }, [registerInfo])
 
     const loginUser = useCallback(async () => {
@@ -133,6 +135,11 @@ export const AuthContextProvider = ({ children }) => {
         }
 
         if (response === "Email is not exist") {
+            setLoginError("Invalid email or password");
+            return;
+        }
+
+        if (typeof response === "string") {
             setLoginError("Invalid email or password");
             return;
         }

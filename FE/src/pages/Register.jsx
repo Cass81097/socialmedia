@@ -10,7 +10,7 @@ export default function Register(props) {
     const navigate = useNavigate();
 
     const toastOptions = {
-        position: "bottom-right",
+        position: "top-center",
         autoClose: 8000,
         pauseOnHover: true,
         draggable: true,
@@ -20,13 +20,18 @@ export default function Register(props) {
     const handleValidation = () => {
         const { fullname, email, password, passwordConfirm, id, username } = registerInfo;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/; // Biểu thức chính quy kiểm tra ký tự đặc biệt
+
         if (password === "" || fullname === "" || email === "" || passwordConfirm === "") {
             toast.error("Please input all options.", toastOptions);
             return false;
         } else if (fullname.length < 3) {
             toast.error("Fullname should be greater than 3 characters.", toastOptions);
             return false;
-        } else if (!emailRegex.test(email)) { // Check if email format is valid
+        } else if (specialCharRegex.test(fullname)) {
+            toast.error("Fullname should not contain special characters.", toastOptions);
+            return false;
+        } else if (!emailRegex.test(email)) { // Kiểm tra định dạng email hợp lệ
             toast.error("Please enter a valid email address.", toastOptions);
             return false;
         } else if (password.length < 6 || passwordConfirm < 6) {
@@ -62,13 +67,13 @@ export default function Register(props) {
                         </div>
                         <div className="signup__subtitle"></div>
                         <div className="signup__form">
-                            <input type="text" placeholder="Fullname" onChange={(e) => updateRegisterInfo({ fullname: e.target.value })} />
+                            <input type="text" placeholder="Họ và tên" onChange={(e) => updateRegisterInfo({ fullname: e.target.value })} />
                             <input type="text" placeholder="Email" onChange={(e) => updateRegisterInfo({ email: e.target.value })} />
-                            <input type="password" placeholder="Password" onChange={(e) => updateRegisterInfo({ password: e.target.value })} />
+                            <input type="password" placeholder="Mật khẩu" onChange={(e) => updateRegisterInfo({ password: e.target.value })} />
                             {/* <input type="username" placeholder="username" onChange={(e) => updateRegisterInfo({ username: e.target.value })} /> */}
                             <input
                                 type="password"
-                                placeholder="Confirm Password"
+                                placeholder="Xác nhận mật khẩu"
                                 onChange={(e) => updateRegisterInfo({ passwordConfirm: e.target.value })}
                             />
                             <button className="signup__btn">
