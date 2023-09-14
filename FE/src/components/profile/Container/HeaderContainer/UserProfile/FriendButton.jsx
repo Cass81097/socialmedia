@@ -120,7 +120,7 @@ export default function FriendButton() {
       const response1 = await postRequest(`${baseUrl}/friendships/unfriend/${user.id}/${userProfile[0]?.id}`)
       const response2 = await postRequest(`${baseUrl}/friendships/unfriend/${userProfile[0]?.id}/${user.id}`)
       setFriendStatus();
-
+      setShowAlertUnFriend(false);
       // if (socket) {
       //   socket.emit("cancelFriendRequest", {
       //     senderId: user.id,

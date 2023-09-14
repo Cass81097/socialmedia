@@ -38,7 +38,7 @@ export const AuthContextProvider = ({ children }) => {
             }
         };
         fetchAllUsers();
-    }, [user]);
+    }, []);
 
     const { cometChat, setIsLoading } = useContext(CometChatContext);
 
