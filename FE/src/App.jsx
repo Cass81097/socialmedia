@@ -10,7 +10,7 @@ import Profile from "./pages/Profile";
 import Loading from "./components/common/Loading"
 
 export default function App() {
-  const { user, allUser } = useContext(AuthContext);
+  const { user, allUser  } = useContext(AuthContext);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function App() {
               <Route
                 key={username}
                 path={`/${username}`}
-                element={<Profile user={username} />}
+                element={user ? <Profile user={username}/> : <Login/> }
               />
             ))}
         </Routes>

@@ -3,6 +3,8 @@ export declare class User {
     username: string;
     fullname: string;
     password: string;
+    address: string;
+    phone: string;
     passwordConfirm: string;
     email: string;
     avatar: string;

@@ -16,12 +16,15 @@ import "../styles/user/style.css";
 import Avatar from "../components/profile/Container/HeaderContainer/UserProfile/Avatar";
 import FriendButton from "../components/profile/Container/HeaderContainer/UserProfile/FriendButton";
 import ListFriend from "../components/profile/Container/MainContainer/ListFriend"
+import EditUser from "./EditUser";
+import SidebarProfile from "../components/profile/SidebarProfile";
 
 export default function Profile() {
   const { user } = useContext(AuthContext);
-  // const { listFriend } = useContext(ProfileContext);
+  const { userProfile } = useContext(ProfileContext)
   const [isPost, setIsPost] = useState(true);
   const [isFriend, setIsFriend] = useState(false);
+  const [isProfile, setIsProfile] = useState(false);
 
   return (
     <>
@@ -35,8 +38,8 @@ export default function Profile() {
             <Avatar></Avatar>
             <FriendButton></FriendButton>
           </div>
-          <NavbarContainer isPost={isPost} setIsPost={setIsPost} isFriend={isFriend} setIsFriend={setIsFriend}></NavbarContainer>
-          {isPost && !isFriend ? (
+          <NavbarContainer isPost={isPost} setIsPost={setIsPost} isFriend={isFriend} setIsFriend={setIsFriend} isProfile={isProfile} setIsProfile={setIsProfile}></NavbarContainer>
+          {isPost && !isFriend && !isProfile ? (
             <div className="profile-info">
               <div className="info-col">
                 ABC
@@ -45,11 +48,24 @@ export default function Profile() {
                 ABC
               </div>
             </div>
-          ) : (
+          ) : !isPost && isFriend && !isProfile ? (
             <div className="profile-info">
-              <div className="post-col" style={{ background: "white", width:"100%" }}>
+              <div className="post-col" style={{ background: "white", width: "100%" }}>
                 <ListFriend></ListFriend>
               </div>
+            </div>
+          ) : !isPost && !isFriend && isProfile ? (
+            <div className="profile-info">
+              <div className="info-col">
+                <SidebarProfile></SidebarProfile>
+              </div>
+              {userProfile[0]?.id === user?.id && <div className="post-col" style={{ background: "white" }}>
+                <EditUser></EditUser>
+              </div>}
+            </div>
+          ) : (
+            <div className="profile-info">
+              OK
             </div>
           )}
         </div>
@@ -57,4 +73,3 @@ export default function Profile() {
     </>
   );
 }
-

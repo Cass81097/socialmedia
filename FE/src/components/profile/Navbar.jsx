@@ -27,7 +27,6 @@ export default function Navbar() {
         try {
             await firebase.auth().signOut();
             localStorage.clear();
-            navigate("/");
             window.location.reload();
         } catch (error) {
             console.error("Error :", error);

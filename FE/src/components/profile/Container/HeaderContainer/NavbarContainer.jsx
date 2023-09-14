@@ -11,7 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function NavbarContainer(props) {
-    const { isPost, setIsPost, isFriend, setIsFriend } = props
+    const { isPost, setIsPost, isFriend, setIsFriend, setIsProfile, isProfile } = props
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
     const { userProfile, checkFriendStatus } = useContext(ProfileContext);
@@ -61,11 +61,19 @@ export default function NavbarContainer(props) {
     const handleFriendClick = () => {
         setIsFriend(true);
         setIsPost(false);
+        setIsProfile(false)
     };
 
     const handlePostClick = () => {
         setIsFriend(false);
+        setIsProfile(false)
         setIsPost(true);
+    };
+
+    const handleProfileClick = () => {
+        setIsFriend(false);
+        setIsPost(false);
+        setIsProfile(true)
     };
 
     const fetchBlockList = async () => {
@@ -125,17 +133,17 @@ export default function NavbarContainer(props) {
             <div className="all-task">
                 <div className="left-all-task">
                     <div className="post-task">
-                        <Link to='' onClick={handlePostClick}>
+                        <Link onClick={handlePostClick}>
                             <span>Bài viết</span>
                         </Link>
                     </div>
                     <div className="profile-task">
-                        <Link to='' >
+                        <Link onClick={handleProfileClick}>
                             <span>Giới thiệu</span>
                         </Link>
                     </div>
                     <div className="profile-task">
-                        <Link to='' onClick={handleFriendClick}>
+                        <Link onClick={handleFriendClick}>
                             <span>Bạn bè</span>
                         </Link>
                     </div>

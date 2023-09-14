@@ -10,6 +10,10 @@ export class User {
     fullname: string;
     @Column({ type: 'varchar' })
     password: string
+    @Column({ type: 'varchar', nullable: true })
+    address: string
+    @Column({ type: 'varchar', nullable: true })
+    phone: string
     @Column({ type: 'varchar' })
     passwordConfirm: string
     @Column({ type: 'varchar', nullable: true })

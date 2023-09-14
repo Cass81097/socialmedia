@@ -15,12 +15,14 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import { baseUrl, getRequest, postRequest } from "../utils/services";
 import Navbar from "../components/profile/Navbar";
+import { ProfileContext } from "../context/ProfileContext";
 
 
 const Home = (props) => {
     const navigate = useNavigate();
+    const {userProfile} = useContext(ProfileContext)
     const { toggleModal } = props;
-    const { user, loginFinish } = useContext(AuthContext)
+    const { user, loginFinish, setLoginFinish } = useContext(AuthContext)
 
     const toastOptions = {
         position: "top-center",
@@ -33,6 +35,7 @@ const Home = (props) => {
     useEffect(() => {
         if (loginFinish) {
             toast.success("Đăng nhập thành công !", toastOptions);
+            setLoginFinish(false);
         }
     }, [loginFinish]);
 
@@ -42,7 +45,6 @@ const Home = (props) => {
             <Navbar></Navbar>
             <ToastContainer />
         </>
-
     );
 }
 
