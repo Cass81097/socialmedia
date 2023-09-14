@@ -10,6 +10,7 @@ import { baseUrl, getRequest, postRequest } from "../../../../utils/services";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 export default function NavbarContainer(props) {
     const { isPost, setIsPost, isFriend, setIsFriend, setIsProfile, isProfile } = props
     const navigate = useNavigate();
@@ -132,20 +133,22 @@ export default function NavbarContainer(props) {
         <>
             <div className="all-task">
                 <div className="left-all-task">
-                    <div className="post-task">
-                        <Link onClick={handlePostClick}>
-                            <span>Bài viết</span>
-                        </Link>
-                    </div>
-                    <div className="profile-task">
-                        <Link onClick={handleProfileClick}>
-                            <span>Giới thiệu</span>
-                        </Link>
-                    </div>
-                    <div className="profile-task">
-                        <Link onClick={handleFriendClick}>
-                            <span>Bạn bè</span>
-                        </Link>
+                    <div className="left-all-task">
+                        <div className={`post-task ${isPost ? 'select1' : ''}`}>
+                            <Link onClick={handlePostClick}>
+                                <span style={isPost ? { color: 'rgb(24, 118, 242)' } : {}}>Bài viết</span>
+                            </Link>
+                        </div>
+                        <div className={`profile-task ${isProfile ? 'select1' : ''}`}>
+                            <Link onClick={handleProfileClick}>
+                                <span style={isProfile ? { color: 'rgb(24, 118, 242)' } : {}}>Giới thiệu</span>
+                            </Link>
+                        </div>
+                        <div className={`profile-task ${isFriend ? 'select1' : ''}`}>
+                            <Link onClick={handleFriendClick}>
+                                <span style={isFriend ? { color: 'rgb(24, 118, 242)' } : {}}>Bạn bè</span>
+                            </Link>
+                        </div>
                     </div>
                 </div>
                 <div className="icon-block">
@@ -219,7 +222,7 @@ export default function NavbarContainer(props) {
                 {/* Modal Confirm Block */}
                 <Modal show={showAlert} onHide={handleCloseAlert} centered>
                     <Modal.Header closeButton>
-                        <Modal.Title style={{transform:"translateX(170px)"}}>Xác nhận</Modal.Title>
+                        <Modal.Title style={{ transform: "translateX(170px)" }}>Xác nhận</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>Bạn có chắc chắn muốn bỏ chặn ?</Modal.Body>
                     <Modal.Footer>
@@ -233,9 +236,10 @@ export default function NavbarContainer(props) {
                 </Modal>
 
                 {/* Modal Block User  */}
+
                 <Modal show={showAlertUser} onHide={handleCloseAlertUser} centered>
                     <Modal.Header closeButton>
-                        <Modal.Title style={{transform:"translateX(170px)"}}>Xác nhận</Modal.Title>
+                        <Modal.Title style={{ transform: "translateX(170px)" }}>Xác nhận</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>Bạn có chắc chắn muốn chặn ?</Modal.Body>
                     <Modal.Footer>
@@ -247,8 +251,12 @@ export default function NavbarContainer(props) {
                         </Button>
                     </Modal.Footer>
                 </Modal>
+
             </div>
             <ToastContainer />
+
         </>
     )
 }
+
+

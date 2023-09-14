@@ -188,6 +188,22 @@
     border-radius: 50px 50px 0px 0px;
 }
 
+.select1 {
+    position: relative;
+}
+
+.select1::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    background: rgb(24, 118, 242);
+    transform: rotate(180deg);
+    border-radius: 50px 50px 0px 0px;
+}
+
 .link-avatar a {
     width: 45px;
 }

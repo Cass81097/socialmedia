@@ -1,11 +1,11 @@
-    import React, {useContext, useEffect, useState} from "react";
-import "../styles/user/editUser.css"
 import axios from "axios";
-import { object, string, ref } from 'yup';
-import * as Yup from "yup";
+import React, { useContext, useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ProfileContext } from "../context/ProfileContext";
+import * as Yup from "yup";
+import { object, string } from 'yup';
+import { ProfileContext } from "../../../context/ProfileContext";
+import "../../../styles/user/editUser.css"
 
 export default function EditUser() {
     const { fetchUserProfile } = useContext(ProfileContext);

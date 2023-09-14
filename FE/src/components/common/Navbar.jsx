@@ -1,16 +1,13 @@
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import $ from 'jquery';
 import React, { useContext, useState } from "react";
-import { BiPowerOff } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "../../context/AuthContext";
 import { ProfileContext } from "../../context/ProfileContext";
-import styled from "styled-components";
-import { SearchBar } from "../search/SearchBar"
-import { SearchResultsList } from "../search/SearchResultsList"
-import $ from 'jquery';
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
+import { SearchBar } from "../search/SearchBar";
+import { SearchResultsList } from "../search/SearchResultsList";
 
 export default function Navbar() {
     const { user } = useContext(AuthContext);

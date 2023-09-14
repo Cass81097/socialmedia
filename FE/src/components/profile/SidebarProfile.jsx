@@ -1,70 +1,71 @@
-import "../../styles/user/sidebarProfile.css"
 import React, { useContext } from "react";
-import { ProfileContext } from "../../context/ProfileContext";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function SidebarProfile() {
-    const { userProfile, setUserProfile, fetchUserProfile } = useContext(ProfileContext);
-    console.log(userProfile)
+    const { user } = useContext(AuthContext);
 
     return (
         <>
-
-            {/*msb: main sidebar*/}
-            <div className="msb" id="msb">
-                {/* Brand and toggle get grouped for better mobile display */}
-                <div className="navbar-header">
-                    <div className="brand-wrapper">
-                        {/* Brand */}
-                        <div className="brand-name-wrapper">
-                            <h1 style={{ margin: "20px", color:"black", fontSize:"25px" }}>
-                                Giới thiệu
-                            </h1>
-                        </div>
-                    </div>
+            <div className="left-sidebar">
+                <div className="container-top-content">
+                    <li className="links">
+                        <a href="">
+                            <i
+                                className="fas fa-home icon"
+                                style={{ color: "black", minWidth:"50px" }}
+                            />
+                        </a>
+                    </li>
+                    {/* <li className="links link-avatar">
+                        <a href="" className="select" style={{position:"relative"}}>
+                            <div className="left-ava">
+                                <img className="left-avatar"
+                                    src={user.avatar} alt="load" />
+                            </div>
+                        </a>
+                    </li> */}
+                    <li className="links link-avatar select" style={{transform:"translate(6px)"}}>
+                            <div className="sidebar-avatar">
+                                <img 
+                                    src={user.avatar} alt="load" />
+                            </div>
+                    </li>
                 </div>
-                {/* Main Menu */}
-                {userProfile[0] ? ( // Kiểm tra userProfile[0]
-                    <div className="side-menu-container">
-                        <ul className="nav navbar-nav">
-                            <li className={"li"} >
-                                <a className={"navbar-nav-item"} href="#">
-                                    <i className="dashboard" /><span style={{color:"black"}}>Thông tin cá nhân</span> 
-                                </a>
-                            </li>
-                        </ul>
-                        <table style={{ borderCollapse: "collapse" }}>
-                            <tbody>
-                                <tr className="service" style={{ height: "60px" }}>
-                                    <td className="tableitem" >
-                                        <p className="itemtext">Họ và tên</p>
-                                    </td>
-                                    <td className="tableitem">
-                                        <p className="itemtext">{userProfile[0].fullname || "Chưa có"}</p>
-                                    </td>
-                                </tr>
-                                <tr className="service" style={{ height: "60px" }}>
-                                    <td className="tableitem">
-                                        <p className="itemtext">Địa chỉ</p>
-                                    </td>
-                                    <td className="tableitem">
-                                        <p className="itemtext">{userProfile[0].address || "Chưa có"}</p>
-                                    </td>
-                                </tr>
-                                <tr className="service" style={{ height: "60px" }} >
-                                    <td className="tableitem">
-                                        <p className="itemtext">Số điện thoại</p>
-                                    </td>
-                                    <td className="tableitem">
-                                        <p className="itemtext">{userProfile[0].phone || "Chưa có"}</p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                ) : null}
-                {/* /.navbar-collapse */}
+                <div className="mid-content">
+                    <li>
+                        <a href="">
+                            <i className="watch icon" />
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <i className="page icon" />
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <i className="market icon" />
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <i className="game icon" />
+                        </a>
+                    </li>
+                </div>
+                {/* <div className="bottom-content">
+                    <li>
+                        <a href="">
+                            <i className="bx bx-group icon" />
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <i className="shortcut icon" />
+                        </a>
+                    </li>
+                </div> */}
             </div>
-
         </>
     )
 }

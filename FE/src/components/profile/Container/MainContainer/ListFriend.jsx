@@ -33,7 +33,7 @@ export default function ListFriend() {
           }
           setShow(true);
         }
-      };
+    };
 
     const goFriendProfile = (username) => {
         setShow(false);
