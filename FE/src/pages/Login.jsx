@@ -69,7 +69,7 @@ const Login = (props) => {
                 const resLogin = await axios.post(`${baseUrl}/users/login`, loginData);
                 localStorage.setItem('User', JSON.stringify(existingUser)); 
                 // axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-                navigate('/home');
+                window.location.href = "/home";
             } else {
                console.log("dang ky moi");
                 const username = email.split("@")[0]; // Extract the username part before the @ symbol
@@ -82,10 +82,11 @@ const Login = (props) => {
                     fullname: username,
                 };
                 const res = await axios.post(`${baseUrl}/users/register`, data);
-                const resLogin = await axios.post(`${baseUrl}/users/login`, data);
-                localStorage.setItem('User', JSON.stringify(data)); 
+                console.log(res);
+                // const resLogin = await axios.post(`${baseUrl}/users/login`, data);
+                localStorage.setItem('User', JSON.stringify(res.data.message)); 
                 // axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-                navigate('/home');
+                window.location.href = "/home";
             }
         } catch (error) {
             console.error('Error during registration:', error);
@@ -187,13 +188,6 @@ const Login = (props) => {
             </>
         );
     }
-    return (
-        <div>
-            <h1>My App</h1>
-            <p>Welcome {firebase.auth().currentUser.displayName}! You are now signed-in!</p>
-            <button onClick={handleSignOut}>Sign-out</button>
-        </div>
-    );
 }
 
 export default withModal(Register)(Login);

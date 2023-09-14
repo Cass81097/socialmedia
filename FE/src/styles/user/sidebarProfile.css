@@ -1,18 +1,3 @@
-/* Reset some default styles */
-ul,
-li,
-a,
-a:focus
-{
-    margin: 0;
-    padding: 0;
-    text-decoration: none;
-    list-style: none;
-}
-
-
-/* Body styles */
-
 
 /* Navbar styles */
 .navbar-default {
@@ -23,8 +8,6 @@ a:focus
 .in4-info {
     margin-top: 6px ;
 }
-
-
 
 .msb .navbar {
     border: none;
