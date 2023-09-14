@@ -131,17 +131,17 @@ export const AuthContextProvider = ({ children }) => {
         }
 
         if (response === "Invalid email or password") {
-            setLoginError("Invalid email or password");
+            setLoginError("Sai tài khoản hoặc mật khẩu");
             return;
         }
 
         if (response === "Email is not exist") {
-            setLoginError("Invalid email or password");
+            setLoginError("Sai tài khoản hoặc mật khẩu");
             return;
         }
 
         if (typeof response === "string") {
-            setLoginError("Invalid email or password");
+            setLoginError("Sai tài khoản hoặc mật khẩu");
             return;
         }
 

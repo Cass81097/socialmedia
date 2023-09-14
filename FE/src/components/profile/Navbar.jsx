@@ -26,8 +26,9 @@ export default function Navbar() {
     const logout = async () => {
         try {
             await firebase.auth().signOut();
-            localStorage.clear();
+            navigate("/")
             window.location.reload();
+            localStorage.clear();
         } catch (error) {
             console.error("Error :", error);
         }

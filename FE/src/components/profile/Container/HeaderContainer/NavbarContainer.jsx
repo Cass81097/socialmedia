@@ -227,7 +227,7 @@ export default function NavbarContainer(props) {
                             Đóng
                         </Button>
                         <Button variant="primary" onClick={() => handleUnblockUser(userIndex)}>
-                            Lưu
+                            Có
                         </Button>
                     </Modal.Footer>
                 </Modal>

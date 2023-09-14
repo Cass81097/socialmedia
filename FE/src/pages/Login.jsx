@@ -165,7 +165,7 @@ const Login = (props) => {
                             <div className="login__logo">
                                 <img style={{ width: 600, height: 50 }} src='https://i.ibb.co/TvdSv6z/Untitled-1-removebg-preview.png' alt='logo' />
                             </div>
-                            <p>Connect with your <span style={{ color: "#9400D3", fontWeight: 'bold' }}>Friends </span><span style={{ color: "FF7F00", fontWeight: 'bold' }}>and </span><span style={{ color: "#404EED", fontWeight: 'bold' }}>Family </span>!</p>
+                            <p>Kết nối <span style={{ color: "#9400D3", fontWeight: 'bold' }}>tình bạn</span><span style={{ color: "FF7F00", fontWeight: 'bold' }}> và </span><span style={{ color: "#404EED", fontWeight: 'bold' }}>gia đình </span>!</p>
                         </div>
                         <div className="login__form-container">
                             <div className="login__form">
@@ -176,10 +176,10 @@ const Login = (props) => {
                                 />
                                 <input type="password" placeholder="Mật khẩu" onChange={(e) => updateLoginInfo({ password: e.target.value })} />
                                 <button type="submit" className="login__submit-btn">
-                                    {isLoginLoading ? "Login..." : "Login"}
+                                    {isLoginLoading ? "Đăng nhập..." : "Đăng nhập"}
                                 </button>
                                 <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
-                                <span className="login__signup" onClick={() => toggleModal(true)}><span style={{ cursor: "pointer" }}>Create a new account</span></span>
+                                <span className="login__signup" onClick={() => toggleModal(true)}><span style={{ cursor: "pointer" }}>Tạo tài khoản mới</span></span>
                             </div>
                         </div>
                     </div>
