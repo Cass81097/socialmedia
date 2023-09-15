@@ -18,6 +18,7 @@ import FriendButton from "../components/profile/Container/HeaderContainer/UserPr
 import ListFriend from "../components/profile/Container/MainContainer/ListFriend"
 import EditUser from "./EditUser";
 import SidebarProfile from "../components/profile/SidebarProfile";
+import Post from "../components/profile/Container/MainContainer/Post";
 
 export default function Profile() {
   const { user } = useContext(AuthContext);
@@ -45,7 +46,7 @@ export default function Profile() {
                 ABC
               </div>
               <div className="post-col" style={{ background: "white" }}>
-                ABC
+                <Post></Post>
               </div>
             </div>
           ) : !isPost && isFriend && !isProfile ? (

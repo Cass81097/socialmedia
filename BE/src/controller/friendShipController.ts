@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import friendShipService from "../Service/friendShipService";
 export class FriendShipController {
+
     sendFriendRequest = async (req, res) => {
         const userId1 = req.params.userId1;
         const userId2 = req.params.userId2;
