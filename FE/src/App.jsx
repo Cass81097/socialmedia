@@ -27,7 +27,6 @@ export default function App() {
     <Router>
       <ProfileContextProvider user={user}>
         <Routes>
-          {/* <Route path="/loading" element={<Loading />} /> */}
           <Route path="/404" element={<PageNotFound />} />
           <Route path="/" element={user ? <Home /> : <Login />} />
           <Route path="/login" element={user ? <Home /> : <Login />} />
