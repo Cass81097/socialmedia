@@ -8,5 +8,6 @@ export default class Image{
     @Column({type: "varchar"})
     image : string
     @ManyToOne(() => Status, (status) => status.id)
+
     status: Status;
  }

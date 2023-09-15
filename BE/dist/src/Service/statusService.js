@@ -46,8 +46,23 @@ class StatusService {
             }
             return status;
         };
-        this.delete = async (id) => {
-            return await this.statusRepository.delete(id);
+        this.delete = async (statusId) => {
+            try {
+                await this.statusRepository.createQueryBuilder()
+                    .delete()
+                    .from("like")
+                    .where("statusId = :statusId", { statusId })
+                    .execute();
+                await this.statusRepository.createQueryBuilder()
+                    .delete()
+                    .from("status")
+                    .where("id = :statusId", { statusId })
+                    .execute();
+            }
+            catch (error) {
+                console.error('Lỗi khi xóa bài viết:', error.message);
+                throw error;
+            }
         };
         this.updateVisibility = async (statusId, visibility) => {
             try {

@@ -52,8 +52,28 @@ export  class StatusService {
         return status;
     };
 
-    delete = async (id) => {
-        return await this.statusRepository.delete(id)
+    delete = async (statusId) => {
+
+        try {
+        await this.statusRepository.createQueryBuilder()
+            .delete()
+            .from("like") // Thay thế "like" bằng tên bảng thực tế của bạn
+            .where("statusId = :statusId", { statusId })
+            .execute();
+
+
+
+            // Xóa bài viết (status) cùng với các dòng liên quan trong bảng Like và Image
+             await this.statusRepository.createQueryBuilder()
+                .delete()
+                .from("status")
+                .where("id = :statusId", { statusId })
+                .execute();
+
+        } catch (error) {
+            console.error('Lỗi khi xóa bài viết:', error.message);
+            throw error;
+        }
     }
     updateVisibility = async (statusId, visibility) => {
         try {

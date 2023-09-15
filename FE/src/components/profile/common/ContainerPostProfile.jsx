@@ -5,11 +5,14 @@ import uploadImages from "../../../hooks/UploadMulti";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import styled from "styled-components";
+import Like from "../Container/MainContainer/Like";
+import customAxios from "../../../service/api";
 
 export default function ContainerPostProfile() {
     const { user } = useContext(AuthContext);
     const [imageSrc, setImageSrc] = useState(null);
     const [show, setShow] = useState(false);
+    const [list , setList] = useState([])
 
     const handleDeleteImage = (index) => {
         setImageSrc((prevImages) => {
@@ -41,7 +44,12 @@ export default function ContainerPostProfile() {
     const handleImageClose = () => {
         setImageSrc([]);
     };
-
+    useEffect(()=>{
+            customAxios.get("/status").then((res)=>{
+                console.log(res.data)
+                setList(res.data)
+            })
+        },[])
     return (
         <>
             <div className="post-col">
@@ -123,6 +131,7 @@ export default function ContainerPostProfile() {
                     </div>
                 </div>
                 <div className="index-content">
+                    {list.map((item)=>(
                     <div className="post-container">
                         <div className="user-profile">
                             <div className="user-avatar">
@@ -141,13 +150,17 @@ export default function ContainerPostProfile() {
                         </div>
                         <div className="post-user">
                             <p className="post-text">
-                                Lâu rồi mới có thời gian rảnh sau giờ ăn tối cùng gia đình
+                                {item.content}
                             </p>
 
                             <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3QBGmFHi1Kk4KfViRu0M5iQL-On3HXvX0uQ&usqp=CAU"} className="post-img" />
                             <div className="activity-icons"></div>
+                            <div style={{display : "flex"}}>
+                            <Like key={item.id} postId={item.id} countLike={item.acountLike}></Like>
+                            </div>
+
                         </div>
-                    </div>
+                    </div>))}
                 </div>
             </div>
 

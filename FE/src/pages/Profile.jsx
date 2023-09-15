@@ -1,8 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useContext, useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
-import Cover from "../components/profile/container/headerContainer/Cover";
-import NavbarContainer from "../components/profile/container/headerContainer/NavbarContainer";
+import Cover from "../components/profile/Container/HeaderContainer/Cover";
+import NavbarContainer from "../components/profile/Container/HeaderContainer/NavbarContainer";
 import Navbar from "../components/common/Navbar";
 import { AuthContext } from "../context/AuthContext";
 import { ProfileContext } from "../context/ProfileContext";
@@ -12,14 +12,13 @@ import "../styles/user/main-content.css";
 import "../styles/user/profile.css";
 import "../styles/user/right-sidebar.css";
 import "../styles/user/style.css";
-import Avatar from "../components/profile/container/headerContainer/userProfile/Avatar";
-import FriendButton from "../components/profile/container/headerContainer/userProfile/FriendButton";
-import ListFriend from "../components/profile/container/mainContainer/ListFriend"
+import Avatar from "../components/profile/Container/HeaderContainer/UserProfile/Avatar";
+import FriendButton from "../components/profile/Container/HeaderContainer/UserProfile/FriendButton";
+import ListFriend from "../components/profile/Container/MainContainer/ListFriend";
 import EditUser from "../components/profile/common/EditUser"
 import SidebarProfile from "../components/profile/SidebarProfile";
 import LeftContainerProfile from "../components/profile/common/LeftContainerProfile"
-import PostProfile from "../components/profile/container/mainContainer/PostProfile";
-
+import PostProfile from "../components/profile/Container/MainContainer/PostProfile";
 export default function Profile() {
   const { user } = useContext(AuthContext);
   const { userProfile } = useContext(ProfileContext)

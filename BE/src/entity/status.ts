@@ -1,5 +1,8 @@
-import {Column, Entity, ManyToOne, PrimaryGeneratedColumn,OneToMany} from "typeorm";
+import {Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany} from "typeorm";
 import {User} from "./user";
+import {Like} from "./like";
+import Image from "./image";
+
 
 @Entity()
 export class Status {
@@ -20,5 +23,11 @@ export class Status {
     user: User;
     @Column()
     time : string
+    // Định nghĩa quan hệ OneToMany với bảng Like
+    @OneToMany(() => Like, (like) => like.id, { onDelete: 'CASCADE' })
+    likes: Like[];
+
+    @OneToMany(() => Image, (img) => img.id, { onDelete: 'CASCADE' })
+    images: Image[];
 
 }

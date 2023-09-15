@@ -8,10 +8,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Status = void 0;
 const typeorm_1 = require("typeorm");
 const user_1 = require("./user");
+const like_1 = require("./like");
+const image_1 = __importDefault(require("./image"));
 let Status = class Status {
 };
 exports.Status = Status;
@@ -39,6 +44,14 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Status.prototype, "time", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => like_1.Like, (like) => like.id, { onDelete: 'CASCADE' }),
+    __metadata("design:type", Array)
+], Status.prototype, "likes", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => image_1.default, (img) => img.id, { onDelete: 'CASCADE' }),
+    __metadata("design:type", Array)
+], Status.prototype, "images", void 0);
 exports.Status = Status = __decorate([
     (0, typeorm_1.Entity)()
 ], Status);
