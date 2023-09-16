@@ -26,11 +26,24 @@ class LikeService {
         };
         this.save = async (statusId, userId) => {
             try {
-                const newLike = this.likeRepository.create({
-                    status: { id: statusId },
-                    user: { id: userId }
+                const existingLike = await this.likeRepository.findOne({
+                    where: {
+                        status: { id: statusId },
+                        user: { id: userId },
+                    },
                 });
-                return await this.likeRepository.save(newLike);
+                if (existingLike) {
+                    existingLike.isLiked = true;
+                    return await this.likeRepository.save(existingLike);
+                }
+                else {
+                    const newLike = this.likeRepository.create({
+                        status: { id: statusId },
+                        user: { id: userId },
+                        isLiked: true,
+                    });
+                    return await this.likeRepository.save(newLike);
+                }
             }
             catch (e) {
                 console.log(e);

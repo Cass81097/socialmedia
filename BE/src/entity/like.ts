@@ -13,5 +13,7 @@ export class Like {
 
     @ManyToOne(() => Status, (post) => post.id)
     status: Status;
+    @Column({ default: false })
+    isLiked: boolean;
 
 }

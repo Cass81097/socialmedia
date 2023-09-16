@@ -58,6 +58,7 @@ io.on("connection", (socket) => {
             // Người nhận không trực tuyến, thực hiện các xử lý khác (ví dụ: gửi thông báo, lưu vào cơ sở dữ liệu, vv.)
         }
     });
+
 });
 
 // Khởi động máy chủ trên cổng đã chỉ định

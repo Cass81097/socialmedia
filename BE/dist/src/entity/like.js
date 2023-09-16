@@ -28,6 +28,10 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => status_1.Status, (post) => post.id),
     __metadata("design:type", status_1.Status)
 ], Like.prototype, "status", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
+], Like.prototype, "isLiked", void 0);
 exports.Like = Like = __decorate([
     (0, typeorm_1.Entity)()
 ], Like);

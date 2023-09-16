@@ -4,4 +4,5 @@ export declare class Like {
     id: number;
     user: User;
     status: Status;
+    isLiked: boolean;
 }

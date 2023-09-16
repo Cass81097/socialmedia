@@ -30,19 +30,33 @@ export class LikeService {
         }
     }
 
-    save = async  (statusId, userId ) => {
+    save = async (statusId, userId) => {
         try {
-            const newLike = this.likeRepository.create({
-                status: { id: statusId },
-                user: { id: userId }
+            const existingLike = await this.likeRepository.findOne({
+                where: {
+                    status: { id: statusId },
+                    user: { id: userId },
+                },
             });
 
-            return await this.likeRepository.save(newLike);
+            if (existingLike) {
+                // Nếu like đã tồn tại, cập nhật giá trị isLiked thành true
+                existingLike.isLiked = true;
+                return await this.likeRepository.save(existingLike);
+            } else {
+                // Nếu like chưa tồn tại, tạo một like mới và đặt isLiked thành true
+                const newLike = this.likeRepository.create({
+                    status: { id: statusId },
+                    user: { id: userId },
+                    isLiked: true,
+                });
+
+                return await this.likeRepository.save(newLike);
+            }
+        } catch (e) {
+            console.log(e);
         }
-        catch (e){
-            console.log(e)
-        }
-    }
+    };
     delete = async (statusId , userId) => {
         try {
 

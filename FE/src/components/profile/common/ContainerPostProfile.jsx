@@ -7,6 +7,7 @@ import Modal from 'react-bootstrap/Modal';
 import styled from "styled-components";
 import Like from "../Container/MainContainer/Like";
 import customAxios from "../../../service/api";
+import {io} from "socket.io-client";
 
 export default function ContainerPostProfile() {
     const { user } = useContext(AuthContext);
@@ -44,12 +45,18 @@ export default function ContainerPostProfile() {
     const handleImageClose = () => {
         setImageSrc([]);
     };
-    useEffect(()=>{
-            customAxios.get("/status").then((res)=>{
-                console.log(res.data)
-                setList(res.data)
-            })
-        },[])
+
+    useEffect(() => {
+        customAxios.get("/status").then((res) => {
+            console.log(res.data);
+            setList(res.data)
+        });
+    }, []);
+
+
+
+
+
     return (
         <>
             <div className="post-col">
@@ -132,13 +139,15 @@ export default function ContainerPostProfile() {
                 </div>
                 <div className="index-content">
                     {list.map((item)=>(
+
                     <div className="post-container">
+                        {console.log(item)}
                         <div className="user-profile">
                             <div className="user-avatar">
-                                <img src={user.avatar} />
+                                <img src={item.avatar} />
                             </div>
                             <div>
-                                <p>{user.fullname}</p>
+                                <p>{item.fullname}</p>
                                 <div className="time-status">
                                     <span>8 tháng 7 lúc 20:20</span>
                                     <i
@@ -156,11 +165,12 @@ export default function ContainerPostProfile() {
                             <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3QBGmFHi1Kk4KfViRu0M5iQL-On3HXvX0uQ&usqp=CAU"} className="post-img" />
                             <div className="activity-icons"></div>
                             <div style={{display : "flex"}}>
-                            <Like key={item.id} postId={item.id} countLike={item.acountLike}></Like>
+                               <Like key={item.id} postId={item.id}  countLike={item.acountLike} checkStatusLike={item.isLiked}></Like>
                             </div>
 
                         </div>
-                    </div>))}
+                    </div>
+                    ))}
                 </div>
             </div>
 
