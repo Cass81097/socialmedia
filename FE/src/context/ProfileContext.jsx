@@ -16,12 +16,6 @@ export const ProfileContextProvider = ({ children, user }) => {
 
   const [listFriend, setListFriend] = useState([])
 
-  // console.log(userProfile.length, "UserProfile");
-  // console.log(listFriend, "ListFriend");
-
-  // console.log(userProfile.length, "UserProfile");
-  // console.log(userProfile[0]?.id, "UserProfileID");
-
   const domain = window.location.pathname.split("/")[1];
   const username = domain || "";
 
@@ -92,23 +86,23 @@ export const ProfileContextProvider = ({ children, user }) => {
     fetchCountFriend();
   }, [username]);
 
-//   useEffect(() => {
-//     const findFriend = async () => {
-//         try {
-//           if (userProfile?.length > 0) {
-//             const response = await getRequest(`${baseUrl}/friendShips/listFriend/id/${userProfile[0]?.id}`);
-//             // for (let i = 0; i < response.data.length; i++) {
-//             //     const response1 = await getRequest(`${baseUrl}/friendShips/mutual-friends/${user?.id}/${response?.data[i].id}`)
-//             //     response.data[i] = { ...response.data[i], matualFriends: response1.data.length }
-//             // }
-//             setListFriend(response);
-//           } else return;
-//         } catch (error) {
-//             console.log(error);
-//         }
-//     };
-//     findFriend();
-// }, []);
+  //   useEffect(() => {
+  //     const findFriend = async () => {
+  //         try {
+  //           if (userProfile?.length > 0) {
+  //             const response = await getRequest(`${baseUrl}/friendShips/listFriend/id/${userProfile[0]?.id}`);
+  //             // for (let i = 0; i < response.data.length; i++) {
+  //             //     const response1 = await getRequest(`${baseUrl}/friendShips/mutual-friends/${user?.id}/${response?.data[i].id}`)
+  //             //     response.data[i] = { ...response.data[i], matualFriends: response1.data.length }
+  //             // }
+  //             setListFriend(response);
+  //           } else return;
+  //         } catch (error) {
+  //             console.log(error);
+  //         }
+  //     };
+  //     findFriend();
+  // }, []);
 
   // Socket
   useEffect(() => {

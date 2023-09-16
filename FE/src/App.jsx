@@ -8,9 +8,10 @@ import Login from "./pages/Login";
 import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
 import Loading from "./components/common/Loading"
+import { PostContextProvider } from './context/PostContext';
 
 export default function App() {
-  const { user, allUser  } = useContext(AuthContext);
+  const { user, allUser } = useContext(AuthContext);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   useEffect(() => {
@@ -26,21 +27,23 @@ export default function App() {
   return (
     <Router>
       <ProfileContextProvider user={user}>
-        <Routes>
-          {/* <Route path="/loading" element={<Loading />} /> */}
-          <Route path="/404" element={<PageNotFound />} />
-          <Route path="/" element={user ? <Home /> : <Login />} />
-          <Route path="/login" element={user ? <Home /> : <Login />} />
-          <Route path="/home" element={user ? <Home /> : <Login />} />
-          {allUser?.length > 0 &&
-            allUser.map((username) => (
-              <Route
-                key={username}
-                path={`/${username}`}
-                element={user ? <Profile user={username}/> : <Login/> }
-              />
-            ))}
-        </Routes>
+        <PostContextProvider user={user} >
+          <Routes>
+            <Route path="/loading" element={<Loading />} />
+            <Route path="/404" element={<PageNotFound />} />
+            <Route path="/" element={user ? <Home /> : <Login />} />
+            <Route path="/login" element={user ? <Home /> : <Login />} />
+            <Route path="/home" element={user ? <Home /> : <Login />} />
+            {allUser?.length > 0 &&
+              allUser.map((username) => (
+                <Route
+                  key={username}
+                  path={`/${username}`}
+                  element={user ? <Profile user={username} /> : <Login />}
+                />
+              ))}
+          </Routes>
+        </PostContextProvider>
       </ProfileContextProvider>
     </Router>
   );

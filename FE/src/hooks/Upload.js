@@ -31,6 +31,7 @@ const metadata = {
 
 
 export default function uploadImage(e, callback) {
+
     var input = e.target;
     if (input.files && input.files[0]) {
         var fileName = input.files[0].name;

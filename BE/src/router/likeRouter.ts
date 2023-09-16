@@ -5,6 +5,6 @@ import likeController from "../controller/likeController";
 export const likeRouter = Router();
 
 likeRouter.get("/:statusId",likeController.getLikeForStatus)
-likeRouter.post("/add/:statusId", likeController.addLike);
+likeRouter.post("", likeController.addLike);
 likeRouter.delete('/:statusId',likeController.deleteLike)
 

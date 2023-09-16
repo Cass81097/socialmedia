@@ -2,11 +2,11 @@ export declare class LikeService {
     private likeRepository;
     constructor();
     getLikeForStatus: (id: any) => Promise<{
-        likeRecords: any;
+        listUserLike: any[];
         likeCount: any;
     }>;
-    save: (statusId: any, userId: any) => Promise<any>;
-    delete: (statusId: any, userId: any) => Promise<any>;
+    save: (data: any) => Promise<any>;
+    delete: (statusId: any) => Promise<any>;
     update: (id: any, user: any) => Promise<any>;
 }
 declare const _default: LikeService;

@@ -5,13 +5,13 @@ import {FriendShipController} from "./friendShipController";
 export  class LikeController {
     addLike = async (req, res) => {
 
-        let data = await likeService.save(req.params.statusId,req.body.userId)
+        let data = await likeService.save(req.body)
 
         res.json(data);
     }
 
     deleteLike = async (req, res) => {
-        const del = await likeService.delete(req.params.statusId,req.body.userId)
+        const del = await likeService.delete(req.params.statusId)
 
         res.json(del)
     }

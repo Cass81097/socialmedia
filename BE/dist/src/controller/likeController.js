@@ -8,11 +8,11 @@ const likeService_1 = __importDefault(require("../Service/likeService"));
 class LikeController {
     constructor() {
         this.addLike = async (req, res) => {
-            let data = await likeService_1.default.save(req.params.statusId, req.body.userId);
+            let data = await likeService_1.default.save(req.body);
             res.json(data);
         };
         this.deleteLike = async (req, res) => {
-            const del = await likeService_1.default.delete(req.params.statusId, req.body.userId);
+            const del = await likeService_1.default.delete(req.params.statusId);
             res.json(del);
         };
         this.getLikeForStatus = async (req, res) => {

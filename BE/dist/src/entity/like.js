@@ -28,6 +28,10 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => status_1.Status, (post) => post.id),
     __metadata("design:type", status_1.Status)
 ], Like.prototype, "status", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" }),
+    __metadata("design:type", Date)
+], Like.prototype, "time", void 0);
 exports.Like = Like = __decorate([
     (0, typeorm_1.Entity)()
 ], Like);

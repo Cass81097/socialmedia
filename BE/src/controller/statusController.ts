@@ -16,22 +16,20 @@ export class StatusController {
     // }
 
     findAll = async (req, res) => {
-
         let list = await statusService.findAll()
-        console.log(list)
         res.json(list)
     }
 
-
     add = async (req, res) => {
         let data = await statusService.add(req.body);
-        res.json(200, data)
-
+        res.json(data)
     }
+
     // update = async (req, res) => {
     //     let data = await statusService.update(req.params.id, req.body);
     //     res.json(data)
     // }
+    
     delete = async (req, res) => {
         let data = await statusService.delete(req.params.id);
         res.json(data)
@@ -49,6 +47,7 @@ export class StatusController {
         let data = await statusService.updateVisibility(userId, visibility);
         res.json(data);
     }
+
     findAllByIdUser = async (req, res) => {
         const userId = req.params.id;
         let data = await statusService.findByIdUser(userId)
@@ -56,6 +55,11 @@ export class StatusController {
 
     }
 
+    findStatusByIdUser = async (req, res) => {
+        let data = await statusService.findStatusByIdUser(req.params.senderId, req.params.receiverId)
+        res.json(data);
+
+    }
 }
 
 export default new StatusController()

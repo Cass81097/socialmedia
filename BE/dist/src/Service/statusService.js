@@ -6,8 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StatusService = void 0;
 const data_source_1 = require("../data-source");
 const status_1 = require("../entity/status");
-const imageService_1 = __importDefault(require("./imageService"));
+const imageStatusService_1 = __importDefault(require("./imageStatusService"));
 const likeService_1 = __importDefault(require("./likeService"));
+const typeorm_1 = require("typeorm");
 class StatusService {
     constructor() {
         this.add = async (status) => {
@@ -16,44 +17,114 @@ class StatusService {
         this.findAll = async () => {
             let status = await this.statusRepository.find({
                 relations: {
-                    user: true
+                    receiver: true,
+                    sender: true
                 }
             });
             for (let i = 0; i < status.length; i++) {
-                let imageByStatusId = await imageService_1.default.findAllByStatusId(status[i].id);
+                let imageByStatusId = await imageStatusService_1.default.findAllByStatusId(status[i].id);
                 let likeByStatusId = await likeService_1.default.getLikeForStatus(status[i].id);
                 console.log(imageByStatusId, 11111);
                 status[i] = await Object.assign(Object.assign({}, status[i]), { image: [...imageByStatusId], acountLike: likeByStatusId.likeCount });
+            }
+            return status;
+        };
+        this.findStatusByIdUser = async (senderId, receiverId) => {
+            let status = await this.statusRepository.find({
+                relations: {
+                    receiver: true,
+                    sender: true
+                },
+                where: {
+                    sender: {
+                        id: senderId
+                    },
+                    receiver: {
+                        id: receiverId
+                    }
+                }
+            });
+            for (let i = 0; i < status.length; i++) {
+                let imageByStatusId = await imageStatusService_1.default.findAllByStatusId(status[i].id);
+                let likeByStatusId = await likeService_1.default.getLikeForStatus(status[i].id);
+                status[i] = Object.assign(Object.assign({}, status[i]), { image: [...imageByStatusId], acountLike: likeByStatusId.likeCount, listUserLike: [...likeByStatusId.listUserLike] });
             }
             return status;
         };
         this.findByIdUser = async (id) => {
             let status = await this.statusRepository.find({
                 relations: {
-                    user: true
+                    receiver: true,
+                    sender: true
                 },
                 where: {
-                    user: {
+                    receiver: {
                         id: id
                     }
+                },
+                order: {
+                    time: 'DESC'
                 }
             });
             for (let i = 0; i < status.length; i++) {
-                let imageByStatusId = await imageService_1.default.findAllByStatusId(status[i].id);
+                let imageByStatusId = await imageStatusService_1.default.findAllByStatusId(status[i].id);
                 let likeByStatusId = await likeService_1.default.getLikeForStatus(status[i].id);
-                console.log(imageByStatusId, 11111);
-                status[i] = await Object.assign(Object.assign({}, status[i]), { image: [...imageByStatusId], acountLike: likeByStatusId.likeCount });
+                console.log(likeByStatusId.listUserLike, 111111);
+                status[i] = Object.assign(Object.assign({}, status[i]), { image: [...imageByStatusId], acountLike: likeByStatusId.likeCount, listUserLike: [...likeByStatusId.listUserLike] });
             }
             return status;
         };
-        this.delete = async (id) => {
-            return await this.statusRepository.delete(id);
+        this.findByIdAndStatus = async (id) => {
+            let status = await this.statusRepository.find({
+                relations: {
+                    receiver: true,
+                    sender: true
+                },
+                where: {
+                    receiver: {
+                        id: id
+                    },
+                    visibility: "public"
+                }
+            });
+            console.log(status, 111);
+            for (let i = 0; i < status.length; i++) {
+                let imageByStatusId = await imageStatusService_1.default.findAllByStatusId(status[i].id);
+                let likeByStatusId = await likeService_1.default.getLikeForStatus(status[i].id);
+                console.log(likeByStatusId.listUserLike, 111111);
+                status[i] = await Object.assign(Object.assign({}, status[i]), { image: [...imageByStatusId], acountLike: likeByStatusId.likeCount, listUserLike: [...likeByStatusId.listUserLike] });
+            }
+            return status;
+        };
+        this.delete = async (statusId) => {
+            try {
+                await this.statusRepository.createQueryBuilder()
+                    .delete().from("like")
+                    .where("statusId = :statusId", { statusId })
+                    .execute();
+                await this.statusRepository.createQueryBuilder()
+                    .delete()
+                    .from("image")
+                    .where("statusId = :statusId", { statusId })
+                    .execute();
+                await this.statusRepository.createQueryBuilder()
+                    .delete()
+                    .from("status")
+                    .where("id = :statusId", { statusId })
+                    .execute();
+                return "xoá thành  công";
+            }
+            catch (error) {
+                console.error('Lỗi khi xóa bài viết:', error.message);
+                throw error;
+            }
         };
         this.updateVisibility = async (statusId, visibility) => {
             try {
                 const status = this.statusRepository.find({
                     relations: {
-                        user: true
+                        receiver: true,
+                        sender: true
                     },
                     where: {
                         id: statusId
@@ -74,7 +145,8 @@ class StatusService {
             try {
                 const status = this.statusRepository.find({
                     relations: {
-                        user: true
+                        receiver: true,
+                        sender: true
                     },
                     where: {
                         id: statusId
@@ -89,6 +161,24 @@ class StatusService {
             }
             catch (error) {
                 throw new Error('Error updating content');
+            }
+        };
+        this.findByContent = async (id, content) => {
+            console.log(id, content, 111);
+            try {
+                return await this.statusRepository.find({
+                    relations: {
+                        receiver: true,
+                        sender: true
+                    },
+                    where: {
+                        content: (0, typeorm_1.Like)(`%${content}%`),
+                        sender: { id: id }
+                    }
+                });
+            }
+            catch (error) {
+                throw new Error('Error finding user by name');
             }
         };
         this.statusRepository = data_source_1.AppDataSource.getRepository(status_1.Status);

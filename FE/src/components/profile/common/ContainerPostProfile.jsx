@@ -1,18 +1,34 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
+import { ProfileContext } from "../../../context/ProfileContext"
 import { Link, useNavigate } from "react-router-dom";
 import uploadImages from "../../../hooks/UploadMulti";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import styled from "styled-components";
+import InputEmoji from "react-input-emoji";
+import "../../../styles/user/post/inputEmoji.css"
+import "../../../styles/user/post/postImage.css"
+import "../../../styles/user/post/postUser.css"
+import { baseUrl, getRequest, postRequest } from "../../../utils/services";
+import { PostContext } from "../../../context/PostContext";
+import LoadingNew from "../../common/LoadingNew";
 
 export default function ContainerPostProfile() {
+    const navigate = useNavigate();
     const { user } = useContext(AuthContext);
-    const [imageSrc, setImageSrc] = useState(null);
+    const { userProfile } = useContext(ProfileContext);
+    const { postUser, postImageUser, fetchPostUser, fetchImagePostUser } = useContext(PostContext);
+
+    const [imageSrcProfile, setImageSrcProfile] = useState(null);
     const [show, setShow] = useState(false);
+    const [textMessage, setTextMessage] = useState("")
+    const [isPostLoading, setIsPostLoading] = useState(false);
+    const [isImageLoading, setIsImageLoading] = useState(false);
+
 
     const handleDeleteImage = (index) => {
-        setImageSrc((prevImages) => {
+        setImageSrcProfile((prevImages) => {
             const newImages = [...prevImages];
             newImages.splice(index, 1);
             return newImages;
@@ -28,18 +44,84 @@ export default function ContainerPostProfile() {
     };
 
     const handleImageUploadMore = (e) => {
-        console.log("1");
         uploadImages(e, (images) => {
-            setImageSrc((prevImages) => [...prevImages, ...images]);
+            setImageSrcProfile((prevImages) => [...prevImages, ...images]);
         });
     };
 
-    const handleImageUpload = (e) => {
-        uploadImages(e, setImageSrc);
+    const handleImageUploadPost = (e) => {
+        uploadImages(e, setImageSrcProfile, setIsImageLoading);
     };
 
+    useEffect(() => {
+        if (imageSrcProfile) {
+            setIsImageLoading(false);
+        }
+    }, [imageSrcProfile]);
+
     const handleImageClose = () => {
-        setImageSrc([]);
+        setImageSrcProfile([]);
+    };
+
+    //Handle Post
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleSendMessage();
+        }
+    };
+
+    const handleInputChange = (value) => {
+        setTextMessage(value);
+    };
+
+    const handleSendMessage = async () => {
+        setIsPostLoading(true);
+
+        const data = {
+            content: textMessage,
+            visibility: "public",
+            sender: {
+                id: user.id
+            },
+            receiver: {
+                id: userProfile[0].id
+            }
+        };
+
+        const response = await postRequest(`${baseUrl}/status`, JSON.stringify(data));
+        const statusId = response.id;
+
+        if (imageSrcProfile) {
+            for (let i = 0; i < imageSrcProfile.length; i++) {
+                const dataImage = {
+                    imageUrl: imageSrcProfile[i],
+                    status: {
+                        id: statusId
+                    }
+                };
+
+                const responseImage = await postRequest(`${baseUrl}/imageStatus`, JSON.stringify(dataImage));
+            }
+        }
+        setIsPostLoading(false);
+
+        setTextMessage("");
+        setImageSrcProfile(null);
+        fetchPostUser();
+        fetchImagePostUser();
+
+        console.log("Đăng post thành công");
+    };
+
+    const goProfile = (username) => {
+        setShow(false);
+        navigate(`/${username}`);
+    };
+
+    const goImageUrl = (imageUrl) => {
+        window.open(imageUrl, "_blank");
     };
 
     return (
@@ -48,44 +130,55 @@ export default function ContainerPostProfile() {
                 <div className="home-content">
                     <div className="write-post-container">
                         <div className="user-profile">
-                            <div className="user-avatar">
+                            <div className="user-avatar" onClick={() => goProfile(user?.username)}>
                                 <img src={user.avatar} />
                             </div>
-                            <div>
-                                <p>{user.fullname}</p>
+                            <div className="user-post-profile">
+                                <p onClick={() => goProfile(user?.username)}>{user.fullname}</p>
                                 <small>
                                     Public
                                     <i className="fas fa-caret-down" />
                                 </small>
                             </div>
                         </div>
+                        <div className="user-action-post">
+                            <Button variant="light">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </Button>
+                        </div>
                     </div>
                     <div className="post-input-container">
-                        <textarea
-                            name="textarea"
-                            id="textarea"
-                            placeholder="Bạn đang nghĩ gì thế?"
-                            rows={3}
-                            defaultValue={""}
+                        <InputEmoji
+                            value={textMessage}
+                            onChange={handleInputChange}
+                            onKeyDown={handleKeyDown}
                         />
+
+                        <Button
+                            variant="primary"
+                            className={`post-button ${(!imageSrcProfile && !textMessage) ? 'cursor-not-allowed' : ''}`}
+                            onClick={handleSendMessage}
+                            disabled={!imageSrcProfile && !textMessage}
+                        >
+                            Đăng
+                        </Button>
 
                         <div style={{ position: "relative" }}>
 
-                            {imageSrc && imageSrc.length > 0 && (
+                            {imageSrcProfile && imageSrcProfile.length > 0 && (
                                 <div className="post-image-container">
-                                    {imageSrc.map((src, index) => (
+                                    {imageSrcProfile.map((src, index) => (
                                         <img key={index} src={src} alt={`Image ${index}`} />
                                     ))}
                                 </div>
                             )}
 
-
-                            {imageSrc && imageSrc.length > 0 && (
+                            {imageSrcProfile && imageSrcProfile.length > 0 && (
                                 <div className="post-image-close">
                                     <Button variant="light" onClick={handleImageClose}>X</Button>
                                 </div>
                             )}
-                            {imageSrc && imageSrc.length > 0 && (
+                            {imageSrcProfile && imageSrcProfile.length > 0 && (
                                 <label htmlFor="image-upload-add" className="post-image-add" style={{ cursor: "pointer" }}>
                                     <div className="btn btn-light">Thêm ảnh</div>
                                     <input
@@ -97,7 +190,7 @@ export default function ContainerPostProfile() {
                                     />
                                 </label>
                             )}
-                            {imageSrc && imageSrc.length > 0 && (
+                            {imageSrcProfile && imageSrcProfile.length > 0 && (
                                 <Button variant="light" className="post-image-change" onClick={() => handleShow()}>Chỉnh sửa tất cả</Button>
                             )}
                         </div>
@@ -106,13 +199,13 @@ export default function ContainerPostProfile() {
                             <Link to="">
                                 <img src="./images/watch.png" /> Video trực tiếp
                             </Link>
-                            <label htmlFor="image-upload" className="upload-label" style={{ cursor: "pointer" }}>
+                            <label htmlFor="image-upload-post" className="upload-label" style={{ cursor: "pointer" }}>
                                 <img src="./images/photo.png" style={{ marginRight: "10px", width: "20px" }} /> Ảnh/video
                                 <input
-                                    id="image-upload"
+                                    id="image-upload-post"
                                     type="file"
                                     multiple
-                                    onChange={handleImageUpload}
+                                    onChange={handleImageUploadPost}
                                     style={{ display: "none" }}
                                 />
                             </label>
@@ -122,32 +215,88 @@ export default function ContainerPostProfile() {
                         </div>
                     </div>
                 </div>
-                <div className="index-content">
-                    <div className="post-container">
-                        <div className="user-profile">
-                            <div className="user-avatar">
-                                <img src={user.avatar} />
-                            </div>
-                            <div>
-                                <p>{user.fullname}</p>
-                                <div className="time-status">
-                                    <span>8 tháng 7 lúc 20:20</span>
-                                    <i
-                                        className="fas fa-globe-americas"
-                                        style={{ color: "#65676B" }}
-                                    />
+                <div>
+                    {postUser.map((post, index) => (
+                        <div key={index} className="index-content">
+                            <div className="post-container">
+                                <div className="user-profile">
+                                    <div className="user-avatar" onClick={() => goProfile(post.sender?.username)}>
+                                        <img src={post.sender?.avatar} alt="User Avatar" />
+                                    </div>
+                                    <div>
+                                        <div className="post-user-name">
+                                            {post.sender?.id !== post.receiver?.id && (
+                                                <>
+                                                    <p onClick={() => goProfile(post.sender?.username)}>{post.sender?.fullname}</p>
+                                                    <i className="fas fa-caret-right icon-post-user"></i>
+                                                </>
+                                            )}
+                                            <p>{post.receiver?.fullname}</p>
+                                        </div>
+
+                                        <div className="time-status">
+                                            {(() => {
+                                                const timeString = post.time;
+                                                const date = new Date(timeString);
+                                                const now = new Date();
+                                                const timeDiffInMinutes = Math.floor((now - date) / (1000 * 60));
+                                                let timeAgo;
+
+                                                if (timeDiffInMinutes === 0) {
+                                                    timeAgo = "Vừa xong";
+                                                } else if (timeDiffInMinutes < 60) {
+                                                    timeAgo = `${timeDiffInMinutes} phút trước`;
+                                                } else {
+                                                    const hours = Math.floor(timeDiffInMinutes / 60);
+                                                    const minutes = timeDiffInMinutes % 60;
+                                                    if (hours >= 24) {
+                                                        timeAgo = "1 ngày trước";
+                                                    } else if (minutes === 0) {
+                                                        timeAgo = `${hours} giờ`;
+                                                    } else {
+                                                        timeAgo = `${hours} giờ ${minutes} phút trước`;
+                                                    }
+                                                }
+
+                                                return (
+                                                    <div>
+                                                        <span>{timeAgo}</span>
+                                                        <i className="fas fa-globe-americas" style={{ color: "#65676B" }} />
+                                                    </div>
+                                                );
+                                            })()}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="post-user">
+                                    <p className="post-text">{post.content}</p>
+                                    {postImageUser[index]?.length > 0 && postImageUser[index] && (
+                                        <div className={`post-image ${postImageUser[index]?.length > 2 ? 'three' : ''}`}>
+                                            {postImageUser[index]?.map((image, imageIndex) => (
+                                                <img src={image.imageUrl} alt="Post Image" className="post-img" key={imageIndex} onClick={() => goImageUrl(image.imageUrl)} />
+                                            ))}
+                                        </div>
+                                    )}
+                                    <div className="activity-icons"></div>
+                                </div>
+
+                                <div className="post-action">
+                                    <div className="post-like">
+                                        <Button variant="light">
+                                            <i className="far fa-thumbs-up"></i>
+                                            <span>Thích</span>
+                                        </Button>
+                                    </div>
+                                    <div className="post-comment">
+                                        <Button variant="light">
+                                            <i className="far fa-comment-alt"></i>
+                                            <span>Bình luận</span>
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="post-user">
-                            <p className="post-text">
-                                Lâu rồi mới có thời gian rảnh sau giờ ăn tối cùng gia đình
-                            </p>
-
-                            <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3QBGmFHi1Kk4KfViRu0M5iQL-On3HXvX0uQ&usqp=CAU"} className="post-img" />
-                            <div className="activity-icons"></div>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
 
@@ -157,9 +306,9 @@ export default function ContainerPostProfile() {
                     <Modal.Title style={{ transform: "translateX(600px)" }}>Xóa ảnh</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {imageSrc && imageSrc.length > 0 && (
+                    {imageSrcProfile && imageSrcProfile.length > 0 && (
                         <div className="modal-image-container">
-                            {imageSrc.map((src, index) => (
+                            {imageSrcProfile.map((src, index) => (
                                 <div key={index} style={{ position: "relative" }}>
                                     <img src={src} alt={`Image ${index}`} />
                                     <Button variant="light" className="modal-image-delete" onClick={() => handleDeleteImage(index)}>
@@ -176,6 +325,10 @@ export default function ContainerPostProfile() {
                     </Button>
                 </Modal.Footer>
             </CustomModal>
+
+            {isPostLoading || isImageLoading ? (
+                <LoadingNew></LoadingNew>
+            ) : null}
         </>
     )
 }

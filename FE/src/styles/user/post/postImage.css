@@ -1,0 +1,34 @@
+.post-image {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    overflow: auto;
+    width: 100%;
+    /* height: 300px; */
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.post-image.three img {
+    width: 350px;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #d3cece;
+}
+
+.post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #d3cece;
+    cursor: pointer;
+}
+
+.post-image.three img:nth-child(1) {
+    width: 100%;
+    object-fit: cover;
+    height: 400px;
+}
+

@@ -30,7 +30,9 @@ const metadata = {
 };
 
 
-export default function uploadImages(e, callback) {
+export default function uploadImages(e, callback, setIsImageLoading) {
+    setIsImageLoading(true); 
+    
     const input = e.target;
     if (input.files && input.files.length > 0) {
         // document.getElementById("image-upload").disabled = true;

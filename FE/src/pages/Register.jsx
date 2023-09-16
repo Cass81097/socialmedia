@@ -77,7 +77,7 @@ export default function Register(props) {
                                 onChange={(e) => updateRegisterInfo({ passwordConfirm: e.target.value })}
                             />
                             <button className="signup__btn">
-                                {isRegisterLoading ? "Creating your account" : "Register"}
+                                {isRegisterLoading ? "Đang tạo tài khoản..." : "Đăng ký"}
                             </button>
                         </div>
                     </div>

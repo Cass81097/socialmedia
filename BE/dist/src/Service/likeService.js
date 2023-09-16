@@ -18,37 +18,21 @@ class LikeService {
                     }
                 });
                 const likeCount = likeRecords.length;
-                return { likeRecords, likeCount };
-            }
-            catch (e) {
-                console.log(e);
-            }
-        };
-        this.save = async (statusId, userId) => {
-            try {
-                const newLike = this.likeRepository.create({
-                    status: { id: statusId },
-                    user: { id: userId }
-                });
-                return await this.likeRepository.save(newLike);
-            }
-            catch (e) {
-                console.log(e);
-            }
-        };
-        this.delete = async (statusId, userId) => {
-            try {
-                const likeToDelete = await this.likeRepository.findOne({ where: { status: { id: statusId }, user: { id: userId } } });
-                if (!likeToDelete) {
-                    return null;
+                let listUserLike = [];
+                for (let i = 0; i < likeRecords.length; i++) {
+                    listUserLike.push(likeRecords[i].user.username);
                 }
-                const del = await this.likeRepository.delete(likeToDelete);
-                return del;
+                return { listUserLike, likeCount };
             }
             catch (e) {
                 console.log(e);
-                throw e;
             }
+        };
+        this.save = async (data) => {
+            return await this.likeRepository.save(data);
+        };
+        this.delete = async (statusId) => {
+            return await this.likeRepository.delete(statusId);
         };
         this.update = async (id, user) => {
             try {

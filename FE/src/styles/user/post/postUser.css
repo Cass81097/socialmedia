@@ -1,0 +1,65 @@
+.user-post-profile p:hover {
+    text-decoration: underline !important;
+    cursor: pointer; 
+}
+
+.post-user-name {
+    display: flex;
+}
+
+.post-user-name p:hover {
+    text-decoration: underline !important;
+    cursor: pointer; 
+}
+
+.icon-post-user {
+    padding: 5px 5px 0 5px;
+}
+
+.post-action {
+    display: flex;
+    justify-content: space-around;
+}
+
+.post-like {
+    width: 50%;
+    text-align: center;
+}
+
+.post-like button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.post-like span {
+    padding: 0 5px;
+}
+
+.post-comment span {
+    padding: 0 5px;
+    transform: translateY(-1px);    
+}
+
+.post-comment {
+    width: 50%;
+    text-align: center;
+}
+
+.post-comment button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.write-post-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-action-post button {
+    border-radius: 50%;
+}

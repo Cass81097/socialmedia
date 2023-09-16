@@ -13,4 +13,5 @@ exports.statusRouter.delete("/:id", statusController_1.default.delete);
 exports.statusRouter.post("", statusController_1.default.add);
 exports.statusRouter.put('/content/:id', statusController_1.default.updateContent);
 exports.statusRouter.put('/visibility/:id', statusController_1.default.updateVisibility);
+exports.statusRouter.get("/id/:senderId/:receiverId", statusController_1.default.findStatusByIdUser);
 //# sourceMappingURL=statusRouter.js.map

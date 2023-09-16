@@ -10,3 +10,6 @@ statusRouter.delete("/:id", statusController.delete);
 statusRouter.post("", statusController.add);
 statusRouter.put('/content/:id', statusController.updateContent);
 statusRouter.put('/visibility/:id', statusController.updateVisibility);
+
+
+statusRouter.get("/id/:senderId/:receiverId", statusController.findStatusByIdUser);

@@ -24,42 +24,22 @@ export class LikeService {
             })
 
             const likeCount = likeRecords.length
-            return { likeRecords , likeCount }
+            let listUserLike=[]
+            for (let i = 0; i < likeRecords.length; i++) {
+
+                listUserLike.push(likeRecords[i].user.username)
+            }
+            return { listUserLike , likeCount }
         }catch (e){
             console.log(e)
         }
     }
 
-    save = async  (statusId, userId ) => {
-        try {
-            const newLike = this.likeRepository.create({
-                status: { id: statusId },
-                user: { id: userId }
-            });
-
-            return await this.likeRepository.save(newLike);
-        }
-        catch (e){
-            console.log(e)
-        }
+    save = async  (data) => {
+        return await  this.likeRepository.save(data)
     }
-    delete = async (statusId , userId) => {
-        try {
-
-            const likeToDelete = await this.likeRepository.findOne({ where: { status: { id: statusId }, user: { id: userId } } });
-
-            if (!likeToDelete) {
-                // Nếu không tìm thấy like, bạn có thể xử lý lỗi hoặc trả về một thông báo phù hợp.
-                return null; // hoặc throw Error("Không tìm thấy like để xóa");
-            }
-
-            const del = await this.likeRepository.delete(likeToDelete);
-            return del
-        }
-        catch (e){
-            console.log(e)
-            throw e
-        }
+    delete = async (statusId ) => {
+            return await this.likeRepository.delete(statusId)
     }
 
     update = async (id, user) => {

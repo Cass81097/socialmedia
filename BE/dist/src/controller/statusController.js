@@ -9,12 +9,11 @@ class StatusController {
     constructor() {
         this.findAll = async (req, res) => {
             let list = await statusService_1.default.findAll();
-            console.log(list);
             res.json(list);
         };
         this.add = async (req, res) => {
             let data = await statusService_1.default.add(req.body);
-            res.json(200, data);
+            res.json(data);
         };
         this.delete = async (req, res) => {
             let data = await statusService_1.default.delete(req.params.id);
@@ -36,6 +35,10 @@ class StatusController {
         this.findAllByIdUser = async (req, res) => {
             const userId = req.params.id;
             let data = await statusService_1.default.findByIdUser(userId);
+            res.json(data);
+        };
+        this.findStatusByIdUser = async (req, res) => {
+            let data = await statusService_1.default.findStatusByIdUser(req.params.senderId, req.params.receiverId);
             res.json(data);
         };
     }
