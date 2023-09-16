@@ -32,6 +32,10 @@ __decorate([
     (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)
 ], Like.prototype, "isLiked", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Like.prototype, "time", void 0);
 exports.Like = Like = __decorate([
     (0, typeorm_1.Entity)()
 ], Like);

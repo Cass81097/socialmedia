@@ -15,5 +15,7 @@ export class Like {
     status: Status;
     @Column({ default: false })
     isLiked: boolean;
+    @Column()
+    time : string
 
 }

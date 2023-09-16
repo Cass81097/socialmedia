@@ -25,6 +25,9 @@ class LikeService {
             }
         };
         this.save = async (statusId, userId) => {
+            const now = new Date();
+            const options = { timeZone: 'Asia/Ho_Chi_Minh', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+            const vnDateTime = new Intl.DateTimeFormat('en-US', options).format(now);
             try {
                 const existingLike = await this.likeRepository.findOne({
                     where: {
@@ -41,6 +44,7 @@ class LikeService {
                         status: { id: statusId },
                         user: { id: userId },
                         isLiked: true,
+                        time: vnDateTime
                     });
                     return await this.likeRepository.save(newLike);
                 }

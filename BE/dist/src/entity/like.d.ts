@@ -5,4 +5,5 @@ export declare class Like {
     user: User;
     status: Status;
     isLiked: boolean;
+    time: string;
 }
