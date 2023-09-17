@@ -17,4 +17,5 @@ exports.friendShipRouter.post('/unfriend/:userId1/:userId2', friendShipControlle
 exports.friendShipRouter.get('/listFriend/username/:username', friendShipController_1.default.findFriendByUsername);
 exports.friendShipRouter.get('/commonFriend/username/:username1/:username2', friendShipController_1.default.findCommonFriendsByUsername);
 exports.friendShipRouter.get('/', friendShipController_1.default.findAll);
+exports.friendShipRouter.get('/listPendingFriend/:user1Id', friendShipController_1.default.findPendingFriend);
 //# sourceMappingURL=friendShipRouter.js.map

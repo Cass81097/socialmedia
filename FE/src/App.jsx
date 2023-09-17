@@ -9,6 +9,7 @@ import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
 import Loading from "./components/common/Loading"
 import { PostContextProvider } from './context/PostContext';
+import ListPendFriend from "./components/profile/container/mainContainer/ListPendFriend";
 
 export default function App() {
   const { user, allUser } = useContext(AuthContext);
@@ -42,6 +43,7 @@ export default function App() {
                   element={user ? <Profile user={username} /> : <Login />}
                 />
               ))}
+            <Route path="/listPendFriend" element={<ListPendFriend />} />
           </Routes>
         </PostContextProvider>
       </ProfileContextProvider>

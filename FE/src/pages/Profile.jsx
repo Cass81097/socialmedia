@@ -23,6 +23,7 @@ import PostProfile from "../components/profile/container/mainContainer/PostProfi
 export default function Profile() {
   const { user } = useContext(AuthContext);
   const { userProfile } = useContext(ProfileContext)
+  console.log(userProfile,1111)
   const [isPost, setIsPost] = useState(true);
   const [isFriend, setIsFriend] = useState(false);
   const [isProfile, setIsProfile] = useState(false);

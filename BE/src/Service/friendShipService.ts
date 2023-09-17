@@ -1,6 +1,7 @@
 import { AppDataSource } from "../data-source";
 import { FriendShip } from "../entity/friendShip";
 import { User } from "../entity/user";
+import {Not} from "typeorm";
 
 export class FriendShipService {
     private friendRepository;
@@ -289,5 +290,17 @@ export class FriendShipService {
     //         throw new Error('Error retrieving users');
     //     }
     // };
+    findPendingFriend = async (user1Id) => {
+        return await this.friendRepository.find({
+            relations: {
+                user1: true,
+                user2: true
+            },
+            where: [
+                { user1: { id: user1Id }, status: "pending", userSendReq:Not(user1Id) },
+                { user2: { id: user1Id }, status: "pending", userSendReq: Not(user1Id)  }
+            ]
+        });
+    };
 }
 export default new FriendShipService();

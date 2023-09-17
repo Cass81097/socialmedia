@@ -4,6 +4,7 @@ exports.FriendShipService = void 0;
 const data_source_1 = require("../data-source");
 const friendShip_1 = require("../entity/friendShip");
 const user_1 = require("../entity/user");
+const typeorm_1 = require("typeorm");
 class FriendShipService {
     constructor() {
         this.findAll = async () => {
@@ -194,6 +195,18 @@ class FriendShipService {
                 console.error("Error in findBlockedUsers:", error);
                 throw error;
             }
+        };
+        this.findPendingFriend = async (user1Id) => {
+            return await this.friendRepository.find({
+                relations: {
+                    user1: true,
+                    user2: true
+                },
+                where: [
+                    { user1: { id: user1Id }, status: "pending", userSendReq: (0, typeorm_1.Not)(user1Id) },
+                    { user2: { id: user1Id }, status: "pending", userSendReq: (0, typeorm_1.Not)(user1Id) }
+                ]
+            });
         };
         this.friendRepository = data_source_1.AppDataSource.getRepository(friendShip_1.FriendShip);
         this.userRepository = data_source_1.AppDataSource.getRepository(user_1.User);

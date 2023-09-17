@@ -7,6 +7,7 @@ import "../../../../styles/user/friend.css";
 import { baseUrl, getRequest } from "../../../../utils/services";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import {fireChangeForInputTimeIfValid} from "@testing-library/user-event/dist/keyboard/shared";
 
 export default function ListFriend() {
     const { userProfile, countFriend } = useContext(ProfileContext);
@@ -17,22 +18,14 @@ export default function ListFriend() {
     const [filteredData, setFilteredData] = useState([]);
     const [commonFriendList, setCommonFriendList] = useState([]);
     const [show, setShow] = useState(false);
-
     const handleClose = () => {
         setShow(false);
     }
 
-    const handleShow = async (username) => {
-        if (username && userProfile && userProfile.length > 0 && userProfile[0].username) {
-          try {
-            const response = await getRequest(`${baseUrl}/users/find/${username}`);
-            setCommonFriendList(response);
-          } catch (error) {
-            console.log(error);
-            return null;
-          }
-          setShow(true);
-        }
+    const handleShow = (arr) => {
+
+         setCommonFriendList(arr);
+        setShow(true);
     };
 
     const goFriendProfile = (username) => {
@@ -109,9 +102,15 @@ export default function ListFriend() {
                                             <img src={listFriend?.avatar} alt="Avatar" />
                                         </div>
                                         <div className="friend-detail">
-                                            <h6 onClick={() => goFriendProfile(listFriend?.username)}>{listFriend?.fullname}</h6>
-                                            {commonFriendNumber?.[index] ? (
-                                                <h6 onClick={() => handleShow(commonFriendNumber?.[index][0].username)}>{commonFriendNumber?.[index].length} bạn chung</h6>
+                                            <h6 onClick={() => goFriendProfile(listFriend?.username)}>
+                                                {listFriend?.fullname}
+                                            </h6>
+                                            {commonFriendNumber?.[index]?.length ? (
+                                                <h6 onClick={() =>
+                                                    handleShow(commonFriendNumber?.[index])}
+                                                >
+                                                    {commonFriendNumber?.[index]?.length} bạn chung
+                                                </h6>
                                             ) : (
                                                 <span>0 bạn chung</span>
                                             )}
@@ -131,7 +130,7 @@ export default function ListFriend() {
                                         <div className="friend-detail">
                                             <h6 onClick={() => goFriendProfile(listFriend?.username)}>{listFriend?.fullname}</h6>
                                             {commonFriendNumber?.[index] ? (
-                                                <h6 onClick={() => handleShow(commonFriendNumber?.[index].username)}>{commonFriendNumber?.[index].length} bạn chung</h6>
+                                                <h6 onClick={() => handleShow(commonFriendNumber?.[index])}>{commonFriendNumber?.[index].length} bạn chung</h6>
                                             ) : (
                                                 <span>0 bạn chung</span>
                                             )}
@@ -145,6 +144,7 @@ export default function ListFriend() {
             </div>
 
             {/* Modal Common Friend */}
+
             <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header closeButton>
                     <Modal.Title style={{ transform: "translateX(92px)" }}>Danh sách bạn chung</Modal.Title>
