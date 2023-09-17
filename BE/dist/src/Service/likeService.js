@@ -53,14 +53,19 @@ class LikeService {
                 console.log(e);
             }
         };
-        this.delete = async (statusId, userId) => {
+        this.deleteByUserIdAndStatusId = async (statusId, userId) => {
             try {
-                const likeToDelete = await this.likeRepository.findOne({ where: { status: { id: statusId }, user: { id: userId } } });
+                const likeToDelete = await this.likeRepository.createQueryBuilder("like")
+                    .leftJoinAndSelect("like.user", "user")
+                    .leftJoinAndSelect("like.status", "status")
+                    .where("user.id = :userId", { userId })
+                    .andWhere("status.id = :statusId", { statusId })
+                    .getOne();
+                console.log(likeToDelete);
                 if (!likeToDelete) {
-                    return null;
+                    throw new Error("Không tìm thấy like để xóa");
                 }
-                const del = await this.likeRepository.delete(likeToDelete);
-                return del;
+                return await this.likeRepository.delete(likeToDelete);
             }
             catch (e) {
                 console.log(e);

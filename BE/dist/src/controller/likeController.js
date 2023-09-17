@@ -12,7 +12,7 @@ class LikeController {
             res.json(data);
         };
         this.deleteLike = async (req, res) => {
-            const del = await likeService_1.default.delete(req.params.statusId, req.body.userId);
+            const del = await likeService_1.default.deleteByUserIdAndStatusId(req.params.statusId, req.query.userId);
             res.json(del);
         };
         this.getLikeForStatus = async (req, res) => {

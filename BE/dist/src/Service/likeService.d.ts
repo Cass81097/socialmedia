@@ -6,7 +6,7 @@ export declare class LikeService {
         likeCount: any;
     }>;
     save: (statusId: any, userId: any) => Promise<any>;
-    delete: (statusId: any, userId: any) => Promise<any>;
+    deleteByUserIdAndStatusId: (statusId: any, userId: any) => Promise<any>;
     update: (id: any, user: any) => Promise<any>;
 }
 declare const _default: LikeService;

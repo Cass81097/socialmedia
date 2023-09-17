@@ -23,7 +23,8 @@ export default function Like({ postId, countLike,checkStatusLike }) {
     const handleRemoveLike = () => {
         const data = user.id;
         console.log(data)
-        customAxios.delete(`/likes/${postId}`, { userId: data }).then((res) => {
+        console.log(postId)
+        customAxios.delete(`/likes/${postId}?userId=${data}` ).then((res) => {
             setIsLiked(false);
             setLikeCount(likeCount - 1); // Giảm số lượng like đi 1
         });

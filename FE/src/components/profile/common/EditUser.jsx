@@ -116,7 +116,10 @@ export default function EditUser() {
                         }else {
                             setIsEditing({...isEditing, password: false});
                             if (res.data === "mat khau da duoc cap nhat" ) {
-                                toast.success("Chỉnh sửa mật khẩu thành cong.", toastOptions);
+                                toast.success("Chỉnh sửa mật khẩu thành công.", toastOptions);
+                                setTimeout(() => {
+                                    toast.dismiss();
+                                }, 1000);
                                 setPasswordFields({
                                     oldPassword: "",
                                     newPassword: "",
