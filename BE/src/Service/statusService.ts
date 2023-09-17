@@ -27,7 +27,6 @@ export class StatusService {
         for (let i = 0; i < status.length; i++) {
             let imageByStatusId = await imageService.findAllByStatusId(status[i].id);
             let likeByStatusId = await likeService.getLikeForStatus(status[i].id)
-            console.log(imageByStatusId, 11111)
             status[i] = await { ...status[i], image: [...imageByStatusId], acountLike: likeByStatusId.likeCount };
         }
 

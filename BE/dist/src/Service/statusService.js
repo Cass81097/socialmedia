@@ -24,7 +24,6 @@ class StatusService {
             for (let i = 0; i < status.length; i++) {
                 let imageByStatusId = await imageStatusService_1.default.findAllByStatusId(status[i].id);
                 let likeByStatusId = await likeService_1.default.getLikeForStatus(status[i].id);
-                console.log(imageByStatusId, 11111);
                 status[i] = await Object.assign(Object.assign({}, status[i]), { image: [...imageByStatusId], acountLike: likeByStatusId.likeCount });
             }
             return status;
