@@ -23,10 +23,6 @@ input {
   border: none;
 }
 
-::-webkit-scrollbar {
-  display: none;
-}
-
 .login__container {
   background-color: #f0f2f5;
   display: grid;

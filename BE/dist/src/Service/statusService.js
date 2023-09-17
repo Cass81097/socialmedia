@@ -24,7 +24,6 @@ class StatusService {
             for (let i = 0; i < status.length; i++) {
                 let imageByStatusId = await imageStatusService_1.default.findAllByStatusId(status[i].id);
                 let likeByStatusId = await likeService_1.default.getLikeForStatus(status[i].id);
-                console.log(imageByStatusId, 11111);
                 status[i] = await Object.assign(Object.assign({}, status[i]), { image: [...imageByStatusId], acountLike: likeByStatusId.likeCount });
             }
             return status;
@@ -69,7 +68,6 @@ class StatusService {
             for (let i = 0; i < status.length; i++) {
                 let imageByStatusId = await imageStatusService_1.default.findAllByStatusId(status[i].id);
                 let likeByStatusId = await likeService_1.default.getLikeForStatus(status[i].id);
-                console.log(likeByStatusId.listUserLike, 111111);
                 status[i] = Object.assign(Object.assign({}, status[i]), { image: [...imageByStatusId], acountLike: likeByStatusId.likeCount, listUserLike: [...likeByStatusId.listUserLike] });
             }
             return status;
@@ -87,11 +85,9 @@ class StatusService {
                     visibility: "public"
                 }
             });
-            console.log(status, 111);
             for (let i = 0; i < status.length; i++) {
                 let imageByStatusId = await imageStatusService_1.default.findAllByStatusId(status[i].id);
                 let likeByStatusId = await likeService_1.default.getLikeForStatus(status[i].id);
-                console.log(likeByStatusId.listUserLike, 111111);
                 status[i] = await Object.assign(Object.assign({}, status[i]), { image: [...imageByStatusId], acountLike: likeByStatusId.likeCount, listUserLike: [...likeByStatusId.listUserLike] });
             }
             return status;
@@ -164,7 +160,6 @@ class StatusService {
             }
         };
         this.findByContent = async (id, content) => {
-            console.log(id, content, 111);
             try {
                 return await this.statusRepository.find({
                     relations: {

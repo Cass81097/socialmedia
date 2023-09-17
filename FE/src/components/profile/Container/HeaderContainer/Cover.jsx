@@ -43,9 +43,13 @@ export default function Cover() {
         uploadImage(e, setImageSrc);
     };
 
+    const goImageUrl = (imageUrl) => {
+        window.open(imageUrl, "_blank");
+    };
+
     return (
         <div style={{ position: "relative" }}>
-            <div className="cover-image">
+            <div className="cover-image" onClick={() => goImageUrl(userProfile[0].cover)}>
                 <img src={userProfile[0]?.cover} className="cover-img" />
             </div> 
             <div className="edit-profile-cover">

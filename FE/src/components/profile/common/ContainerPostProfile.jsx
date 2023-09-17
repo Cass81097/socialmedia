@@ -19,8 +19,8 @@ export default function ContainerPostProfile() {
     const { user } = useContext(AuthContext);
     const { userProfile } = useContext(ProfileContext);
     const { postUser, postImageUser, fetchPostUser, fetchImagePostUser } = useContext(PostContext);
-
     const [imageSrcProfile, setImageSrcProfile] = useState(null);
+
     const [show, setShow] = useState(false);
     const [textMessage, setTextMessage] = useState("")
     const [isPostLoading, setIsPostLoading] = useState(false);
@@ -136,14 +136,14 @@ export default function ContainerPostProfile() {
                             <div className="user-post-profile">
                                 <p onClick={() => goProfile(user?.username)}>{user.fullname}</p>
                                 <small>
-                                    Public
+                                    <span>Public</span> 
                                     <i className="fas fa-caret-down" />
                                 </small>
                             </div>
                         </div>
                         <div className="user-action-post">
                             <Button variant="light">
-                                <i class="fas fa-ellipsis-h"></i>
+                                <i className="fas fa-ellipsis-h"></i>
                             </Button>
                         </div>
                     </div>
@@ -273,7 +273,7 @@ export default function ContainerPostProfile() {
                                     {postImageUser[index]?.length > 0 && postImageUser[index] && (
                                         <div className={`post-image ${postImageUser[index]?.length > 2 ? 'three' : ''}`}>
                                             {postImageUser[index]?.map((image, imageIndex) => (
-                                                <img src={image.imageUrl} alt="Post Image" className="post-img" key={imageIndex} onClick={() => goImageUrl(image.imageUrl)} />
+                                                <img src={image.imageUrl} alt="Post Image" className="post-img" key={imageIndex} />
                                             ))}
                                         </div>
                                     )}

@@ -10,7 +10,6 @@ export class ImageStatusService {
     }
 
     add = async (image) => {
-        console.log(image, 111)
         return await this.imageStatusRepository.save(this.imageStatusRepository.create(image))
     }
 

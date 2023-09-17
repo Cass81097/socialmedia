@@ -27,7 +27,7 @@ export class StatusService {
         for (let i = 0; i < status.length; i++) {
             let imageByStatusId = await imageService.findAllByStatusId(status[i].id);
             let likeByStatusId = await likeService.getLikeForStatus(status[i].id)
-            console.log(imageByStatusId, 11111)
+
             status[i] = await { ...status[i], image: [...imageByStatusId], acountLike: likeByStatusId.likeCount };
         }
 
@@ -83,7 +83,6 @@ export class StatusService {
         for (let i = 0; i < status.length; i++) {
             let imageByStatusId = await imageService.findAllByStatusId(status[i].id);
             let likeByStatusId = await likeService.getLikeForStatus(status[i].id);
-            console.log(likeByStatusId.listUserLike, 111111);
     
             status[i] = {
                 ...status[i],
@@ -109,12 +108,12 @@ export class StatusService {
                 visibility: "public"
             }
         });
-        console.log(status, 111)
+
 
         for (let i = 0; i < status.length; i++) {
             let imageByStatusId = await imageService.findAllByStatusId(status[i].id);
             let likeByStatusId = await likeService.getLikeForStatus(status[i].id)
-            console.log(likeByStatusId.listUserLike, 111111)
+        
             status[i] = await { ...status[i], image: [...imageByStatusId], acountLike: likeByStatusId.likeCount, listUserLike: [...likeByStatusId.listUserLike] };
         }
 
@@ -194,7 +193,7 @@ export class StatusService {
         }
     }
     findByContent = async (id, content) => {
-        console.log(id, content, 111)
+   
         try {
             return await this.statusRepository.find({
                 relations: {
