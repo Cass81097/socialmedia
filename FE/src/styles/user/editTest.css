@@ -1,0 +1,36 @@
+.user-info {
+    margin-top: 5%;
+    width: 100%;
+    height: 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
+.user-info i {
+    font-size: 22px;
+}
+
+.item-Left {
+    display: flex;
+    width: 80%;
+}
+
+.item-Right {
+    display: flex;
+    width: 20%;
+    justify-content: space-between;
+}
+
+.right-icons {
+    display: flex; /* Để các icon nằm trên cùng một hàng */
+    align-items: center; /* Để căn giữa theo chiều dọc */
+    margin-right: 50px;
+
+}
+
+.item-icon {
+    margin: 0 5%;
+}
+
+

@@ -19,6 +19,7 @@ import EditUser from "../components/profile/common/EditUser"
 import SidebarProfile from "../components/profile/SidebarProfile";
 import LeftContainerProfile from "../components/profile/common/LeftContainerProfile"
 import PostProfile from "../components/profile/Container/MainContainer/PostProfile";
+import Info from "../components/profile/common/Info";
 export default function Profile() {
   const { user } = useContext(AuthContext);
   const { userProfile } = useContext(ProfileContext)
@@ -56,13 +57,21 @@ export default function Profile() {
               </div>
             </div>
           ) : !isPost && !isFriend && isProfile ? (
+
             <div className="profile-info">
               <div className="info-col">
                 <LeftContainerProfile></LeftContainerProfile>
               </div>
-              {userProfile[0]?.id === user?.id && <div className="post-col" style={{ background: "white" }}>
-                <EditUser></EditUser>
-              </div>}
+              {userProfile[0]?.id === user?.id ? (
+                  <div className="post-col" style={{ background: "white" }}>
+                    <EditUser></EditUser>
+                  </div>
+              ) : (
+                  <div className="post-col" style={{ background: "white" }}>
+
+                  <Info></Info>
+                  </div>
+              )}
             </div>
           ) : (
             <div className="profile-info">
