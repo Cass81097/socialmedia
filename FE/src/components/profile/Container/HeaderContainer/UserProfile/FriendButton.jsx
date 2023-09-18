@@ -171,14 +171,14 @@ export default function FriendButton() {
       {friendStatus?.status === "pending" && friendStatus?.userSendReq === user.id ? (
         <div className="pd-right">
           <div className="add-button" style={{ minWidth: "150px" }}>
-            <button type="button" className="btn btn-primary btn-add" >
+            <button type="button" className="btn btn-primary btn-add btn-add-friend" >
               <i className="fas fa-user-check">
                 <span>Đã gửi lời mời</span>
               </i>
             </button>
           </div>
           <div className="edit-button" style={{ minWidth: "160px" }}>
-            <button type="button" className="btn btn-secondary btn-edit" style={{ background: "#dbdbdc" }} onClick={handleUnfriend}>
+            <button type="button" className="btn btn-secondary btn-edit btn-edit-friend" style={{ background: "#dbdbdc" }} onClick={handleUnfriend}>
               <i className="fas fa-user-times" style={{ color: "black" }}>
                 <span>Hủy lời mời</span>
               </i>
@@ -188,14 +188,14 @@ export default function FriendButton() {
       ) : friendStatus?.status === "pending" ? (
         <div className="pd-right">
           <div className="add-button">
-            <button type="button" className="btn btn-primary btn-add" onClick={handleAcceptFriend}>
+            <button type="button" className="btn btn-primary btn-add btn-add-friend" onClick={handleAcceptFriend}>
               <i className="fas fa-user-plus">
                 <span>Đồng ý kết bạn</span>
               </i>
             </button>
           </div>
           <div className="edit-button" style={{ minWidth: "185px" }}>
-            <button type="button" className="btn btn-secondary btn-edit" style={{ background: "#dbdbdc" }} onClick={handleCancelRequest}>
+            <button type="button" className="btn btn-secondary btn-edit btn-editfriend" style={{ background: "#dbdbdc" }} onClick={handleCancelRequest}>
               <i className="fas fa-user-slash" style={{ color: "black" }}>
                 <span>Từ chối kết bạn</span>
               </i>
@@ -205,14 +205,14 @@ export default function FriendButton() {
       ) : friendStatus?.status === "friend" ? (
         <div className="pd-right">
           <div className="add-button" style={{ minWidth: "100px" }}>
-            <button type="button" className="btn btn-primary btn-add">
+            <button type="button" className="btn btn-primary btn-add btn-add-friend">
               <i className="fas fa-user">
                 <span>Bạn bè</span>
               </i>
             </button>
           </div>
           <div className="edit-button" style={{ minWidth: "160px" }}>
-            <button type="button" className="btn btn-secondary btn-edit" onClick={handleShowAlertUnfriend}>
+            <button type="button" className="btn btn-secondary btn-edit btn-edit-friend" onClick={handleShowAlertUnfriend}>
               <i className="fas fa-user-slash" style={{ color: "black" }}>
                 <span>Hủy kết bạn</span>
               </i>
@@ -222,14 +222,14 @@ export default function FriendButton() {
       ) : userProfile[0]?.username === user.username ? (
         <div className="pd-right">
           <div className="add-button" style={{ minWidth: "140px" }}>
-            <button type="button" className="btn btn-primary btn-add">
+            <button type="button" className="btn btn-primary btn-add btn-add-friend ">
               <i className="fas fa-plus fa-xa">
                 <span>Thêm vào tin</span>
               </i>
             </button>
           </div>
           <div className="edit-button">
-            <button type="button" className="btn btn-secondary btn-edit">
+            <button type="button" className="btn btn-secondary btn-edit btn-edit-friend">
               <i className="fas fa-pen fa-xz">
                 <span>Chỉnh sửa trang cá nhân</span>
               </i>
@@ -239,14 +239,14 @@ export default function FriendButton() {
       ) : (
         <div className="pd-right">
           <div className="add-button" style={{ minWidth: "110px" }}>
-            <button type="button" className="btn btn-primary btn-add" onClick={handleAddFriend}>
+            <button type="button" className="btn btn-primary btn-add btn-add-friend" onClick={handleAddFriend}>
               <i className="fas fa-user-plus">
                 <span>Kết bạn</span>
               </i>
             </button>
           </div>
           <div className="edit-button" style={{ minWidth: "135px" }}>
-            <button type="button" className="btn btn-secondary btn-edit" style={{ background: "#dbdbdc" }}>
+            <button type="button" className="btn btn-secondary btn-edit btn-edit-friend" style={{ background: "#dbdbdc" }}>
               {/* <i className="fas fa-pen fa-xz"> */}
               <i className="fab fa-facebook-messenger" style={{ color: "black" }}>
                 <span>Nhắn tin</span>

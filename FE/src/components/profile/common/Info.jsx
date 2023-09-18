@@ -19,9 +19,6 @@ export default function Info() {
 
     return (
         <>
-
-
-
             <div className="user-info">
                 <div className="item-Left">
                     <div className="item-icon">

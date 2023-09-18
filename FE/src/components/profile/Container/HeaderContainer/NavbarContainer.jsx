@@ -154,7 +154,7 @@ export default function NavbarContainer(props) {
                 <div className="icon-block">
                     <button
                         type="button"
-                        className="btn btn-secondary btn-edit"
+                        className="btn btn-secondary btn-edit btn-edit-friend"
                         style={{ background: "#dbdbdc" }}
                         onClick={() => showInfo()}
                     >
@@ -195,7 +195,7 @@ export default function NavbarContainer(props) {
 
                                         <button
                                             type="button"
-                                            className="btn btn-secondary btn-edit block-edit"
+                                            className="btn btn-secondary btn-edit btn-edit-friend block-edit"
                                             style={{ background: "#dbdbdc" }}
                                             onClick={() => handleShowAlert(index)}
                                         >

@@ -31,12 +31,10 @@ const metadata = {
 
 
 export default function uploadImages(e, callback, setIsImageLoading) {
-    setIsImageLoading(true); 
-    
+    setIsImageLoading(true);
+
     const input = e.target;
     if (input.files && input.files.length > 0) {
-        // document.getElementById("image-upload").disabled = true;
-
         const files = Array.from(input.files);
         const uploadPromises = files.map((file) => {
             const fileExtension = file.name.split(".").pop().toLowerCase();
@@ -70,14 +68,13 @@ export default function uploadImages(e, callback, setIsImageLoading) {
 
         Promise.all(uploadPromises)
             .then((downloadURLs) => {
-                // console.log("Files uploaded successfully:", downloadURLs);
                 callback(downloadURLs);
             })
             .catch((error) => {
                 console.error("Error uploading files:", error);
             })
             .finally(() => {
-                // document.getElementById("image-upload").disabled = false;
+                setIsImageLoading(false);
             });
     }
 }

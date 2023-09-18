@@ -113,11 +113,11 @@ header {
     font-size: 95%;
 }
 
-.btn-add {
+.btn-add-friend {
     border: 1px solid white !important;
 }
 
-.btn-edit {
+.btn-edit-friend {
     background: #E4E6EB !important;
     border: 1px solid white !important;
 }
@@ -143,7 +143,8 @@ header {
 .all-task {
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
-    border: 1px solid #dadcdf;;
+    border: 1px solid #dadcdf;
+    ;
     display: flex;
     align-items: center;
     background: #fff;
@@ -240,7 +241,7 @@ header {
     padding: 0px 10px 0px 15px;
 }
 
-.profile-about span{
+.profile-about span {
     color: black;
 }
 
@@ -272,8 +273,7 @@ header {
 .home-content {
     background: white !important;
     /* height: 210px; */
-    border-radius: 15px;
-    overflow: hidden;
+    border-radius: 6px;
     border: 1px solid #dfdaec;
 }
 
@@ -294,11 +294,11 @@ header {
 }
 
 .modal-image-container img {
-    width: 310px; 
+    width: 310px;
     height: 280px;
     object-fit: cover;
-    margin-right: 10px; 
-    margin-bottom: 10px; 
+    margin-right: 10px;
+    margin-bottom: 10px;
     border-radius: 6px;
     border: 1px solid #d3cece;
 }
@@ -310,16 +310,48 @@ header {
     padding: 10px;
     border: 1px solid beige;
     overflow: auto;
-    height: 500px;
+    /* height: 500px; */
     object-fit: cover;
 }
 
+.post-image-container.three-image {
+    height: 500px;
+}
+
+.post-image-container img:nth-child(1) {
+    margin-bottom: 10px;
+}
+
+.post-image-container.three-image img:nth-child(1) {
+    height: 300px; 
+}
+
+.post-image-container.three-image img:nth-child(2),
+.post-image-container.three-image img:nth-child(3) {
+    width: 49%;
+    height: 200px;
+}
+
+.post-image-container.four-image {
+    min-height: 485px;
+}
+
+.post-image-container.four-image img:nth-child(1) {
+    height: 300px;
+}
+
+.post-image-container.four-image img:nth-child(2),
+.post-image-container.four-image img:nth-child(3),
+.post-image-container.four-image img:nth-child(4) {
+    width: 33%;
+    height: 150px;
+}
+
 .post-image-container img {
-    width: 290px; 
-    height: 280px;
+    width: 100%;
+    height: 300px;
     object-fit: cover;
-    margin-right: 10px; 
-    margin-bottom: 10px; 
+    border-radius: 5px;
 }
 
 .post-image-container:hover {
@@ -489,6 +521,13 @@ header {
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    width: fit-content;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.activity-icons:hover {
+    text-decoration: underline !important;
 }
 
 .left-icons {

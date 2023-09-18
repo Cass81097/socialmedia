@@ -17,9 +17,10 @@ import "../../../styles/user/post/privacy.css";
 import { baseUrl, postRequest, putRequest } from "../../../utils/services";
 import LoadingNew from "../../common/LoadingNew";
 import Like from "../../common/Like";
+import LikeList from "../../common/LikeList";
 
 export default function ContainerPostProfile(props) {
-    const { user, userProfile } = props;
+    const { user, userProfile, setShowLikeList, setLikeListIndex } = props;
 
     const navigate = useNavigate();
     const { postUser, postImageUser, fetchPostUser, fetchImagePostUser } = useContext(PostContext);
@@ -39,9 +40,13 @@ export default function ContainerPostProfile(props) {
     const [privacyIndex, setPrivacyIndex] = useState(null);
     const [postUserPrivacy, setPostUserPrivacy] = useState(null);
 
+    //Like
     const [isCountLike, setIsCountLike] = useState([]);
 
-    console.log(postUser[0]);
+    const handleLikeListShow = async (index) => {
+        setLikeListIndex(index)
+        setShowLikeList(true);
+    };
 
     useEffect(() => {
         if (privacyIndex !== null) {
@@ -98,12 +103,16 @@ export default function ContainerPostProfile(props) {
 
     const handleImageUploadMore = (e) => {
         uploadImages(e, (images) => {
+            setIsImageLoading(false);
             setImageSrcProfile((prevImages) => [...prevImages, ...images]);
-        });
+        }, setIsImageLoading);
     };
 
     const handleImageUploadPost = (e) => {
-        uploadImages(e, setImageSrcProfile, setIsImageLoading);
+        uploadImages(e, (images) => {
+            setIsImageLoading(false);
+            setImageSrcProfile(images);
+        }, setIsImageLoading);
     };
 
     useEffect(() => {
@@ -252,13 +261,33 @@ export default function ContainerPostProfile(props) {
 
                         <div style={{ position: "relative" }}>
 
-                            {imageSrcProfile && imageSrcProfile.length > 0 && (
+                            {imageSrcProfile && imageSrcProfile.length > 0 && imageSrcProfile.length < 3 ? (
                                 <div className="post-image-container">
                                     {imageSrcProfile.map((src, index) => (
                                         <img key={index} src={src} alt={`Image ${index}`} />
                                     ))}
                                 </div>
-                            )}
+                            ) : imageSrcProfile && imageSrcProfile.length === 3 ? (
+                                <div className="post-image-container three-image">
+                                    {imageSrcProfile.map((src, index) => (
+                                        <img key={index} src={src} alt={`Image ${index}`} />
+                                    ))}
+                                </div>
+                            ) : imageSrcProfile && imageSrcProfile.length === 4 ? (
+                                <div className="post-image-container four-image">
+                                    {imageSrcProfile.map((src, index) => (
+                                        <img key={index} src={src} alt={`Image ${index}`} />
+                                    ))}
+                                </div>
+                            ) : imageSrcProfile && imageSrcProfile.length > 4 ? (
+                                <div className="post-image-container five-image">
+                                    {imageSrcProfile.map((src, index) => (
+                                        <img key={index} src={src} alt={`Image ${index}`} />
+                                    ))}
+                                </div>
+                            )
+                                :
+                                null}
 
                             {imageSrcProfile && imageSrcProfile.length > 0 && (
                                 <div className="post-image-close">
@@ -365,19 +394,37 @@ export default function ContainerPostProfile(props) {
                                 </div>
                                 <div className="post-user">
                                     <p className="post-text">{post.content}</p>
+
                                     {postImageUser[index]?.length > 0 && postImageUser[index] && (
-                                        <div className={`post-image ${postImageUser[index]?.length > 2 ? 'three' : ''}`}>
+                                        <div className={`post-image ${postImageUser[index]?.length === 4 ? 'four' : postImageUser[index]?.length > 2 && postImageUser[index]?.length !== 4 ? 'three' : ''}`}>
                                             {postImageUser[index]?.map((image, imageIndex) => (
                                                 <img src={image.imageUrl} alt="Post Image" className="post-img" key={imageIndex} />
                                             ))}
                                         </div>
                                     )}
-                                    {post.accountLike > 0 && (
+
+                                    {post.accountLike > 0 && post.accountLike < 3 ? (
                                         <div className="activity-icons">
-                                            <BiSolidLike style={{color:"rgb(27 97 255)"}} className="like-icon" />
-                                            <span style={{marginLeft:"5px"}}>{post.accountLike} người đã thích</span>
+                                            <BiSolidLike style={{ color: "rgb(27 97 255)" }} className="like-icon" />
+                                            <span style={{ marginLeft: "5px" }} onClick={() => handleLikeListShow(index)}>
+                                                {post.listUserLike.map((userLike) => {
+                                                    if (user.username === userLike?.user?.username) {
+                                                        return "Bạn";
+                                                    } else {
+                                                        return userLike?.user?.fullname;
+                                                    }
+                                                }).join(" và ")} đã thích
+                                            </span>
                                         </div>
+                                    ) : (
+                                        post.accountLike > 2 && (
+                                            <div className="activity-icons">
+                                                <BiSolidLike style={{ color: "rgb(27 97 255)" }} className="like-icon" />
+                                                <span onClick={() => handleLikeListShow(index)} style={{ marginLeft: "5px" }}>{post?.accountLike} người đã thích</span>
+                                            </div>
+                                        )
                                     )}
+
                                 </div>
 
                                 <div className="post-action">
