@@ -57,7 +57,7 @@ export class StatusService {
                 ...status[i],
                 image: [...imageByStatusId],
                 accountLike: likeByStatusId.likeCount,
-                // listUserLike: [...likeByStatusId.listUserLike]
+                listUserLike: [...likeByStatusId.likeRecords]
             };
         }
 
@@ -80,6 +80,7 @@ export class StatusService {
             }
         });
 
+    
         for (let i = 0; i < status.length; i++) {
             let imageByStatusId = await imageService.findAllByStatusId(status[i].id);
             let likeByStatusId = await likeService.getLikeForStatus(status[i].id);
@@ -88,7 +89,7 @@ export class StatusService {
                 ...status[i],
                 image: [...imageByStatusId],
                 accountLike: likeByStatusId.likeCount,
-                // listUserLike: [...likeByStatusId.listUserLike]
+                listUserLike: [...likeByStatusId.likeRecords]
             };
         }
 
@@ -128,7 +129,7 @@ export class StatusService {
                 ...status[i],
                 image: [...imageByStatusId],
                 accountLike: likeByStatusId.likeCount,
-                // listUserLike: [...likeByStatusId.listUserLike]
+                listUserLike: [...likeByStatusId.likeRecords]
             };
         }
 
@@ -162,7 +163,7 @@ export class StatusService {
                 ...status[i],
                 image: [...imageByStatusId],
                 accountLike: likeByStatusId.likeCount,
-                // listUserLike: [...likeByStatusId.listUserLike]
+                listUserLike: [...likeByStatusId.likeRecords]
             };
         }
 

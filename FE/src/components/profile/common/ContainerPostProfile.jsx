@@ -41,6 +41,8 @@ export default function ContainerPostProfile(props) {
 
     const [isCountLike, setIsCountLike] = useState([]);
 
+    console.log(postUser[0]);
+
     useEffect(() => {
         if (privacyIndex !== null) {
             setPostUserPrivacy(postUser[privacyIndex]?.visibility);

@@ -15,26 +15,27 @@ export const PostContextProvider = ({ children }) => {
         try {
             const storedUser = localStorage.getItem('User');
             const userStorage = JSON.parse(storedUser).username;
-            const userId = userProfile[0]?.id;
+            const userId = userProfile?.[0]?.id;
 
             let response;
             if (userStorage === userId) {
                 response = await getRequest(`${baseUrl}/status/${userId}`);
-            } else {
-                const friendshipCheckResponse = await getRequest(`${baseUrl}/friendShips/checkStatusByUserId/${userId}/${user.id}`);
+            } 
+            else {
+                const friendshipCheckResponse = await getRequest(`${baseUrl}/friendShips/checkStatusByUserId/${userId}/${user?.id}`);
 
                 if (friendshipCheckResponse?.status === 'friend') {
                     response = await getRequest(`${baseUrl}/status/visibility/${userId}`);
                 } else {
                     response = await getRequest(`${baseUrl}/status/visibility/public/${userId}`);
                 }
-            }
-
+            } 
+            
             setPostUser(response);
         } catch (error) {
             console.error("Error fetching user profiles:", error);
         }
-    }, [user.id, userProfile]);
+    }, [user?.id, userProfile]);
 
     const fetchImagePostUser = useCallback(async () => {
         try {
@@ -55,7 +56,7 @@ export const PostContextProvider = ({ children }) => {
             try {
                 const storedUser = localStorage.getItem('User');
                 const userStorage = JSON.parse(storedUser).username;
-                const userId = userProfile[0]?.id;
+                const userId = userProfile?.[0]?.id;
     
                 let response;
                 if (userStorage === userId) {
