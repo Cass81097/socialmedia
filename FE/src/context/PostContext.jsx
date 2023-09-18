@@ -55,14 +55,14 @@ export const PostContextProvider = ({ children }) => {
         const fetchPostUser = async () => {
             try {
                 const storedUser = localStorage.getItem('User');
-                const userStorage = JSON.parse(storedUser).username;
+                const userStorage = JSON.parse(storedUser)?.username;
                 const userId = userProfile?.[0]?.id;
     
                 let response;
                 if (userStorage === userId) {
                     response = await getRequest(`${baseUrl}/status/${userId}`);
                 } else {
-                    const friendshipCheckResponse = await getRequest(`${baseUrl}/friendShips/checkStatusByUserId/${userId}/${user.id}`);
+                    const friendshipCheckResponse = await getRequest(`${baseUrl}/friendShips/checkStatusByUserId/${userId}/${user?.id}`);
     
                     if (friendshipCheckResponse?.status === 'friend') {
                         response = await getRequest(`${baseUrl}/status/visibility/${userId}`);
@@ -78,7 +78,7 @@ export const PostContextProvider = ({ children }) => {
         };
     
         fetchPostUser();
-    }, [user.id, userProfile, baseUrl]);
+    }, [user?.id, userProfile, baseUrl]);
 
     useEffect(() => {
         const fetchImagePostUser = async () => {
