@@ -27,7 +27,7 @@ export default function App() {
   return (
     <Router>
       <ProfileContextProvider user={user}>
-        <PostContextProvider user={user} >
+        <PostContextProvider>
           <Routes>
             <Route path="/loading" element={<Loading />} />
             <Route path="/404" element={<PageNotFound />} />

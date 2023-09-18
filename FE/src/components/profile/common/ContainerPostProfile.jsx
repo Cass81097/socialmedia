@@ -1,27 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../../context/AuthContext";
-import { ProfileContext } from "../../../context/ProfileContext"
-import { Link, useNavigate } from "react-router-dom";
-import uploadImages from "../../../hooks/UploadMulti";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import styled from "styled-components";
-import InputEmoji from "react-input-emoji";
-import "../../../styles/user/post/inputEmoji.css"
-import "../../../styles/user/post/postImage.css"
-import "../../../styles/user/post/postUser.css"
-import "../../../styles/user/post/privacy.css"
-import { baseUrl, getRequest, postRequest, putRequest } from "../../../utils/services";
-import { PostContext } from "../../../context/PostContext";
-import LoadingNew from "../../common/LoadingNew";
-import { FaEarthAmericas } from 'react-icons/fa6';
-import { FaUserFriends } from 'react-icons/fa';
 import { BiSolidLockAlt } from 'react-icons/bi';
+import { FaUserFriends } from 'react-icons/fa';
+import { FaEarthAmericas } from 'react-icons/fa6';
+import InputEmoji from "react-input-emoji";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { PostContext } from "../../../context/PostContext";
+import uploadImages from "../../../hooks/UploadMulti";
+import "../../../styles/user/post/inputEmoji.css";
+import "../../../styles/user/post/postImage.css";
+import "../../../styles/user/post/postUser.css";
+import "../../../styles/user/post/privacy.css";
+import { baseUrl, postRequest, putRequest } from "../../../utils/services";
+import LoadingNew from "../../common/LoadingNew";
 
-export default function ContainerPostProfile() {
+export default function ContainerPostProfile(props) {
+    const { user, userProfile, checkFriendStatus } = props;
+
     const navigate = useNavigate();
-    const { user } = useContext(AuthContext);
-    const { userProfile } = useContext(ProfileContext);
     const { postUser, postImageUser, fetchPostUser, fetchImagePostUser } = useContext(PostContext);
     const [imageSrcProfile, setImageSrcProfile] = useState(null);
     const [show, setShow] = useState(false);
@@ -32,7 +30,7 @@ export default function ContainerPostProfile() {
     //Privacy
     const [privacyPost, setPrivacyPost] = useState('public');
     const [privacyValue, setPrivacyValue] = useState('public');
-    
+
     const [showPrivacy, setShowPrivacy] = useState(false);
     const [showPrivacyPost, setShowPrivacyPost] = useState(false);
 
@@ -165,8 +163,6 @@ export default function ContainerPostProfile() {
     };
 
     const handleChangePrivacy = async (postId, privacyValue) => {
-        console.log(postId);
-        console.log(privacyValue);
         setIsPostLoading(true);
 
         const data = {
@@ -205,22 +201,22 @@ export default function ContainerPostProfile() {
                                     {privacyPost === "public" ? (
                                         <>
                                             <FaEarthAmericas />
-                                            <i className="fas fa-caret-down" style={{marginLeft:"5px"}} />
+                                            <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
                                         </>
                                     ) : privacyPost === "friend" ? (
                                         <>
                                             <FaUserFriends />
-                                            <i className="fas fa-caret-down" style={{marginLeft:"5px"}} />
+                                            <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
                                         </>
                                     ) : privacyPost === "private" ? (
                                         <>
                                             <BiSolidLockAlt />
-                                            <i className="fas fa-caret-down" style={{marginLeft:"5px"}} />
+                                            <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
                                         </>
                                     ) : (
                                         <>
                                             <FaEarthAmericas />
-                                            <i className="fas fa-caret-down" style={{marginLeft:"5px"}} />
+                                            <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
                                         </>
                                     )}
                                 </small>
@@ -347,13 +343,13 @@ export default function ContainerPostProfile() {
                                                     <div>
                                                         <span>{timeAgo}</span>
                                                         {postUser[index]?.visibility === 'public' && (
-                                                            <i className="fas fa-globe-americas" style={{ color: '#65676B', cursor: 'pointer', marginLeft:"5px", fontSize:"smaller" }} onClick={() => handlePrivacyShow(index)} />
+                                                            <i className="fas fa-globe-americas" style={{ color: '#65676B', cursor: 'pointer', marginLeft: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
                                                         )}
                                                         {postUser[index]?.visibility === 'friend' && (
-                                                            <i className="fas fa-user-friends" style={{ color: '#65676B', cursor: 'pointer', marginLeft:"5px", fontSize:"smaller" }} onClick={() => handlePrivacyShow(index)} />
+                                                            <i className="fas fa-user-friends" style={{ color: '#65676B', cursor: 'pointer', marginLeft: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
                                                         )}
                                                         {postUser[index]?.visibility === 'private' && (
-                                                            <i className="fas fa-lock" style={{ color: '#65676B', cursor: 'pointer', marginLeft:"5px", fontSize:"smaller" }} onClick={() => handlePrivacyShow(index)} />
+                                                            <i className="fas fa-lock" style={{ color: '#65676B', cursor: 'pointer', marginLeft: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
                                                         )}
                                                     </div>
                                                 );
@@ -503,7 +499,7 @@ export default function ContainerPostProfile() {
                                     <span>Bạn bè của bạn trên Facebook</span>
                                 </div>
                             </div>
-                            
+
                             <div className="input-radio">
                                 <input type="radio" name="privacy" checked={postUserPrivacy === 'friend'} onChange={handlePrivacyChange} value="friend" />
                             </div>

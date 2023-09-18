@@ -37,3 +37,11 @@ h5 {
 .input-radio input {
     zoom: 1.5;
 }
+
+.user-post-profile small {
+    transition: 0.3 ease-in-out;
+}
+
+.user-post-profile small:hover {
+    background: red;
+}

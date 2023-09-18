@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
+    
     const [registerFinish, setRegisterFinish] = useState(false);
     const [loginFinish, setLoginFinish] = useState(false);
     const [allUser, setAllUser] = useState(null);

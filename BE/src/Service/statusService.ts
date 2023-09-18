@@ -76,7 +76,7 @@ export class StatusService {
                 }
             },
             order: {
-                time: 'DESC' // Sắp xếp theo trường 'createdAt' theo thứ tự giảm dần (DESC)
+                time: 'DESC' 
             }
         });
 
@@ -113,8 +113,11 @@ export class StatusService {
                         id: id
                     },
                     visibility: "friend"
-                }
-            ]
+                }, 
+            ],
+            order: {
+                time: 'DESC' 
+            }
         });
 
         for (let i = 0; i < status.length; i++) {
@@ -145,7 +148,10 @@ export class StatusService {
                     },
                     visibility: "public"
                 },
-            ]
+            ],
+            order: {
+                time: 'DESC' 
+            }
         });
 
         for (let i = 0; i < status.length; i++) {

@@ -15,7 +15,7 @@ export const ProfileContextProvider = ({ children, user }) => {
   const [checkFriendStatus, setCheckFriendStatus] = useState(null);
 
   const [listFriend, setListFriend] = useState([])
-
+  
   const domain = window.location.pathname.split("/")[1];
   const username = domain || "";
 
@@ -59,7 +59,7 @@ export const ProfileContextProvider = ({ children, user }) => {
   useEffect(() => {
     const fetchFriendStatus = async () => {
       try {
-        const storedUser = localStorage.getItem('User');
+        const storedUser = localStorage.getItem('User'); 
         if (storedUser && username) {
           const response = await getRequest(`${baseUrl}/friendShips/checkStatusByUserId/${user?.id}/${userProfile[0]?.id}`);
           setCheckFriendStatus(response);
@@ -85,24 +85,6 @@ export const ProfileContextProvider = ({ children, user }) => {
     };
     fetchCountFriend();
   }, [username]);
-
-  //   useEffect(() => {
-  //     const findFriend = async () => {
-  //         try {
-  //           if (userProfile?.length > 0) {
-  //             const response = await getRequest(`${baseUrl}/friendShips/listFriend/id/${userProfile[0]?.id}`);
-  //             // for (let i = 0; i < response.data.length; i++) {
-  //             //     const response1 = await getRequest(`${baseUrl}/friendShips/mutual-friends/${user?.id}/${response?.data[i].id}`)
-  //             //     response.data[i] = { ...response.data[i], matualFriends: response1.data.length }
-  //             // }
-  //             setListFriend(response);
-  //           } else return;
-  //         } catch (error) {
-  //             console.log(error);
-  //         }
-  //     };
-  //     findFriend();
-  // }, []);
 
   // Socket
   useEffect(() => {

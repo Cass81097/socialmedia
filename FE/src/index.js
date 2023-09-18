@@ -10,7 +10,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <CometChatContextProvider>
     <AuthContextProvider>
       <App />
-
     </AuthContextProvider>
   </CometChatContextProvider >
   // </React.StrictMode>,

@@ -1,43 +1,42 @@
 import React, { createContext, useCallback, useEffect, useState, useContext } from "react";
-import { baseUrl, getRequest, postRequest } from "../utils/services";
-import { Link, useNavigate } from "react-router-dom";
+import { baseUrl, getRequest } from "../utils/services";
 import { ProfileContext } from "./ProfileContext";
+import { AuthContext } from "./AuthContext";
 
 export const PostContext = createContext();
 
-export const PostContextProvider = ({ children, user }) => {
+export const PostContextProvider = ({ children }) => {
+    const { user } = useContext(AuthContext);
     const { userProfile } = useContext(ProfileContext);
     const [postUser, setPostUser] = useState([]);
-    const [postImageUser, setIsPostImageUser] = useState([]);
-    const [userProfileId, setUserProfileId] = useState(null);
-
-    const domain = window.location.pathname.split("/")[1];
-    const username = domain || "";
+    const [postImageUser, setPostImageUser] = useState([]);
+    
+    console.log(user)
 
     const fetchPostUser = useCallback(async () => {
         try {
             const storedUser = localStorage.getItem('User');
             const userStorage = JSON.parse(storedUser).username;
-            if (userStorage === username) {
-                const response = await getRequest(`${baseUrl}/status/${userProfile[0]?.id}`);
-                setPostUser(response);
-            }
-            if (userStorage !== username) {
-                const friendshipCheckResponse = await getRequest(`${baseUrl}/friendShips/checkStatusByUserId/${userProfile[0]?.id}/${user.id}`);
-console.log(friendshipCheckResponse?.status);
+            const userId = userProfile[0]?.id;
+
+            let response;
+            if (userStorage === userId) {
+                response = await getRequest(`${baseUrl}/status/${userId}`);
+            } else {
+                const friendshipCheckResponse = await getRequest(`${baseUrl}/friendShips/checkStatusByUserId/${userId}/${user.id}`);
+
                 if (friendshipCheckResponse?.status === 'friend') {
-                    const response = await getRequest(`${baseUrl}/status/visibility/${userProfile[0]?.id}`);
-                    setPostUser(response);
-                }
-                if (friendshipCheckResponse?.status === 'pending' || friendshipCheckResponse === null ) {
-                    const response = await getRequest(`${baseUrl}/status/visibility/public/${userProfile[0]?.id}`);
-                    setPostUser(response);
+                    response = await getRequest(`${baseUrl}/status/visibility/${userId}`);
+                } else {
+                    response = await getRequest(`${baseUrl}/status/visibility/public/${userId}`);
                 }
             }
+
+            setPostUser(response);
         } catch (error) {
             console.error("Error fetching user profiles:", error);
         }
-    }, [username, user?.id, userProfileId]);
+    }, [user.id, userProfile]);
 
     const fetchImagePostUser = useCallback(async () => {
         try {
@@ -47,27 +46,58 @@ console.log(friendshipCheckResponse?.status);
             });
 
             const imagePostResponses = await Promise.all(imagePostPromises);
-            setIsPostImageUser(imagePostResponses);
+            setPostImageUser(imagePostResponses);
         } catch (error) {
-            console.error("Error fetching image posts:", error);
+            console.error("Error fetchingảnh posts:", error);
         }
     }, [postUser]);
 
     useEffect(() => {
-        fetchImagePostUser();
-    }, [fetchImagePostUser]);
-
-    useEffect(() => {
-        setUserProfileId(userProfile[0]?.id);
-    }, [userProfile]);
-
-    useEffect(() => {
+        const fetchPostUser = async () => {
+            try {
+                const storedUser = localStorage.getItem('User');
+                const userStorage = JSON.parse(storedUser).username;
+                const userId = userProfile[0]?.id;
+    
+                let response;
+                if (userStorage === userId) {
+                    response = await getRequest(`${baseUrl}/status/${userId}`);
+                } else {
+                    const friendshipCheckResponse = await getRequest(`${baseUrl}/friendShips/checkStatusByUserId/${userId}/${user.id}`);
+    
+                    if (friendshipCheckResponse?.status === 'friend') {
+                        response = await getRequest(`${baseUrl}/status/visibility/${userId}`);
+                    } else {
+                        response = await getRequest(`${baseUrl}/status/visibility/public/${userId}`);
+                    }
+                }
+    
+                setPostUser(response);
+            } catch (error) {
+                console.error("Error fetching user profiles:", error);
+            }
+        };
+    
         fetchPostUser();
-    }, [fetchPostUser]);
+    }, [user.id, userProfile, baseUrl]);
 
     useEffect(() => {
+        const fetchImagePostUser = async () => {
+            try {
+                const imagePostPromises = postUser.map(async (post) => {
+                    const response = await getRequest(`${baseUrl}/imageStatus/${post.id}`);
+                    return response;
+                });
+    
+                const imagePostResponses = await Promise.all(imagePostPromises);
+                setPostImageUser(imagePostResponses);
+            } catch (error) {
+                console.error("Error fetching image posts:", error);
+            }
+        };
+    
         fetchImagePostUser();
-    }, [fetchImagePostUser]);
+    }, [postUser, baseUrl]);
 
     return (
         <PostContext.Provider value={{ postUser, fetchPostUser, postImageUser, fetchImagePostUser }}>
