@@ -1,69 +1,83 @@
-import "../../../styles/user/sidebarProfile.css"
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ProfileContext } from "../../../context/ProfileContext";
+import "../../../styles/user/sidebarProfile.css"
 
-export default function SidebarProfile() {
+export default function LeftContainerProfile() {
     const { userProfile, setUserProfile, fetchUserProfile } = useContext(ProfileContext);
-    
+    const [selectedTab, setSelectedTab] = useState("tongquan"); // State để theo dõi tab hiện tại
+
+    const handleTabClick = (tabName) => {
+        setSelectedTab(tabName);
+    };
+
+    const isTabSelected = (tabName) => {
+        return selectedTab === tabName;
+    };
+
     return (
         <>
-
-            {/*msb: main sidebar*/}
             <div className="msb" id="msb">
-                {/* Brand and toggle get grouped for better mobile display */}
                 <div className="navbar-header">
                     <div className="brand-wrapper">
-                        {/* Brand */}
                         <div className="brand-name-wrapper">
-                            <h1 style={{ margin: "20px", color:"black", fontSize:"25px" }}>
+                            <h1 style={{ margin: "20px", color: "black", fontSize: "25px" }}>
                                 Giới thiệu
                             </h1>
                         </div>
                     </div>
                 </div>
-                {/* Main Menu */}
-                {userProfile[0] ? ( // Kiểm tra userProfile[0]
-                    <div className="side-menu-container">
-                        <ul className="nav navbar-nav">
-                            <li className={"li"} >
-                                <a className={"navbar-nav-item"} href="#">
-                                    <i className="dashboard" /><span style={{color:"black"}}>Thông tin cá nhân</span> 
-                                </a>
-                            </li>
-                        </ul>
-                        <table style={{ borderCollapse: "collapse" }}>
-                            <tbody>
-                                <tr className="service" style={{ height: "60px" }}>
-                                    <td className="tableitem" >
-                                        <p className="itemtext">Họ và tên</p>
-                                    </td>
-                                    <td className="tableitem">
-                                        <p className="itemtext">{userProfile[0].fullname || "Chưa có"}</p>
-                                    </td>
-                                </tr>
-                                <tr className="service" style={{ height: "60px" }}>
-                                    <td className="tableitem">
-                                        <p className="itemtext">Địa chỉ</p>
-                                    </td>
-                                    <td className="tableitem">
-                                        <p className="itemtext">{userProfile[0].address || "Chưa có"}</p>
-                                    </td>
-                                </tr>
-                                <tr className="service" style={{ height: "60px" }} >
-                                    <td className="tableitem">
-                                        <p className="itemtext">Số điện thoại</p>
-                                    </td>
-                                    <td className="tableitem">
-                                        <p className="itemtext">{userProfile[0].phone || "Chưa có"}</p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                ) : null}
-                {/* /.navbar-collapse */}
-            </div>
 
+                <div className="intro-profile">
+                    <div
+                        className={`border-text-intro ${isTabSelected("tongquan") ? 'focused' : ''}`}
+                        onClick={() => handleTabClick("tongquan")}
+                    >
+                        <div className="text-intro">Tổng quan</div>
+                    </div>
+
+                    <div
+                        className={`border-text-intro ${isTabSelected("congviec") ? 'focused' : ''}`}
+                        onClick={() => handleTabClick("congviec")}
+                    >
+                        <div className="text-intro">Công việc và học vấn</div>
+                    </div>
+
+                    <div
+                        className={`border-text-intro ${isTabSelected("noitungho") ? 'focused' : ''}`}
+                        onClick={() => handleTabClick("noitungho")}>
+                        <div className="text-intro">Nơi từng sống</div>
+                    </div>
+
+
+
+                    <div
+                        className={`border-text-intro ${isTabSelected("thongtin") ? 'focused' : ''}`}
+                        onClick={() => handleTabClick("thongtin")}>
+                        <div className="text-intro">Thông tin liên hệ và cơ bản</div>
+                    </div>
+
+                    <div
+                        className={`border-text-intro ${isTabSelected("giadinh") ? 'focused' : ''}`}
+                        onClick={() => handleTabClick("giadinh")}>
+                        <div className="text-intro">Gia đình và các mối quan hệ</div>
+                    </div>
+
+                    <div
+                        className={`border-text-intro ${isTabSelected("chitiet") ? 'focused' : ''}`}
+                        onClick={() => handleTabClick("chitiet")}>
+                        <div className="text-intro">Chi tiết về bạn</div>
+                    </div>
+
+                    <div
+                        className={`border-text-intro ${isTabSelected("sukien") ? 'focused' : ''}`}
+                        onClick={() => handleTabClick("sukien")}>
+                        <div className="text-intro">Sự kiện trong đời</div>
+                    </div>
+
+
+
+                </div>
+            </div>
         </>
-    )
+    );
 }

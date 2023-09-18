@@ -20,7 +20,7 @@ const Home = (props) => {
         autoClose: 8000,
         pauseOnHover: true,
         draggable: true,
-        theme: "dark",
+        theme: "light",
     };
 
     useEffect(() => {

@@ -9,9 +9,7 @@ export const PostContextProvider = ({ children }) => {
     const { user } = useContext(AuthContext);
     const { userProfile } = useContext(ProfileContext);
     const [postUser, setPostUser] = useState([]);
-    const [postImageUser, setPostImageUser] = useState([]);
-    
-    console.log(user)
+    const [postImageUser, setPostImageUser] = useState([]); 
 
     const fetchPostUser = useCallback(async () => {
         try {

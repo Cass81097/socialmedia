@@ -14,7 +14,7 @@ export default function Register(props) {
         autoClose: 8000,
         pauseOnHover: true,
         draggable: true,
-        theme: "dark",
+        theme: "light",
     };
 
     const handleValidation = () => {

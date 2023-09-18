@@ -273,7 +273,7 @@ header {
     background: white !important;
     /* height: 210px; */
     border-radius: 15px;
-    /* overflow: hidden; */
+    overflow: hidden;
     border: 1px solid #dfdaec;
 }
 
@@ -447,7 +447,7 @@ header {
 
 .user-profile span {
     font-size: 13px;
-    color: #9a9a9a
+    color: #787676
 }
 
 .user-profile p {
@@ -487,8 +487,8 @@ header {
 
 .activity-icons {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: flex-start;
 }
 
 .left-icons {

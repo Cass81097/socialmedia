@@ -28,7 +28,7 @@ export class StatusService {
             let imageByStatusId = await imageService.findAllByStatusId(status[i].id);
             let likeByStatusId = await likeService.getLikeForStatus(status[i].id)
 
-            status[i] = await { ...status[i], image: [...imageByStatusId], acountLike: likeByStatusId.likeCount };
+            status[i] = await { ...status[i], image: [...imageByStatusId], accountLike: likeByStatusId.likeCount };
         }
 
         return status;
@@ -56,8 +56,8 @@ export class StatusService {
             status[i] = {
                 ...status[i],
                 image: [...imageByStatusId],
-                acountLike: likeByStatusId.likeCount,
-                listUserLike: [...likeByStatusId.listUserLike]
+                accountLike: likeByStatusId.likeCount,
+                // listUserLike: [...likeByStatusId.listUserLike]
             };
         }
 
@@ -87,8 +87,8 @@ export class StatusService {
             status[i] = {
                 ...status[i],
                 image: [...imageByStatusId],
-                acountLike: likeByStatusId.likeCount,
-                listUserLike: [...likeByStatusId.listUserLike]
+                accountLike: likeByStatusId.likeCount,
+                // listUserLike: [...likeByStatusId.listUserLike]
             };
         }
 
@@ -127,8 +127,8 @@ export class StatusService {
             status[i] = {
                 ...status[i],
                 image: [...imageByStatusId],
-                acountLike: likeByStatusId.likeCount,
-                listUserLike: [...likeByStatusId.listUserLike]
+                accountLike: likeByStatusId.likeCount,
+                // listUserLike: [...likeByStatusId.listUserLike]
             };
         }
 
@@ -161,8 +161,8 @@ export class StatusService {
             status[i] = {
                 ...status[i],
                 image: [...imageByStatusId],
-                acountLike: likeByStatusId.likeCount,
-                listUserLike: [...likeByStatusId.listUserLike]
+                accountLike: likeByStatusId.likeCount,
+                // listUserLike: [...likeByStatusId.listUserLike]
             };
         }
 

@@ -42,12 +42,6 @@ export default function Profile() {
           <NavbarContainer isPost={isPost} setIsPost={setIsPost} isFriend={isFriend} setIsFriend={setIsFriend} isProfile={isProfile} setIsProfile={setIsProfile}></NavbarContainer>
           {isPost && !isFriend && !isProfile ? (
             <div className="profile-info">
-              {/* <div className="info-col">
-                ABC
-              </div>
-              <div className="post-col" style={{ background: "white" }}>
-                ABC
-              </div> */}
               <PostProfile></PostProfile>
             </div>
           ) : !isPost && isFriend && !isProfile ? (

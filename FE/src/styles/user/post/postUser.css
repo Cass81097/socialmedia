@@ -19,6 +19,8 @@
 .post-action {
     display: flex;
     justify-content: space-around;
+    border-top: 1px solid #ddd7d7;
+    padding-top: 5px;
 }
 
 .post-like {

@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import { BiSolidLockAlt } from 'react-icons/bi';
 import { FaUserFriends } from 'react-icons/fa';
 import { FaEarthAmericas } from 'react-icons/fa6';
+import { BiSolidLike } from 'react-icons/bi';
 import InputEmoji from "react-input-emoji";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -15,9 +16,10 @@ import "../../../styles/user/post/postUser.css";
 import "../../../styles/user/post/privacy.css";
 import { baseUrl, postRequest, putRequest } from "../../../utils/services";
 import LoadingNew from "../../common/LoadingNew";
+import Like from "../../common/Like";
 
 export default function ContainerPostProfile(props) {
-    const { user, userProfile, checkFriendStatus } = props;
+    const { user, userProfile } = props;
 
     const navigate = useNavigate();
     const { postUser, postImageUser, fetchPostUser, fetchImagePostUser } = useContext(PostContext);
@@ -36,6 +38,8 @@ export default function ContainerPostProfile(props) {
 
     const [privacyIndex, setPrivacyIndex] = useState(null);
     const [postUserPrivacy, setPostUserPrivacy] = useState(null);
+
+    const [isCountLike, setIsCountLike] = useState([]);
 
     useEffect(() => {
         if (privacyIndex !== null) {
@@ -340,16 +344,16 @@ export default function ContainerPostProfile(props) {
                                                 }
 
                                                 return (
-                                                    <div>
+                                                    <div className="post-privacy-change">
                                                         <span>{timeAgo}</span>
                                                         {postUser[index]?.visibility === 'public' && (
-                                                            <i className="fas fa-globe-americas" style={{ color: '#65676B', cursor: 'pointer', marginLeft: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
+                                                            <i className="fas fa-globe-americas" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
                                                         )}
                                                         {postUser[index]?.visibility === 'friend' && (
-                                                            <i className="fas fa-user-friends" style={{ color: '#65676B', cursor: 'pointer', marginLeft: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
+                                                            <i className="fas fa-user-friends" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
                                                         )}
                                                         {postUser[index]?.visibility === 'private' && (
-                                                            <i className="fas fa-lock" style={{ color: '#65676B', cursor: 'pointer', marginLeft: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
+                                                            <i className="fas fa-lock" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
                                                         )}
                                                     </div>
                                                 );
@@ -366,16 +370,22 @@ export default function ContainerPostProfile(props) {
                                             ))}
                                         </div>
                                     )}
-                                    <div className="activity-icons"></div>
+                                    {post.accountLike > 0 && (
+                                        <div className="activity-icons">
+                                            <BiSolidLike style={{color:"rgb(27 97 255)"}} className="like-icon" />
+                                            <span style={{marginLeft:"5px"}}>{post.accountLike} người đã thích</span>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="post-action">
+
                                     <div className="post-like">
-                                        <Button variant="light">
-                                            <i className="far fa-thumbs-up"></i>
-                                            <span>Thích</span>
-                                        </Button>
+                                        <Like key={post.id} postId={post.id} countLike={post.acountLike} checkStatusLike={post.isLiked}
+                                            isCountLike={isCountLike} setIsCountLike={setIsCountLike}
+                                        ></Like>
                                     </div>
+
                                     <div className="post-comment">
                                         <Button variant="light">
                                             <i className="far fa-comment-alt"></i>

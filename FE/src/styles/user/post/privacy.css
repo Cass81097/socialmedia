@@ -14,7 +14,7 @@
 .modal-privacy-select {
     display: flex;
     justify-content: space-between;
-    transition: 0.3s ease-in-out;
+    transition: 0.3s;
     padding: 0 5px;
     cursor: pointer;
 }
@@ -39,9 +39,20 @@ h5 {
 }
 
 .user-post-profile small {
-    transition: 0.3 ease-in-out;
+    transition: 0.3s;
+    padding: 1px 5px;
 }
 
 .user-post-profile small:hover {
-    background: red;
+    background: #efefef;
+    border-radius: 50%;
+}
+
+.post-privacy-change i {
+    transition: 0.3s;
+}
+
+.post-privacy-change i:hover {
+    border-radius: 50%;
+    background: #efefef;
 }

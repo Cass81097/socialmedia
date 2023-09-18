@@ -13,7 +13,9 @@ export class Like {
 
     @ManyToOne(() => Status, (post) => post.id)
     status: Status;
-    @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-    time: Date;
+    @Column({ default: false })
+    isLiked: boolean;
+    @Column()
+    time : string
 
 }

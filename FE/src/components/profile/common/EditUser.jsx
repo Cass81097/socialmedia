@@ -3,15 +3,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as Yup from "yup";
-import { object, string } from 'yup';
+import {object, string, ValidationError} from 'yup';
 import { ProfileContext } from "../../../context/ProfileContext";
-import "../../../styles/user/editUser.css"
+import "../../../styles/user/editTest.css"
 
 export default function EditUser() {
     const { fetchUserProfile } = useContext(ProfileContext);
 
     const validationSchema = object({
-        oldPassword: string().required('Password is required'),
         confirmPassword: string()
             .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
             .required('Please re-enter your password'),
@@ -33,8 +32,6 @@ export default function EditUser() {
         address: false,
         phone: false,
     });
-    const [isPasswordMatching, setIsPasswordMatching] = useState(true);
-    const [arePasswordsEntered, setArePasswordsEntered] = useState(false);
 
     const [user, setUser] = useState({
         username: "",
@@ -68,6 +65,7 @@ export default function EditUser() {
         });
     }, [username]);
 
+
     const handleSaveClick = (field) => {
         setIsSaving({}); // Đặt tất cả nút "Lưu" về false
         setIsSaving((prevState) => ({
@@ -85,7 +83,12 @@ export default function EditUser() {
 
         axios.put(`http://localhost:5000/users/users/${id}`, updatedUser).then((res) => {
             // console.log("Cập nhật thành công!");
-            toast.success("Cập nhật thành công.", toastOptions);
+            if (isEditing[field]) {
+                toast.success("Cập nhật thành công.", toastOptions);
+                setTimeout(() => {
+                    toast.dismiss();
+                }, 1000);
+            }
             setIsEditing({ ...isEditing, [field]: false }); // Tắt chế độ chỉnh sửa sau khi cập nhật thành công
             fetchUserProfile()
         }).catch((error) => {
@@ -99,35 +102,62 @@ export default function EditUser() {
             newPassword: passwordFields.newPassword,
             confirmPassword: passwordFields.confirmPassword,
         };
+        if( updatedPassword.oldPassword === "") {
+            toast.error("Vui lòng nhập mật khẩu cũ", toastOptions)
+            setTimeout(()=>{
+                toast.dismiss()
+            },2000)
+        }else {
 
-        // Kiểm tra tính hợp lệ sử dụng Yup
-        validationSchema.validate(updatedPassword, { abortEarly: false })
-            .then(() => {
-                // Nếu không có lỗi, thực hiện axios request
-                axios.put(`http://localhost:5000/users/${id}`, updatedPassword)
-                    .then((res) => {
-                        // console.log(res)
-                        if(res.data === "Mật khẩu cũ không đúng."){
-                            toast.error("Mật khẩu cũ của bạn không đúng.", toastOptions);
-                        }else {
-                            setIsEditing({...isEditing, password: false});
-                            if (res.data === "mat khau da duoc cap nhat" ) {
-                                toast.success("Chỉnh sửa mật khẩu thành cong.", toastOptions);
-                                setPasswordFields({
-                                    oldPassword: "",
-                                    newPassword: "",
-                                    confirmPassword: "",
-                                });
+            // Kiểm tra tính hợp lệ sử dụng Yup
+            validationSchema.validate(updatedPassword, {abortEarly: false})
+                .then(() => {
+                    // Nếu không có lỗi, thực hiện axios request
+                    axios.put(`http://localhost:5000/users/${id}`, updatedPassword)
+                        .then((res) => {
+                            // console.log(res)
+                            console.log(res.data)
+
+                            if (res.data === "Mật khẩu cũ của bạn không đúng.") {
+                                toast.error("Mật khẩu cũ của bạn không đúng.", toastOptions);
+                                setTimeout(()=>{
+                                    toast.dismiss()
+                                },2000)
+                            }  else {
+                                setIsEditing({...isEditing, password: false});
+                                if (res.data === "mat khau da duoc cap nhat") {
+                                    toast.success("Chỉnh sửa mật khẩu thành công.", toastOptions);
+                                    setTimeout(() => {
+                                        toast.dismiss();
+                                    }, 1000);
+                                    setPasswordFields({
+                                        oldPassword: "",
+                                        newPassword: "",
+                                        confirmPassword: "",
+                                    });
+                                }
                             }
-                        }
-                    })
+                        })
 
-            })
-            .catch((errors) => {
-                toast.error("Vui lòng nhập đúng mật khẩu.", toastOptions);
-                // console.log('Có lỗi trong quá trình cập nhật mật khẩu.',errors);
-            });
-    };
+                })
+                .catch((errors) => {
+                    if (errors instanceof ValidationError) {
+                        toast.error("Mật khẩu không trùng lặp", toastOptions);
+                        setTimeout(()=>{
+                            toast.dismiss()
+                        },2000)
+                    }else {
+                        toast.error("Có lỗi trong quá trình cập nhật mật khẩu.", toastOptions);
+                        setTimeout(()=>{
+                            toast.dismiss()
+                        },2000)
+                        console.log('Có lỗi trong quá trình cập nhật mật khẩu.', errors);
+                    }
+                });
+        }
+    }
+
+
 
 
     // check pass
@@ -141,7 +171,7 @@ export default function EditUser() {
             ...info,
         }));
     }, []);
-    // console.log(checkPass)
+
     const handlePasswordChange = (event) => {
         const { name, value } = event.target;
         setPasswordFields({ ...passwordFields, [name]: value });
@@ -149,297 +179,369 @@ export default function EditUser() {
 
     const toastOptions = {
         position: "bottom-right",
-        autoClose: 8000,
+        autoClose: 2000,
         pauseOnHover: true,
         draggable: true,
-        theme: "dark",
+        theme: "light",
     };
 
 
 
     return (
         <>
-            <div>
-                <div id="invoice" className="effect2">
 
-                    {/*End Invoice Mid*/}
-                    <div id="invoice-bot">
-                        <div id="table">
-                            <table>
-                                <tbody>
-                                <tr className="tabletitle">
-                                    <td className="item">
-                                        <h2 style={{color:"black", fontSize:"25px"}}>Thông tin</h2>
-                                    </td>
-                                    <td className="Hours">
-                                        <h2 style={{color:"black", fontSize:"25px"}}>Mô tả </h2>
-                                    </td>
-                                    <td className="Hours" />
-                                </tr>
 
-                                <tr  className="service">
-                                    <td className="tableitem">
-                                        <p className="itemtext">Tên người dùng</p>
-                                    </td>
-                                    {isEditing.username ? (
+
+                            <div className="user-info">
+                                <div className="item-Left">
+                                    <div className="item-icon">
+                                        <i className="fas fa-user"></i>
+                                    </div>
+                                    <div className="item-text">
+                                        <p>{user.username}</p></div>
+                                </div>
+                                    <div className="item-Right">
+                                        <div className="right-icons">
+                                            <div style={{marginRight : "40px"}} className="item-icon">
+                                                <i className="fas fa-globe-asia"></i>
+                                            </div>
+                                            <div className="item-icon">
+                                                <div className="bg-icon">
+                                                    <i></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                            </div>
+
+                    <div className="user-info">
+                        <div className="item-Left">
+                            <div className="item-icon">
+                                <i className="fas fa-envelope"></i>
+                            </div>
+                            <div className="item-text">
+                                <p>{user.email}</p></div>
+                        </div>
+                        <div className="item-Right">
+                            <div className="right-icons">
+                                <div style={{marginRight : "40px"}} className="item-icon">
+                                    <i className="fas fa-globe-asia"></i>
+                                </div>
+                                <div className="item-icon">
+                                    <div className="bg-icon">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                        {isEditing.fullname ? (
                                         <>
-                                            <td className="tableitem" >
-                                                <input
-                                                    className="itemtext"
-                                                    type="text"
-                                                    value={user.username}
-                                                    onChange={(e) =>
-                                                        setUser({...user, username: e.target.value})
-                                                    }
-                                                />
-                                            </td>
-                                            <td  className="tableitem">
-                                                <button className="itemtext"
-                                                        onClick={() => handleSaveClick("username")}>
-                                                    Lưu
-                                                </button>
-                                            </td>
+                                            <div className="user-info">
+                                                <div className="item-Left">
+                                                    <div className="item-icon">
+                                                        <i className="fas fa-address-card"></i>
+                                                    </div>
+                                                    <div className="item-text">
+                                                        <input
+                                                            style={{marginRight: "10px"}}
+                                                            type="text"
+                                                            value={user.fullname}
+                                                            onChange={(e) =>
+                                                                setUser({...user, fullname: e.target.value})
+                                                            }
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="item-Right">
+                                                    <div className="right-icons">
+                                                        <div style={{marginRight: "40px"}} className="item-icon">
+                                                            <i className="fas fa-globe-asia"></i>
+                                                        </div>
+                                                        <div className="item-icon">
+                                                            <div className="bg-icon">
+                                                                <i className="item-table fas fa-save fa-xs"
+                                                                   onClick={() => handleSaveClick("fullname")}></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
                                         </>
                                     ) : (
                                         <>
-                                            <td className="tableitem">
-                                                <p className="itemtext">{user.username}</p>
-                                            </td>
-                                            <td className="tableitem">
-                                                <i className="item-table"></i>
-                                            </td>
+                                            <div className="user-info">
+                                            <div className="item-Left">
+                                                <div className="item-icon">
+                                                    <i className="fas fa-address-card"></i>
+                                                </div>
+                                                <div className="item-text">
+                                                    <p>{user.fullname || "Chưa có"}</p>
+                                                </div>
+                                            </div>
+                                                <div className="item-Right">
+                                                    <div className="right-icons">
+                                                        <div style={{marginRight: "40px"}} className="item-icon">
+                                                            <i className="fas fa-globe-asia"></i>
+                                                        </div>
+                                                        <div className="item-icon">
+                                                            <div className="bg-icon">
+                                                                <i className="fas fa-pen" onClick={() => handleToggleEdit("fullname")}></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
                                         </>
                                     )}
-                                </tr>
-
-                                <tr className="service">
-                                    <td className="tableitem">
-                                        <p className="itemtext">Email</p>
-                                    </td>
-                                    {isEditing.email ? (
-                                        <>
-                                            <td className="tableitem">
-                                                <input
-                                                    className="itemtext"
-                                                    type="text"
-                                                    value={user.email}
-                                                    onChange={(e) =>
-                                                        setUser({ ...user, email: e.target.value })
-                                                    }
-                                                />
-                                            </td>
-                                            <td className="tableitem">
-                                                <i className="item-table"
-                                                   // onClick={() => handleSaveClick("email")}
-                                                ></i>
-                                            </td>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <td className="tableitem">
-                                                <p className="itemtext">{user.email}</p>
-                                            </td>
-                                            <td className="tableitem">
-                                                <i className="item-table "
-                                                   // onClick={() => handleToggleEdit("email")}
-                                                ></i>
-                                            </td>
-                                        </>
-                                    )}
-                                </tr>
 
 
-                                <tr className="service">
-                                    <td className="tableitem">
-                                        <p className="itemtext">Họ và tên</p>
-                                    </td>
-                                    {isEditing.fullname ? (
-                                        <>
-                                            <td className="tableitem">
-                                                <input
-                                                    style={{ marginRight: "10px" }}
-                                                    className="itemtext"
-                                                    type="text"
-                                                    value={user.fullname}
-                                                    onChange={(e) =>
-                                                        setUser({ ...user, fullname: e.target.value })
-                                                    }
-                                                />
-                                            </td>
-                                            <td className="tableitem">
-                                                <i className="item-table fas fa-save fa-xs"
-                                                   onClick={() => handleSaveClick("fullname")}></i>
-                                            </td>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <td className="tableitem">
-                                                <p className="itemtext">{user.fullname}</p>
-                                            </td>
-                                            <td className="tableitem">
-                                                <i style={{fontSize:"30px",margin : "10%"}}
-                                                   className="item-table fas fa-edit" onClick={() => handleToggleEdit("fullname")}></i>
-                                            </td>
-                                        </>
-                                    )}
-                                </tr>
 
+                    <div className="user-info">
 
-                                <tr className="service">
-                                    <td className="tableitem">
-                                        <p className="itemtext">Địa chỉ</p>
-                                    </td>
                                     {isEditing.address ? (
                                         <>
-                                            <td className="tableitem">
-                                                <input
-                                                    className="itemtext"
-                                                    type="text"
-                                                    value={user.address}
-                                                    onChange={(e) =>
-                                                        setUser({ ...user, address: e.target.value })
-                                                    }
-                                                />
-                                            </td>
-                                            <td className="tableitem">
-                                                <i className="item-table fas fa-save fa-xs"
-                                                   onClick={() => handleSaveClick("address")}></i>
-                                            </td>
+                                            <div className="item-Left">
+                                                <div className="item-icon">
+                                                    <i className="fas fa-map-marker-alt"></i>
+                                                </div>
+                                                <div className="item-text">
+                                                    <input
+                                                        style={{ marginRight: "10px" }}
+                                                        className="itemtext"
+                                                        type="text"
+                                                        value={user.address}
+                                                        onChange={(e) =>
+                                                            setUser({ ...user, address: e.target.value })
+                                                        }
+                                                    />
+                                                </div>
+                                            </div>
+                                                <div className="item-Right">
+                                                    <div className="right-icons">
+                                                        <div style={{marginRight: "40px"}} className="item-icon">
+                                                            <i className="fas fa-globe-asia"></i>
+                                                        </div>
+                                                        <div className="item-icon">
+                                                            <div className="bg-icon">
+                                                                <i className="item-table fas fa-save fa-xs"
+                                                                   onClick={() => handleSaveClick("address")}></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                         </>
                                     ) : (
                                         <>
-                                            <td className="tableitem">
-                                                <p className="itemtext">{user.address}</p>
-                                            </td>
-                                            <td className="tableitem">
-                                                <i className="item-table fas fa-edit" onClick={() => handleToggleEdit("address")}></i>
-                                            </td>
+                                            <div className="item-Left">
+                                                <div className="item-icon">
+                                                    <i className="fas fa-map-marker-alt"></i>
+                                                </div>
+                                                <div className="item-text"
+                                                     style={{ marginLeft: "7px" }}
+                                                >
+                                                    <p> {user.address || "Chưa có"}</p></div>
+                                            </div>
+                                                <div className="item-Right">
+                                                    <div className="right-icons">
+                                                        <div style={{marginRight: "40px"}} className="item-icon">
+                                                            <i className="fas fa-globe-asia"></i>
+                                                        </div>
+                                                        <div className="item-icon">
+                                                            <div className="bg-icon">
+                                                                <i className="fas fa-pen" onClick={() => handleToggleEdit("address")}></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                         </>
                                     )}
-                                </tr>
-                                <tr className="service">
-                                    <td className="tableitem">
-                                        <p className="itemtext">Số điện thoại</p>
-                                    </td>
+                    </div>
+                    <div className="user-info">
+
                                     {isEditing.phone ? (
                                         <>
-                                            <td className="tableitem">
-                                                <input
-                                                    className="itemtext"
-                                                    type="number"
-                                                    value={user.phone}
-                                                    onChange={(e) =>
-                                                        setUser({ ...user, phone: e.target.value })
-                                                    }
-                                                />
-                                            </td>
-                                            <td className="tableitem">
-                                                <i className="item-table fas fa-save fa-xs"
-                                                   onClick={() => handleSaveClick("phone")}></i>
-                                            </td>
+                                            <div className="item-Left">
+                                                <div className="item-icon">
+                                                    <i className="fas fa-phone-alt"></i>
+                                                </div>
+                                                <div className="item-text">
+                                                    <input
+                                                        style={{ marginRight: "10px" }}
+                                                        className="itemtext"
+                                                        type="text"
+                                                        value={user.phone}
+                                                        onChange={(e) =>
+                                                            setUser({ ...user, phone: e.target.value })
+                                                        }
+                                                    />
+                                                </div>
+                                            </div>
+                                                <div className="item-Right">
+                                                    <div className="right-icons">
+                                                        <div style={{marginRight: "40px"}} className="item-icon">
+                                                            <i className="fas fa-globe-asia"></i>
+                                                        </div>
+
+                                                        <div className="item-icon">
+                                                            <div className="bg-icon">
+                                                                <i className="item-table fas fa-save fa-xs"
+                                                                   onClick={() => handleSaveClick("phone")}></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
                                         </>
                                     ) : (
                                         <>
-                                            <td className="tableitem">
-                                                <p className="itemtext">{user.phone}</p>
-                                            </td>
-                                            <td className="tableitem">
-                                                <i className="item-table fas fa-edit" onClick={() => handleToggleEdit("phone")}></i>
-                                            </td>
+                                            <div className="item-Left">
+                                                <div className="item-icon">
+                                                    <i className="fas fa-phone-alt"></i>
+                                                </div>
+                                                <div className="item-text">
+                                                    <p>{user.phone || <p >Chưa có</p>}</p></div>
+                                            </div>
+                                                <div className="item-Right">
+                                                    <div className="right-icons">
+                                                        <div style={{marginRight: "40px"}} className="item-icon">
+                                                            <i className="fas fa-globe-asia"></i>
+                                                        </div>
+                                                        <div className="item-icon">
+                                                            <div className="bg-icon">
+                                                                <i className="fas fa-pen" onClick={() => handleToggleEdit("phone")}></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                         </>
                                     )}
-                                </tr>
+                    </div>
 
                                 {/*password*/}
 
                                 {!isEditing.password ? (
-                                    <tr className="service">
-                                        <td className="tableitem">
-                                            <p className="itemtext">Mật khẩu</p>
-                                        </td>
-                                        <td className="tableitem">
-                                            <input
-                                                className="itemtext"
-                                                type="password"
-                                                value={user.password}
-                                                readOnly
-                                            />
-                                        </td>
-                                        <td className="tableitem">
-                                            <i className="item-table fas fa-edit"  onClick={() => handleToggleEdit("password")}></i>
-                                        </td>
-                                    </tr>
+                                    <>
+                                    <div  className="user-info">
+                                        <div className="item-Left">
+                                            <div className="item-icon">
+                                                <i className="fas fa-lock"></i>
+                                            </div>
+                                            <div className="item-text">
+                                                <input
+                                                    className="itemtext"
+                                                    type="password"
+                                                    value={user.password}
+                                                    readOnly
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="item-Right">
+                                            <div className="right-icons">
+                                                <div style={{marginRight : "60px"}} className="item-icon">
+                                                    <i></i>
+                                                </div>
+                                                <div className="item-icon">
+                                                    <div className="bg-icon">
+                                                        <i className="fas fa-pen" onClick={() => handleToggleEdit("password")}></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    </>
+
                                 ) : (
                                     <>
-                                        <tr className="service">
-                                            <td className="tableitem">
-                                                <p className="itemtext">Mật khẩu cũ</p>
-                                            </td>
-                                            <td className="tableitem">
+
+                                        <div className="user-info">
+                                        <div className="item-Left">
+                                            <div className="item-icon">
+                                                <i className="fas fa-lock"></i>
+                                            </div>
+                                            <div className="item-text">
                                                 <input
-                                                    placeholder={"Vui lòng nhập mật khẩu cũ của bạn"}
+                                                    style={{ width : "350px"}}
                                                     className="itemtext"
                                                     type="password"
                                                     name="oldPassword"
-                                                    style={{ fontSize: "15px" }}
                                                     value={passwordFields.oldPassword}
                                                     onChange={handlePasswordChange}
+                                                    placeholder={"Vui lòng nhập mật khẩu cũ của bạn"}
                                                 />
-                                            </td>
-                                            <td className="tableitem">
-                                                <i className="item-table"></i>
-
-                                            </td>
-                                        </tr>
-                                        <tr className="service">
-                                            <td className="tableitem">
-                                                <p className="itemtext">Mật khẩu mới</p>
-                                            </td>
-                                            <td className="tableitem">
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div className="user-info">
+                                        <div className="item-Left">
+                                            <div className="item-icon">
+                                                <i className="fas fa-lock"></i>
+                                            </div>
+                                            <div className="item-text">
                                                 <input
-                                                    placeholder={"Vui lòng nhập mật khẩu mới của bạn"}
+                                                    style={{ width : "350px"}}
                                                     className="itemtext"
                                                     type="password"
                                                     name="newPassword"
-                                                    style={{ fontSize: "15px" }}
                                                     value={passwordFields.newPassword}
                                                     onChange={handlePasswordChange}
+                                                    placeholder={"Vui lòng nhập mật khẩu mới của bạn"}
                                                 />
-                                            </td>
-                                            <td className="tableitem">
-                                                <i className="item-table"></i>
-                                            </td>
-                                        </tr>
-                                        <tr className="service">
-                                            <td className="tableitem">
-                                                <p className="itemtext">Xác nhận mật khẩu mới</p>
-                                            </td>
-                                            <td className="tableitem">
-                                                <input className="itemtext" type="password" name="confirmPassword"
-                                                       placeholder={"Vui lòng nhập lại mật khẩu mới"}
-                                                       value={passwordFields.confirmPassword}
-                                                       style={{ fontSize: "15px" }}
-                                                       onChange={handlePasswordChange}
-                                                />
-                                                {/*{arePasswordsEntered && !isPasswordMatching && <span className="error-message">Mật khẩu không trùng khớp.</span>}*/}
-                                            </td>
-                                            <td className="tableitem">
-                                                <i className="item-table fas fa-save fa-xs" onClick={handleSavePassword}></i>
-                                            </td>
-                                        </tr>
+                                            </div>
+                                        </div>
+                                        </div>
+
+                                        <div className="user-info">
+                                            <div className="item-Left">
+                                                <div className="item-icon">
+                                                    <i className="fas fa-lock"></i>
+                                                </div>
+                                                <div className="item-text">
+                                                    <input
+                                                        style={{ width : "350px"}}
+                                                        className="itemtext"
+                                                        type="password"
+                                                        name="confirmPassword"
+                                                        value={passwordFields.confirmPassword}
+                                                        onChange={handlePasswordChange}
+                                                        placeholder={"Vui lòng nhập lại mật khẩu mới"}
+                                                    />
+                                                    {/*{arePasswordsEntered && !isPasswordMatching && <span className="error-message">Mật khẩu không trùng khớp.</span>}*/}
+                                                </div>
+                                            </div>
+                                            <div className="item-Right">
+                                                <div className="right-icons">
+                                                    <div style={{marginRight: "60px"}} className="item-icon">
+                                                        <i></i>
+                                                    </div>
+                                                    <div className="item-icon">
+                                                        <div className="bg-icon">
+                                                            <i className="item-table fas fa-save fa-xs"
+                                                               onClick={handleSavePassword}></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
 
                                     </>
                                 )}
                                 {/* Kết thúc phần mật khẩu */}
-                                </tbody>
-                            </table>
-                        </div>
-                        {/*End Table*/}
-                    </div>
-                    {/*End InvoiceBot*/}
-                </div>
                 {/*End Invoice*/}
-            </div>
+
             <ToastContainer />
         </>
     );
