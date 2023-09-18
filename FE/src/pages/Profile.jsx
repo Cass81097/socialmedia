@@ -23,14 +23,17 @@ import PostProfile from "../components/profile/container/mainContainer/PostProfi
 export default function Profile() {
   const { user } = useContext(AuthContext);
   const { userProfile } = useContext(ProfileContext)
-  console.log(userProfile,1111)
   const [isPost, setIsPost] = useState(true);
   const [isFriend, setIsFriend] = useState(false);
   const [isProfile, setIsProfile] = useState(false);
 
+  const [isTest, setIsTest] = useState(false);
+  const [userRequest, setUserRequest] = useState({});
+
+
   return (
     <>
-      <Navbar></Navbar>
+      <Navbar  userRequest={userRequest}></Navbar>
       <div className="fb-container">
         <SidebarProfile></SidebarProfile>
         {/* profile page  */}
@@ -38,7 +41,7 @@ export default function Profile() {
           <Cover></Cover>
           <div className="profile-details">
             <Avatar></Avatar>
-            <FriendButton></FriendButton>
+            <FriendButton setUserRequest={setUserRequest} ></FriendButton>
           </div>
           <NavbarContainer isPost={isPost} setIsPost={setIsPost} isFriend={isFriend} setIsFriend={setIsFriend} isProfile={isProfile} setIsProfile={setIsProfile}></NavbarContainer>
           {isPost && !isFriend && !isProfile ? (

@@ -9,8 +9,7 @@ import "../../../../../styles/toast.css";
 import { baseUrl, getRequest, postRequest } from "../../../../../utils/services";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-
-export default function FriendButton() {
+export default function FriendButton(prop) {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const { userProfile, socket } = useContext(ProfileContext);
@@ -21,7 +20,6 @@ export default function FriendButton() {
   const [userRequest, setUserRequest] = useState([])
   const [userAccepted, setUserAccepted] = useState(false)
   const [showAlertUnFriend, setShowAlertUnFriend] = useState(false);
-
   const handleCloseAlertUnfriend = () => {
     setShowAlertUnFriend(false);
   }
@@ -39,6 +37,7 @@ export default function FriendButton() {
     const fetchData = async () => {
       try {
         const response = await getRequest(`${baseUrl}/users/find/id/${friendRequest?.senderId}`);
+        prop.setUserRequest({...response[0], userAccepted: userAccepted})
         setUserRequest(response);
       } catch (error) {
         console.error("Error checking friend status:", error);
@@ -52,7 +51,6 @@ export default function FriendButton() {
 
   useEffect(() => {
     if (socket === null) return;
-
     socket.on("friendRequest", (res) => {
       setFriendRequest(res);
       // if (user?.id === userProfile[0]?.id) {
@@ -75,8 +73,7 @@ export default function FriendButton() {
     if (friendRequest.senderId) {
       setShowToast(true);
       return;
-    }
-    else {
+    } else {
       setShowToast(false);
       return;
     }
@@ -256,7 +253,8 @@ export default function FriendButton() {
         </div>
       )}
 
-      {/* Toast  */}
+
+
       {showToast && (
         <Toast onClose={() => setShowToast(false)}>
           <div className="toast-header">
@@ -279,7 +277,7 @@ export default function FriendButton() {
         </Toast>
       )}
 
-      {/* Modal Block User  */}
+
       <Modal show={showAlertUnFriend} onHide={handleCloseAlertUnfriend} centered>
         <Modal.Header closeButton>
           <Modal.Title style={{ transform: "translateX(170px)" }}>Xác nhận</Modal.Title>

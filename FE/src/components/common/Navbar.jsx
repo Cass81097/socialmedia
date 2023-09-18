@@ -1,15 +1,16 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import $ from 'jquery';
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import {AuthContext} from "../../context/AuthContext";
 import {ProfileContext} from "../../context/ProfileContext";
 import {SearchBar} from "../search/SearchBar";
 import {SearchResultsList} from "../search/SearchResultsList";
+import FriendButton from "../profile/container/headerContainer/userProfile/FriendButton";
 
-export default function Navbar() {
+export default function Navbar(props) {
     const {user} = useContext(AuthContext);
     const {setUserProfile} = useContext(ProfileContext);
     const [results, setResults] = useState([]);
@@ -54,13 +55,27 @@ export default function Navbar() {
         } else {
             $('.profile-menu').hide();
         }
-        ;
     };
 
     const clearSearchResult = () => {
         setResults([]);
     }
 
+    // let notifications = []
+    // if (props.userRequest === undefined) {
+    //     notifications = []
+    // } else {
+    //     notifications.push(props.userRequest)
+    // }
+    const [notifications, setNotifications] = useState([]);
+
+    useEffect( () => {
+        if (props.userRequest && Object.keys(props.userRequest).length !== 0) {
+             setNotifications((prevNotifications) => [props.userRequest,...prevNotifications]);
+        }
+    }, [props.userRequest]);
+    //
+    console.log(props.userRequest,11111111111)
     return (
         <>
             <header>
@@ -88,7 +103,7 @@ export default function Navbar() {
                                 data-toggle="tooltip"
                                 data-placement="bottom"
                                 title="Thông báo"
-                                style={{transform: "translateY(7px)"} }
+                                style={{transform: "translateY(7px)"}}
                             >
                                 <i className="fas fa-bell" onClick={toggleNotifi}></i>
                             </Link>
@@ -131,6 +146,34 @@ export default function Navbar() {
                                         </button>
 
                                     </div>
+                                    {notifications.length >=0? ( notifications.map((item, index) =>
+
+                                            (
+                                                <div className="notifi-item" key={index}>
+                                                    <div>
+                                                        <div className="item-image">
+                                                            <img src={item.avatar} alt="img"/>
+                                                            <div className="icon-avatar">
+                                                                <i className="fas fa-camera"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="text">
+                                                        <h4>
+                                                            {item.fullname}
+                                                            <span>
+                                                             {item.userAccepted ? "đã đồng ý" : "vừa mới gửi"} lời mời kết bạn
+                                                                                           </span>
+                                                        </h4>
+                                                        <p>4 ngày trước</p>
+                                                    </div>
+                                                    <div className="icon-read"></div>
+                                                </div>
+                                            )))
+                                            : (
+                                        // Hiển thị khi mảng notifications rỗng
+                                        <div>No notifications</div>
+                                        )}
 
                                     <div className="notifi-item">
                                         <div>
