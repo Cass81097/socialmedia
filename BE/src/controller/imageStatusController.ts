@@ -11,8 +11,7 @@ export class ImageStatusController {
 
     add = async (req, res) => {
         let data = await ImageStatusService.add(req.body);
-        res.json(200, data)
-
+        res.json(data)
     }
     update = async (req, res) => {
         console.log(req.params.id,req.body,1111 )

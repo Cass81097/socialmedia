@@ -290,7 +290,7 @@ export default function FriendButton() {
             Đóng
           </Button>
           <Button variant="primary" onClick={() => handleUnfriend()}>
-            Lưu
+            Có
           </Button>
         </Modal.Footer>
       </Modal>

@@ -10,9 +10,13 @@ import InputEmoji from "react-input-emoji";
 import "../../../styles/user/post/inputEmoji.css"
 import "../../../styles/user/post/postImage.css"
 import "../../../styles/user/post/postUser.css"
-import { baseUrl, getRequest, postRequest } from "../../../utils/services";
+import "../../../styles/user/post/privacy.css"
+import { baseUrl, getRequest, postRequest, putRequest } from "../../../utils/services";
 import { PostContext } from "../../../context/PostContext";
 import LoadingNew from "../../common/LoadingNew";
+import { FaEarthAmericas } from 'react-icons/fa6';
+import { FaUserFriends } from 'react-icons/fa';
+import { BiSolidLockAlt } from 'react-icons/bi';
 
 export default function ContainerPostProfile() {
     const navigate = useNavigate();
@@ -20,12 +24,39 @@ export default function ContainerPostProfile() {
     const { userProfile } = useContext(ProfileContext);
     const { postUser, postImageUser, fetchPostUser, fetchImagePostUser } = useContext(PostContext);
     const [imageSrcProfile, setImageSrcProfile] = useState(null);
-
     const [show, setShow] = useState(false);
     const [textMessage, setTextMessage] = useState("")
     const [isPostLoading, setIsPostLoading] = useState(false);
     const [isImageLoading, setIsImageLoading] = useState(false);
 
+    //Privacy
+    const [privacyPost, setPrivacyPost] = useState('public');
+    const [privacyValue, setPrivacyValue] = useState('public');
+    
+    const [showPrivacy, setShowPrivacy] = useState(false);
+    const [showPrivacyPost, setShowPrivacyPost] = useState(false);
+
+    const [privacyIndex, setPrivacyIndex] = useState(null);
+    const [postUserPrivacy, setPostUserPrivacy] = useState(null);
+
+    useEffect(() => {
+        if (privacyIndex !== null) {
+            setPostUserPrivacy(postUser[privacyIndex]?.visibility);
+        }
+    }, [privacyIndex, postUser]);
+
+    const handlePrivacyChange = (event) => {
+        setPostUserPrivacy(event.target.value);
+    };
+
+    const handlePrivacyPostChange = (event) => {
+        setPrivacyValue(event.target.value);
+    };
+
+    const handleChangePostPrivacy = () => {
+        setPrivacyPost(privacyValue)
+        setShowPrivacyPost(false);
+    }
 
     const handleDeleteImage = (index) => {
         setImageSrcProfile((prevImages) => {
@@ -41,6 +72,24 @@ export default function ContainerPostProfile() {
 
     const handleShow = async () => {
         setShow(true);
+    };
+
+    const handlePrivacyClose = () => {
+        setShowPrivacy(false);
+        setPrivacyIndex(null);
+    };
+
+    const handlePrivacyShow = (index) => {
+        setShowPrivacy(true);
+        setPrivacyIndex(index)
+    };
+
+    const handlePrivacyPostShow = () => {
+        setShowPrivacyPost(true);
+    };
+
+    const handlePrivacyPostClose = () => {
+        setShowPrivacyPost(false);
     };
 
     const handleImageUploadMore = (e) => {
@@ -81,7 +130,7 @@ export default function ContainerPostProfile() {
 
         const data = {
             content: textMessage,
-            visibility: "public",
+            visibility: privacyPost,
             sender: {
                 id: user.id
             },
@@ -115,6 +164,23 @@ export default function ContainerPostProfile() {
         console.log("Đăng post thành công");
     };
 
+    const handleChangePrivacy = async (postId, privacyValue) => {
+        console.log(postId);
+        console.log(privacyValue);
+        setIsPostLoading(true);
+
+        const data = {
+            visibility: privacyValue
+        };
+
+        const response = await putRequest(`${baseUrl}/status/visibility/${postId}`, JSON.stringify(data));
+
+        setIsPostLoading(false);
+        setShowPrivacy(false);
+        fetchPostUser();
+        console.log("Sửa Privacy thành công");
+    };
+
     const goProfile = (username) => {
         setShow(false);
         navigate(`/${username}`);
@@ -135,9 +201,28 @@ export default function ContainerPostProfile() {
                             </div>
                             <div className="user-post-profile">
                                 <p onClick={() => goProfile(user?.username)}>{user.fullname}</p>
-                                <small>
-                                    <span>Public</span> 
-                                    <i className="fas fa-caret-down" />
+                                <small onClick={handlePrivacyPostShow} style={{ cursor: "pointer" }}>
+                                    {privacyPost === "public" ? (
+                                        <>
+                                            <FaEarthAmericas />
+                                            <i className="fas fa-caret-down" style={{marginLeft:"5px"}} />
+                                        </>
+                                    ) : privacyPost === "friend" ? (
+                                        <>
+                                            <FaUserFriends />
+                                            <i className="fas fa-caret-down" style={{marginLeft:"5px"}} />
+                                        </>
+                                    ) : privacyPost === "private" ? (
+                                        <>
+                                            <BiSolidLockAlt />
+                                            <i className="fas fa-caret-down" style={{marginLeft:"5px"}} />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FaEarthAmericas />
+                                            <i className="fas fa-caret-down" style={{marginLeft:"5px"}} />
+                                        </>
+                                    )}
                                 </small>
                             </div>
                         </div>
@@ -261,7 +346,15 @@ export default function ContainerPostProfile() {
                                                 return (
                                                     <div>
                                                         <span>{timeAgo}</span>
-                                                        <i className="fas fa-globe-americas" style={{ color: "#65676B" }} />
+                                                        {postUser[index]?.visibility === 'public' && (
+                                                            <i className="fas fa-globe-americas" style={{ color: '#65676B', cursor: 'pointer', marginLeft:"5px", fontSize:"smaller" }} onClick={() => handlePrivacyShow(index)} />
+                                                        )}
+                                                        {postUser[index]?.visibility === 'friend' && (
+                                                            <i className="fas fa-user-friends" style={{ color: '#65676B', cursor: 'pointer', marginLeft:"5px", fontSize:"smaller" }} onClick={() => handlePrivacyShow(index)} />
+                                                        )}
+                                                        {postUser[index]?.visibility === 'private' && (
+                                                            <i className="fas fa-lock" style={{ color: '#65676B', cursor: 'pointer', marginLeft:"5px", fontSize:"smaller" }} onClick={() => handlePrivacyShow(index)} />
+                                                        )}
                                                     </div>
                                                 );
                                             })()}
@@ -299,6 +392,153 @@ export default function ContainerPostProfile() {
                     ))}
                 </div>
             </div>
+
+            {/* Modal Privacy Post*/}
+            <Modal show={showPrivacyPost} onHide={handlePrivacyPostClose} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Chọn đối tượng</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="modal-privacy-container">
+                        <div className="modal-privacy-select">
+                            <div className="privacy-container">
+                                <div className="privacy-select">
+                                    <div className="privacy-icon">
+                                        <FaEarthAmericas />
+                                    </div>
+                                </div>
+                                <div className="privacy-name">
+                                    <h5>Công khai</h5>
+                                    <span>Bất kì ai ở trên hoặc ngoài Facebook</span>
+                                </div>
+                            </div>
+
+                            <div className="input-radio">
+                                <input type="radio" name="privacy" value="public" checked={privacyValue === 'public'} onChange={handlePrivacyPostChange} />
+                            </div>
+                        </div>
+
+                        <div className="modal-privacy-select">
+                            <div className="privacy-container">
+                                <div className="privacy-select">
+                                    <div className="privacy-icon">
+                                        <FaUserFriends />
+                                    </div>
+                                </div>
+                                <div className="privacy-name">
+                                    <h5>Bạn bè</h5>
+                                    <span>Bạn bè của bạn trên Facebook</span>
+                                </div>
+                            </div>
+                            <div className="input-radio">
+                                <input type="radio" name="privacy" value="friend" checked={privacyValue === 'friend'} onChange={handlePrivacyPostChange} />
+                            </div>
+
+                        </div>
+
+                        <div className="modal-privacy-select">
+                            <div className="privacy-container">
+                                <div className="privacy-select">
+                                    <div className="privacy-icon">
+                                        <BiSolidLockAlt />
+                                    </div>
+                                </div>
+                                <div className="privacy-name">
+                                    <h5>Chỉ mình tôi</h5>
+                                    <span>Chế độ riêng tư</span>
+                                </div>
+                            </div>
+
+                            <div className="input-radio">
+                                <input type="radio" name="privacy" value="private" checked={privacyValue === 'private'} onChange={handlePrivacyPostChange} />
+                            </div>
+                        </div>
+
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handlePrivacyPostClose}>
+                        Đóng
+                    </Button>
+                    <Button variant="primary" onClick={handleChangePostPrivacy}>
+                        Lưu
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/* Modal Privacy */}
+            <Modal show={showPrivacy && privacyIndex !== null} onHide={handlePrivacyClose} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Chọn đối tượng</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="modal-privacy-container">
+                        <div className="modal-privacy-select">
+                            <div className="privacy-container">
+                                <div className="privacy-select">
+                                    <div className="privacy-icon">
+                                        <FaEarthAmericas />
+                                    </div>
+                                </div>
+                                <div className="privacy-name">
+                                    <h5>Công khai</h5>
+                                    <span>Bất kì ai ở trên hoặc ngoài Facebook</span>
+                                </div>
+                            </div>
+
+                            <div className="input-radio">
+                                <input type="radio" name="privacy" checked={postUserPrivacy === 'public'} onChange={handlePrivacyChange} value="public" />
+                            </div>
+                        </div>
+
+                        <div className="modal-privacy-select">
+                            <div className="privacy-container">
+                                <div className="privacy-select">
+                                    <div className="privacy-icon">
+                                        <FaUserFriends />
+                                    </div>
+                                </div>
+                                <div className="privacy-name">
+                                    <h5>Bạn bè</h5>
+                                    <span>Bạn bè của bạn trên Facebook</span>
+                                </div>
+                            </div>
+                            
+                            <div className="input-radio">
+                                <input type="radio" name="privacy" checked={postUserPrivacy === 'friend'} onChange={handlePrivacyChange} value="friend" />
+                            </div>
+
+                        </div>
+
+                        <div className="modal-privacy-select">
+                            <div className="privacy-container">
+                                <div className="privacy-select">
+                                    <div className="privacy-icon">
+                                        <BiSolidLockAlt />
+                                    </div>
+                                </div>
+                                <div className="privacy-name">
+                                    <h5>Chỉ mình tôi</h5>
+                                    <span>Chế độ riêng tư</span>
+                                </div>
+                            </div>
+
+                            <div className="input-radio">
+                                <input type="radio" name="privacy" checked={postUserPrivacy === 'private'} onChange={handlePrivacyChange} value="private" />
+                            </div>
+                        </div>
+
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handlePrivacyClose}>
+                        Đóng
+                    </Button>
+                    <Button variant="primary" onClick={() => handleChangePrivacy(postUser[privacyIndex]?.id, postUserPrivacy)}>
+                        Lưu
+                    </Button>
+                </Modal.Footer>
+            </Modal>
 
             {/* Modal Change Image */}
             <CustomModal show={show} onHide={handleClose} centered className="custom-modal">

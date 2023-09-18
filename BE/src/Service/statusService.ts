@@ -79,11 +79,11 @@ export class StatusService {
                 time: 'DESC' // Sắp xếp theo trường 'createdAt' theo thứ tự giảm dần (DESC)
             }
         });
-    
+
         for (let i = 0; i < status.length; i++) {
             let imageByStatusId = await imageService.findAllByStatusId(status[i].id);
             let likeByStatusId = await likeService.getLikeForStatus(status[i].id);
-    
+
             status[i] = {
                 ...status[i],
                 image: [...imageByStatusId],
@@ -91,7 +91,7 @@ export class StatusService {
                 listUserLike: [...likeByStatusId.listUserLike]
             };
         }
-    
+
         return status;
     };
 
@@ -101,23 +101,66 @@ export class StatusService {
                 receiver: true,
                 sender: true
             },
-            where: {
-                receiver: {
-                    id: id
+            where: [
+                {
+                    receiver: {
+                        id: id
+                    },
+                    visibility: "public"
                 },
-                visibility: "public"
-            }
+                {
+                    receiver: {
+                        id: id
+                    },
+                    visibility: "friend"
+                }
+            ]
         });
-
 
         for (let i = 0; i < status.length; i++) {
             let imageByStatusId = await imageService.findAllByStatusId(status[i].id);
-            let likeByStatusId = await likeService.getLikeForStatus(status[i].id)
-        
-            status[i] = await { ...status[i], image: [...imageByStatusId], acountLike: likeByStatusId.likeCount, listUserLike: [...likeByStatusId.listUserLike] };
+            let likeByStatusId = await likeService.getLikeForStatus(status[i].id);
+
+            status[i] = {
+                ...status[i],
+                image: [...imageByStatusId],
+                acountLike: likeByStatusId.likeCount,
+                listUserLike: [...likeByStatusId.listUserLike]
+            };
         }
 
-        return status
+        return status;
+    };
+
+    findByIdAndStatusPublic = async (id) => {
+        let status = await this.statusRepository.find({
+            relations: {
+                receiver: true,
+                sender: true
+            },
+            where: [
+                {
+                    receiver: {
+                        id: id
+                    },
+                    visibility: "public"
+                },
+            ]
+        });
+
+        for (let i = 0; i < status.length; i++) {
+            let imageByStatusId = await imageService.findAllByStatusId(status[i].id);
+            let likeByStatusId = await likeService.getLikeForStatus(status[i].id);
+
+            status[i] = {
+                ...status[i],
+                image: [...imageByStatusId],
+                acountLike: likeByStatusId.likeCount,
+                listUserLike: [...likeByStatusId.listUserLike]
+            };
+        }
+
+        return status;
     };
 
 
@@ -193,7 +236,7 @@ export class StatusService {
         }
     }
     findByContent = async (id, content) => {
-   
+
         try {
             return await this.statusRepository.find({
                 relations: {

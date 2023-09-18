@@ -5,15 +5,6 @@ import {statusRouter} from "../router/statusRouter";
 
 
 export class StatusController {
-    // findAll = async (req, res) => {
-    //     let list
-    //     if ( req.params.id) {
-    //         list = await statusService.findByIdUser( req.params.id)
-    //     } else if (req.query.address) {
-    //         let list = await statusService.findAll()
-    //     }
-    //     res.json(list)
-    // }
 
     findAll = async (req, res) => {
         let list = await statusService.findAll()
@@ -24,11 +15,6 @@ export class StatusController {
         let data = await statusService.add(req.body);
         res.json(data)
     }
-
-    // update = async (req, res) => {
-    //     let data = await statusService.update(req.params.id, req.body);
-    //     res.json(data)
-    // }
     
     delete = async (req, res) => {
         let data = await statusService.delete(req.params.id);
@@ -52,13 +38,21 @@ export class StatusController {
         const userId = req.params.id;
         let data = await statusService.findByIdUser(userId)
         res.json(data);
-
     }
 
     findStatusByIdUser = async (req, res) => {
         let data = await statusService.findStatusByIdUser(req.params.senderId, req.params.receiverId)
         res.json(data);
+    }
 
+    findByIdAndStatus = async (req, res) => {
+        let data = await statusService.findByIdAndStatus(req.params.userId)
+        res.json(data);
+    }
+
+    findByIdAndStatusPublic = async (req, res) => {
+        let data = await statusService.findByIdAndStatusPublic(req.params.userId)
+        res.json(data);
     }
 }
 

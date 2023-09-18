@@ -99,31 +99,7 @@ export class FriendShipService {
           console.error("Error in findCommonFriendsByUsername:", error);
           throw error;
         }
-      };
-
-    // findFriendById = async (userId) => {
-    //     try {
-    //       const friends = await this.friendRepository
-    //         .createQueryBuilder("friendShip")
-    //         .innerJoinAndSelect("friendShip.user1", "user1")
-    //         .innerJoinAndSelect("friendShip.user2", "user2")
-    //         .where("(user1.id = :userId OR user2.id = :userId) AND friendShip.status = 'friend'", { userId })
-    //         .getMany();
-      
-    //       const friendUsers = friends.map((friendShip) => {
-    //         if (friendShip.user1.id === userId) {
-    //           return friendShip.user2;
-    //         } else {
-    //           return friendShip.user1;
-    //         }
-    //       });
-      
-    //       return friendUsers;
-    //     } catch (error) {
-    //       console.error("Error in findFriendById:", error);
-    //       throw error;
-    //     }
-    //   };
+      }
 
     sendFriendRequest = async (userId1, userId2) => {
         try {

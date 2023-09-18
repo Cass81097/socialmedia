@@ -16,14 +16,6 @@ export default function Sidebar() {
                             />
                         </a>
                     </li>
-                    {/* <li className="links link-avatar">
-                        <a href="" className="select" style={{position:"relative"}}>
-                            <div className="left-ava">
-                                <img className="left-avatar"
-                                    src={user.avatar} alt="load" />
-                            </div>
-                        </a>
-                    </li> */}
                     <li className="links link-avatar select" style={{transform:"translate(6px)"}}>
                             <div className="sidebar-avatar">
                                 <img 
@@ -53,18 +45,6 @@ export default function Sidebar() {
                         </a>
                     </li>
                 </div>
-                {/* <div className="bottom-content">
-                    <li>
-                        <a href="">
-                            <i className="bx bx-group icon" />
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <i className="shortcut icon" />
-                        </a>
-                    </li>
-                </div> */}
             </div>
         </>
     )

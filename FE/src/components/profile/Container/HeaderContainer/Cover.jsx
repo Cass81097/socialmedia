@@ -18,8 +18,6 @@ export default function Cover() {
 
     const [imageSrc, setImageSrc] = useState(null);
 
-    console.log(imageSrc);
-
     const handleSubmit = async () => {
         const newData = {
             cover: imageSrc,
