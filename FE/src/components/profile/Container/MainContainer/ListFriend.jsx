@@ -37,10 +37,12 @@ export default function ListFriend() {
         const value = event.target.value;
         setSearchValue(value);
 
+
         const lowercaseValue = value.toLowerCase();
         const filtered = countFriend.filter(item => item.fullname.toLowerCase().includes(lowercaseValue));
         setFilteredData(filtered);
     };
+    console.log(commonFriendList,3333)
 
     useEffect(() => {
         const findCommonFriendNumber = async (index) => {
@@ -120,6 +122,7 @@ export default function ListFriend() {
                             </div>
                         ))
                     ) : (
+
                         filteredData.map((listFriend, index) => (
                             <div className="friend-container-left" key={listFriend?.id}>
                                 <div>
@@ -129,8 +132,10 @@ export default function ListFriend() {
                                         </div>
                                         <div className="friend-detail">
                                             <h6 onClick={() => goFriendProfile(listFriend?.username)}>{listFriend?.fullname}</h6>
-                                            {commonFriendNumber?.[index] ? (
-                                                <h6 onClick={() => handleShow(commonFriendNumber?.[index])}>{commonFriendNumber?.[index].length} bạn chung</h6>
+                                            {commonFriendNumber?.[countFriend.indexOf(listFriend)] ? (
+                                                <h6 onClick={() => handleShow(commonFriendNumber?.[countFriend.indexOf(listFriend)])}>
+                                                    {commonFriendNumber?.[countFriend.indexOf(listFriend)].length} bạn chung
+                                                </h6>
                                             ) : (
                                                 <span>0 bạn chung</span>
                                             )}
@@ -142,7 +147,6 @@ export default function ListFriend() {
                     )}
                 </div>
             </div>
-
             {/* Modal Common Friend */}
 
             <Modal show={show} onHide={handleClose} centered>
