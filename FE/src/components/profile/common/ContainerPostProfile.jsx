@@ -231,7 +231,7 @@ export default function ContainerPostProfile(props) {
         <>
             <div className="post-col">
 
-                {(user?.username === userProfile[0]?.username && (
+                {user?.username === userProfile[0]?.username && (
                     <div className="home-content">
                         <div className="write-post-container">
                             <div className="user-profile">
@@ -384,9 +384,9 @@ export default function ContainerPostProfile(props) {
                             </div>
                         </div>
                     </div>
-                ))}
+                )}
 
-                {(checkFriendStatus?.status === "friend" && (
+                {checkFriendStatus?.status === "friend" && (
                     <div className="home-content">
                         <div className="write-post-container">
                             <div className="user-profile">
@@ -539,7 +539,7 @@ export default function ContainerPostProfile(props) {
                             </div>
                         </div>
                     </div>
-                ))}
+                )}
 
                 <div>
                     {postUser.map((post, index) => (
@@ -644,10 +644,41 @@ export default function ContainerPostProfile(props) {
                                                 <i className="fas fa-ellipsis-h"></i>
                                             </Button>
                                             <ol className={`post-menu-${index} show-post-menu`} style={{ display: "none" }}>
+
+                                                {user?.username !== userProfile[0]?.username && user?.username !== post?.sender?.username && (
+                                                    <li onClick={() => handlePostEditShow(index)} >
+                                                        <i className="far fa-edit"></i>
+                                                        <span>Sửa bài viết</span>
+                                                    </li>
+                                                )}
+
+                                                {user?.username === userProfile[0]?.username && user?.username === post?.sender?.username && (
+                                                    <li onClick={() => handlePostEditShow(index)} >
+                                                        <i className="far fa-edit"></i>
+                                                        <span>Sửa bài viết</span>
+                                                    </li>
+                                                )}
+
+                                                <li>
+                                                    <i className="far fa-trash-alt"></i>
+                                                    <span>Xóa bài viết</span>
+                                                </li>
+                                            </ol>
+                                        </div>
+                                    )}
+
+                                    {user?.username !== userProfile[0]?.username && user?.username === post?.sender?.username && (
+                                        <div className="user-action-post" onClick={() => showPostMenu(index)}>
+                                            <Button variant="light">
+                                                <i className="fas fa-ellipsis-h"></i>
+                                            </Button>
+                                            <ol className={`post-menu-${index} show-post-menu`} style={{ display: "none" }}>
+
                                                 <li onClick={() => handlePostEditShow(index)} >
                                                     <i className="far fa-edit"></i>
                                                     <span>Sửa bài viết</span>
                                                 </li>
+
                                                 <li>
                                                     <i className="far fa-trash-alt"></i>
                                                     <span>Xóa bài viết</span>

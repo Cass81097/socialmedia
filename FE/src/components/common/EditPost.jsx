@@ -103,7 +103,7 @@ export default function EditPost(props) {
                             <section className="post">
                                 <header>Sửa bài viết</header>
                                 <div className="post-form">
-                                    <div className="content" style={{ margin: "82px 0 20px 0" }}>
+                                    <div className="content" style={{ margin: "82px 0 -20px 0" }}>
                                         <div>
                                             <img src={postUser[postEditIndex]?.sender.avatar} alt="logo" />
                                         </div>
