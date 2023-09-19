@@ -3,6 +3,10 @@
     cursor: pointer; 
 }
 
+.user-post-profile svg {
+    margin-top: -2px;
+}
+
 .post-user-name {
     display: flex;
 }
