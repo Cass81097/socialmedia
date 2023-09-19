@@ -14,16 +14,19 @@ import "../../../styles/user/post/inputEmoji.css";
 import "../../../styles/user/post/postImage.css";
 import "../../../styles/user/post/postUser.css";
 import "../../../styles/user/post/privacy.css";
+import "../../../styles/modalChangeImage.css"
 import { baseUrl, postRequest, putRequest } from "../../../utils/services";
 import LoadingNew from "../../common/LoadingNew";
 import Like from "../../common/Like";
 import LikeList from "../../common/LikeList";
 import $ from 'jquery';
+import { ProfileContext } from "../../../context/ProfileContext";
 
 export default function ContainerPostProfile(props) {
     const { user, userProfile, setShowLikeList, setLikeListIndex, setShowPostEdit, setPostEditIndex } = props;
 
     const navigate = useNavigate();
+    const { checkFriendStatus } = useContext(ProfileContext)
     const { postUser, postImageUser, fetchPostUser, fetchImagePostUser } = useContext(PostContext);
     const [imageSrcProfile, setImageSrcProfile] = useState(null);
     const [show, setShow] = useState(false);
@@ -32,8 +35,8 @@ export default function ContainerPostProfile(props) {
     const [isImageLoading, setIsImageLoading] = useState(false);
 
     //Privacy
-    const [privacyPost, setPrivacyPost] = useState('public');
-    const [privacyValue, setPrivacyValue] = useState('public');
+    const [privacyPost, setPrivacyPost] = useState('friend');
+    const [privacyValue, setPrivacyValue] = useState('friend');
 
     const [showPrivacy, setShowPrivacy] = useState(false);
     const [showPrivacyPost, setShowPrivacyPost] = useState(false);
@@ -227,131 +230,317 @@ export default function ContainerPostProfile(props) {
     return (
         <>
             <div className="post-col">
-                <div className="home-content">
-                    <div className="write-post-container">
-                        <div className="user-profile">
-                            <div className="user-avatar" onClick={() => goProfile(user?.username)}>
-                                <img src={user.avatar} />
-                            </div>
-                            <div className="user-post-profile">
-                                <p onClick={() => goProfile(user?.username)}>{user.fullname}</p>
-                                <small onClick={handlePrivacyPostShow} style={{ cursor: "pointer" }}>
-                                    {privacyPost === "public" ? (
-                                        <>
-                                            <FaEarthAmericas />
-                                            <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
-                                        </>
-                                    ) : privacyPost === "friend" ? (
-                                        <>
-                                            <FaUserFriends />
-                                            <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
-                                        </>
-                                    ) : privacyPost === "private" ? (
-                                        <>
-                                            <BiSolidLockAlt />
-                                            <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
-                                        </>
+
+                {(user?.username === userProfile[0]?.username && (
+                    <div className="home-content">
+                        <div className="write-post-container">
+                            <div className="user-profile">
+                                <div className="user-avatar" onClick={() => goProfile(user?.username)}>
+                                    <img src={user.avatar} />
+                                </div>
+                                <div className="user-post-profile">
+                                    <p onClick={() => goProfile(user?.username)}>{user?.fullname}</p>
+
+                                    {user?.username === userProfile[0]?.username ? (
+                                        <small onClick={handlePrivacyPostShow} style={{ cursor: "pointer" }}>
+                                            {privacyPost === "public" ? (
+                                                <>
+                                                    <FaEarthAmericas />
+                                                    <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
+                                                </>
+                                            ) : privacyPost === "friend" ? (
+                                                <>
+                                                    <FaUserFriends />
+                                                    <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
+                                                </>
+                                            ) : privacyPost === "private" ? (
+                                                <>
+                                                    <BiSolidLockAlt />
+                                                    <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <FaEarthAmericas />
+                                                    <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
+                                                </>
+                                            )}
+                                        </small>
                                     ) : (
-                                        <>
-                                            <FaEarthAmericas />
-                                            <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
-                                        </>
+                                        <small style={{ cursor: "pointer" }}>
+                                            {privacyPost === "public" ? (
+                                                <>
+                                                    <FaEarthAmericas />
+                                                    <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
+                                                </>
+                                            ) : privacyPost === "friend" ? (
+                                                <>
+                                                    <FaUserFriends />
+                                                    <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
+                                                </>
+                                            ) : privacyPost === "private" ? (
+                                                <>
+                                                    <BiSolidLockAlt />
+                                                    <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <FaEarthAmericas />
+                                                    <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
+                                                </>
+                                            )}
+                                        </small>
                                     )}
-                                </small>
+                                </div>
+                            </div>
+                            <div className="user-action-post">
+                                <Button variant="light">
+                                    <i className="fas fa-ellipsis-h"></i>
+                                </Button>
                             </div>
                         </div>
-                        <div className="user-action-post">
-                            <Button variant="light">
-                                <i className="fas fa-ellipsis-h"></i>
+                        <div className="post-input-container">
+                            <InputEmoji
+                                value={textMessage}
+                                onChange={handleInputChange}
+                                onKeyDown={handleKeyDown}
+                            />
+
+                            <Button
+                                variant="primary"
+                                className={`post-button ${(!imageSrcProfile && !textMessage) ? 'cursor-not-allowed' : ''}`}
+                                onClick={handleSendMessage}
+                                disabled={!imageSrcProfile && !textMessage}
+                            >
+                                Đăng
                             </Button>
-                        </div>
-                    </div>
-                    <div className="post-input-container">
-                        <InputEmoji
-                            value={textMessage}
-                            onChange={handleInputChange}
-                            onKeyDown={handleKeyDown}
-                        />
 
-                        <Button
-                            variant="primary"
-                            className={`post-button ${(!imageSrcProfile && !textMessage) ? 'cursor-not-allowed' : ''}`}
-                            onClick={handleSendMessage}
-                            disabled={!imageSrcProfile && !textMessage}
-                        >
-                            Đăng
-                        </Button>
+                            <div style={{ position: "relative" }}>
 
-                        <div style={{ position: "relative" }}>
-
-                            {imageSrcProfile && imageSrcProfile.length > 0 && imageSrcProfile.length < 3 ? (
-                                <div className="post-image-container">
-                                    {imageSrcProfile.map((src, index) => (
-                                        <img key={index} src={src} alt={`Image ${index}`} />
-                                    ))}
-                                </div>
-                            ) : imageSrcProfile && imageSrcProfile.length === 3 ? (
-                                <div className="post-image-container three-image">
-                                    {imageSrcProfile.map((src, index) => (
-                                        <img key={index} src={src} alt={`Image ${index}`} />
-                                    ))}
-                                </div>
-                            ) : imageSrcProfile && imageSrcProfile.length === 4 ? (
-                                <div className="post-image-container four-image">
-                                    {imageSrcProfile.map((src, index) => (
-                                        <img key={index} src={src} alt={`Image ${index}`} />
-                                    ))}
-                                </div>
-                            ) : imageSrcProfile && imageSrcProfile.length > 4 ? (
-                                <div className="post-image-container five-image">
-                                    {imageSrcProfile.map((src, index) => (
-                                        <img key={index} src={src} alt={`Image ${index}`} />
-                                    ))}
-                                </div>
-                            )
-                                :
-                                null}
-
-                            {imageSrcProfile && imageSrcProfile.length > 0 && (
-                                <>
-                                    <div className="post-image-close">
-                                        <Button variant="light" onClick={handleImageClose} style={{borderRadius:"50%"}} >X</Button>
+                                {imageSrcProfile && imageSrcProfile.length > 0 && imageSrcProfile.length < 3 ? (
+                                    <div className="post-image-container">
+                                        {imageSrcProfile.map((src, index) => (
+                                            <img key={index} src={src} alt={`Image ${index}`} />
+                                        ))}
                                     </div>
-                                    <label htmlFor="image-upload-add" className="post-image-add" style={{ cursor: "pointer" }}>
-                                        <div className="btn btn-light">Thêm ảnh</div>
-                                        <input
-                                            id="image-upload-add"
-                                            type="file"
-                                            multiple
-                                            onChange={handleImageUploadMore}
-                                            style={{ display: "none" }}
-                                        />
-                                    </label>
-                                    <Button variant="light" className="post-image-change" onClick={handleShow}>Chỉnh sửa tất cả</Button>
-                                </>
-                            )}
-                        </div>
+                                ) : imageSrcProfile && imageSrcProfile.length === 3 ? (
+                                    <div className="post-image-container three-image">
+                                        {imageSrcProfile.map((src, index) => (
+                                            <img key={index} src={src} alt={`Image ${index}`} />
+                                        ))}
+                                    </div>
+                                ) : imageSrcProfile && imageSrcProfile.length === 4 ? (
+                                    <div className="post-image-container four-image">
+                                        {imageSrcProfile.map((src, index) => (
+                                            <img key={index} src={src} alt={`Image ${index}`} />
+                                        ))}
+                                    </div>
+                                ) : imageSrcProfile && imageSrcProfile.length > 4 ? (
+                                    <div className="post-image-container five-image">
+                                        {imageSrcProfile.map((src, index) => (
+                                            <img key={index} src={src} alt={`Image ${index}`} />
+                                        ))}
+                                    </div>
+                                )
+                                    :
+                                    null}
 
-                        <div className="add-post-links">
-                            <Link to="">
-                                <img src="./images/watch.png" /> Video trực tiếp
-                            </Link>
-                            <label htmlFor="image-upload-post" className="upload-label" style={{ cursor: "pointer" }}>
-                                <img src="./images/photo.png" style={{ marginRight: "10px", width: "20px" }} /> Ảnh/video
-                                <input
-                                    id="image-upload-post"
-                                    type="file"
-                                    multiple
-                                    onChange={handleImageUploadPost}
-                                    style={{ display: "none" }}
-                                />
-                            </label>
-                            <Link to="">
-                                <img src="./images/feeling.png" /> Cảm xúc/hoạt động
-                            </Link>
+                                {imageSrcProfile && imageSrcProfile.length > 0 && (
+                                    <>
+                                        <div className="post-image-close">
+                                            <Button variant="light" onClick={handleImageClose} style={{ borderRadius: "50%" }} >X</Button>
+                                        </div>
+                                        <label htmlFor="image-upload-add" className="post-image-add" style={{ cursor: "pointer" }}>
+                                            <div className="btn btn-light">Thêm ảnh</div>
+                                            <input
+                                                id="image-upload-add"
+                                                type="file"
+                                                multiple
+                                                onChange={handleImageUploadMore}
+                                                style={{ display: "none" }}
+                                            />
+                                        </label>
+                                        <Button variant="light" className="post-image-change" onClick={handleShow}>Chỉnh sửa tất cả</Button>
+                                    </>
+                                )}
+                            </div>
+
+                            <div className="add-post-links">
+                                <Link to="">
+                                    <img src="./images/watch.png" /> Video trực tiếp
+                                </Link>
+                                <label htmlFor="image-upload-post" className="upload-label" style={{ cursor: "pointer" }}>
+                                    <img src="./images/photo.png" style={{ marginRight: "10px", width: "20px" }} /> Ảnh/video
+                                    <input
+                                        id="image-upload-post"
+                                        type="file"
+                                        multiple
+                                        onChange={handleImageUploadPost}
+                                        style={{ display: "none" }}
+                                    />
+                                </label>
+                                <Link to="">
+                                    <img src="./images/feeling.png" /> Cảm xúc/hoạt động
+                                </Link>
+                            </div>
                         </div>
                     </div>
-                </div>
+                ))}
+
+                {(checkFriendStatus?.status === "friend" && (
+                    <div className="home-content">
+                        <div className="write-post-container">
+                            <div className="user-profile">
+                                <div className="user-avatar" onClick={() => goProfile(user?.username)}>
+                                    <img src={user.avatar} />
+                                </div>
+                                <div className="user-post-profile">
+                                    <p onClick={() => goProfile(user?.username)}>{user?.fullname}</p>
+
+                                    {user?.username === userProfile[0]?.username ? (
+                                        <small onClick={handlePrivacyPostShow} style={{ cursor: "pointer" }}>
+                                            {privacyPost === "public" ? (
+                                                <>
+                                                    <FaEarthAmericas />
+                                                    <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
+                                                </>
+                                            ) : privacyPost === "friend" ? (
+                                                <>
+                                                    <FaUserFriends />
+                                                    <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
+                                                </>
+                                            ) : privacyPost === "private" ? (
+                                                <>
+                                                    <BiSolidLockAlt />
+                                                    <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <FaEarthAmericas />
+                                                    <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
+                                                </>
+                                            )}
+                                        </small>
+                                    ) : (
+                                        <small style={{ cursor: "pointer" }}>
+                                            {privacyPost === "public" ? (
+                                                <>
+                                                    <FaEarthAmericas />
+                                                    <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
+                                                </>
+                                            ) : privacyPost === "friend" ? (
+                                                <>
+                                                    <FaUserFriends />
+                                                    <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
+                                                </>
+                                            ) : privacyPost === "private" ? (
+                                                <>
+                                                    <BiSolidLockAlt />
+                                                    <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <FaEarthAmericas />
+                                                    <i className="fas fa-caret-down" style={{ marginLeft: "5px" }} />
+                                                </>
+                                            )}
+                                        </small>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="user-action-post">
+                                <Button variant="light">
+                                    <i className="fas fa-ellipsis-h"></i>
+                                </Button>
+                            </div>
+                        </div>
+                        <div className="post-input-container">
+                            <InputEmoji
+                                value={textMessage}
+                                onChange={handleInputChange}
+                                onKeyDown={handleKeyDown}
+                            />
+
+                            <Button
+                                variant="primary"
+                                className={`post-button ${(!imageSrcProfile && !textMessage) ? 'cursor-not-allowed' : ''}`}
+                                onClick={handleSendMessage}
+                                disabled={!imageSrcProfile && !textMessage}
+                            >
+                                Đăng
+                            </Button>
+
+                            <div style={{ position: "relative" }}>
+
+                                {imageSrcProfile && imageSrcProfile.length > 0 && imageSrcProfile.length < 3 ? (
+                                    <div className="post-image-container">
+                                        {imageSrcProfile.map((src, index) => (
+                                            <img key={index} src={src} alt={`Image ${index}`} />
+                                        ))}
+                                    </div>
+                                ) : imageSrcProfile && imageSrcProfile.length === 3 ? (
+                                    <div className="post-image-container three-image">
+                                        {imageSrcProfile.map((src, index) => (
+                                            <img key={index} src={src} alt={`Image ${index}`} />
+                                        ))}
+                                    </div>
+                                ) : imageSrcProfile && imageSrcProfile.length === 4 ? (
+                                    <div className="post-image-container four-image">
+                                        {imageSrcProfile.map((src, index) => (
+                                            <img key={index} src={src} alt={`Image ${index}`} />
+                                        ))}
+                                    </div>
+                                ) : imageSrcProfile && imageSrcProfile.length > 4 ? (
+                                    <div className="post-image-container five-image">
+                                        {imageSrcProfile.map((src, index) => (
+                                            <img key={index} src={src} alt={`Image ${index}`} />
+                                        ))}
+                                    </div>
+                                )
+                                    :
+                                    null}
+
+                                {imageSrcProfile && imageSrcProfile.length > 0 && (
+                                    <>
+                                        <div className="post-image-close">
+                                            <Button variant="light" onClick={handleImageClose} style={{ borderRadius: "50%" }} >X</Button>
+                                        </div>
+                                        <label htmlFor="image-upload-add" className="post-image-add" style={{ cursor: "pointer" }}>
+                                            <div className="btn btn-light">Thêm ảnh</div>
+                                            <input
+                                                id="image-upload-add"
+                                                type="file"
+                                                multiple
+                                                onChange={handleImageUploadMore}
+                                                style={{ display: "none" }}
+                                            />
+                                        </label>
+                                        <Button variant="light" className="post-image-change" onClick={handleShow}>Chỉnh sửa tất cả</Button>
+                                    </>
+                                )}
+                            </div>
+
+                            <div className="add-post-links">
+                                <Link to="">
+                                    <img src="./images/watch.png" /> Video trực tiếp
+                                </Link>
+                                <label htmlFor="image-upload-post" className="upload-label" style={{ cursor: "pointer" }}>
+                                    <img src="./images/photo.png" style={{ marginRight: "10px", width: "20px" }} /> Ảnh/video
+                                    <input
+                                        id="image-upload-post"
+                                        type="file"
+                                        multiple
+                                        onChange={handleImageUploadPost}
+                                        style={{ display: "none" }}
+                                    />
+                                </label>
+                                <Link to="">
+                                    <img src="./images/feeling.png" /> Cảm xúc/hoạt động
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+
                 <div>
                     {postUser.map((post, index) => (
                         <div key={index} className="index-content">
@@ -399,14 +588,48 @@ export default function ContainerPostProfile(props) {
                                                     return (
                                                         <div className="post-privacy-change">
                                                             <span>{timeAgo}</span>
-                                                            {postUser[index]?.visibility === 'public' && (
-                                                                <i className="fas fa-globe-americas" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
+
+                                                            {user?.username === userProfile[0]?.username && user?.username === post?.sender?.username && (
+                                                                <>
+                                                                    {postUser[index]?.visibility === 'public' && (
+                                                                        <i className="fas fa-globe-americas" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
+                                                                    )}
+                                                                    {postUser[index]?.visibility === 'friend' && (
+                                                                        <i className="fas fa-user-friends" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
+                                                                    )}
+                                                                    {postUser[index]?.visibility === 'private' && (
+                                                                        <i className="fas fa-lock" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
+                                                                    )}
+                                                                </>
                                                             )}
-                                                            {postUser[index]?.visibility === 'friend' && (
-                                                                <i className="fas fa-user-friends" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
+
+
+                                                            {user?.username !== userProfile[0]?.username && user?.username === post?.sender?.username && (
+                                                                <>
+                                                                    {postUser[index]?.visibility === 'public' && (
+                                                                        <i className="fas fa-globe-americas" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} />
+                                                                    )}
+                                                                    {postUser[index]?.visibility === 'friend' && (
+                                                                        <i className="fas fa-user-friends" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} />
+                                                                    )}
+                                                                    {postUser[index]?.visibility === 'private' && (
+                                                                        <i className="fas fa-lock" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} />
+                                                                    )}
+                                                                </>
                                                             )}
-                                                            {postUser[index]?.visibility === 'private' && (
-                                                                <i className="fas fa-lock" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
+
+                                                            {user?.username !== post?.sender?.username && user?.username !== userProfile[0]?.username && (
+                                                                <>
+                                                                    {postUser[index]?.visibility === 'public' && (
+                                                                        <i className="fas fa-globe-americas" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} />
+                                                                    )}
+                                                                    {postUser[index]?.visibility === 'friend' && (
+                                                                        <i className="fas fa-user-friends" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} />
+                                                                    )}
+                                                                    {postUser[index]?.visibility === 'private' && (
+                                                                        <i className="fas fa-lock" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} />
+                                                                    )}
+                                                                </>
                                                             )}
                                                         </div>
                                                     );
@@ -415,22 +638,24 @@ export default function ContainerPostProfile(props) {
                                         </div>
                                     </div>
 
+                                    {user?.username === userProfile[0]?.username && (
+                                        <div className="user-action-post" onClick={() => showPostMenu(index)}>
+                                            <Button variant="light">
+                                                <i className="fas fa-ellipsis-h"></i>
+                                            </Button>
+                                            <ol className={`post-menu-${index} show-post-menu`} style={{ display: "none" }}>
+                                                <li onClick={() => handlePostEditShow(index)} >
+                                                    <i className="far fa-edit"></i>
+                                                    <span>Sửa bài viết</span>
+                                                </li>
+                                                <li>
+                                                    <i className="far fa-trash-alt"></i>
+                                                    <span>Xóa bài viết</span>
+                                                </li>
+                                            </ol>
+                                        </div>
+                                    )}
 
-                                    <div className="user-action-post" onClick={() => showPostMenu(index)}>
-                                        <Button variant="light">
-                                            <i className="fas fa-ellipsis-h"></i>
-                                        </Button>
-                                        <ol className={`post-menu-${index} show-post-menu`} style={{ display: "none" }}>
-                                            <li onClick={() => handlePostEditShow(index)} >
-                                                <i className="far fa-edit"></i>
-                                                <span>Sửa bài viết</span>
-                                            </li>
-                                            <li>
-                                                <i className="far fa-trash-alt"></i>
-                                                <span>Xóa bài viết</span>
-                                            </li>
-                                        </ol>
-                                    </div>
                                 </div>
 
                                 <div className="post-user">
@@ -488,6 +713,7 @@ export default function ContainerPostProfile(props) {
                     ))}
                 </div>
             </div>
+
 
             {/* Modal Privacy Post*/}
             <Modal show={showPrivacyPost} onHide={handlePrivacyPostClose} centered>
@@ -637,7 +863,7 @@ export default function ContainerPostProfile(props) {
             </Modal>
 
             {/* Modal Change Image */}
-            <CustomModal show={show} onHide={handleClose} centered className="custom-modal">
+            {/* <CustomModal show={show} onHide={handleClose} centered className="custom-modal">
                 <Modal.Header closeButton>
                     <Modal.Title style={{ transform: "translateX(600px)" }}>Xóa ảnh</Modal.Title>
                 </Modal.Header>
@@ -660,11 +886,49 @@ export default function ContainerPostProfile(props) {
                         Đóng
                     </Button>
                 </Modal.Footer>
-            </CustomModal>
+            </CustomModal> */}
+
+            <CustomModal show={show} onHide={handleClose} centered className="custom-modal">
+                <div className="modal-body-change-image">
+                    {imageSrcProfile && imageSrcProfile.length === 1 && (
+                        <div className="modal-body-image-change-container">
+                            {imageSrcProfile.map((src, index) => (
+                                <div className="image-change-container" key={index} style={{ position: "relative" }}>
+                                    <img src={src} alt={`Image ${index}`} />
+                                    <Button variant="light" className="modal-image-delete" onClick={() => handleDeleteImage(index)}>
+                                        X
+                                    </Button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {imageSrcProfile && imageSrcProfile.length === 2 && (
+                        <div className="modal-body-image-change-container image-two">
+                            <div className="image-change-container image-two" style={{ position: "relative" }}>
+                                {imageSrcProfile.map((src, index) => (
+                                    <>
+                                        <img src={src} alt={`Image ${index}`} />
+                                        {/* <Button variant="light" className="modal-image-delete" onClick={() => handleDeleteImage(index)}>
+                                        X
+                                    </Button> */}
+                                    </>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handleClose}>
+                        Đóng
+                    </Button>
+                </Modal.Footer>
+            </CustomModal >
 
             {isPostLoading || isImageLoading ? (
                 <LoadingNew></LoadingNew>
-            ) : null}
+            ) : null
+            }
 
         </>
     )

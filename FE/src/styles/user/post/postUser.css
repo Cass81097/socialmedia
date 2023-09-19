@@ -25,7 +25,7 @@
 
 .post-like {
     width: 50%;
-    text-align: center;
+    text-align: center
 }
 
 .post-like button {
@@ -33,6 +33,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    font-weight: 600;
 }
 
 .post-like span {
@@ -54,6 +55,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    font-weight: 600;
 }
 
 .write-post-container {

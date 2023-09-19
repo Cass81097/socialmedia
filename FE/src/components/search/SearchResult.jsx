@@ -30,7 +30,7 @@ export const SearchResult = ({ result, userId, onClickSearchResult }) => {
     if (`/${targetUsername}` !== `/${currentDomain}`) {
       navigate(`/${targetUsername}`);
       onClickSearchResult();
-      setUserProfile(res);
+      // setUserProfile(res);
     } else {
       onClickSearchResult();
     }

@@ -9,11 +9,13 @@ import "../../../../../styles/toast.css";
 import { baseUrl, getRequest, postRequest } from "../../../../../utils/services";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { PostContext } from '../../../../../context/PostContext';
 
 export default function FriendButton() {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const { userProfile, socket } = useContext(ProfileContext);
+  const { fetchPostUser } = useContext(PostContext)
   const [showToast, setShowToast] = useState(false);
   const [showToastAccepted, setShowToastAccepted] = useState(false);
   const [friendStatus, setFriendStatus] = useState(null);
@@ -121,6 +123,7 @@ export default function FriendButton() {
       const response2 = await postRequest(`${baseUrl}/friendships/unfriend/${userProfile[0]?.id}/${user.id}`)
       setFriendStatus();
       setShowAlertUnFriend(false);
+      await fetchPostUser();
       // if (socket) {
       //   socket.emit("cancelFriendRequest", {
       //     senderId: user.id,
@@ -152,6 +155,7 @@ export default function FriendButton() {
     try {
       const response = await postRequest(`${baseUrl}/friendships/accept/${userProfile[0]?.id}/${user.id}`)
       setFriendStatus({ status: "friend" });
+      fetchPostUser();
 
       if (socket) {
         console.log(user.id, userProfile[0]?.id);
@@ -195,7 +199,7 @@ export default function FriendButton() {
             </button>
           </div>
           <div className="edit-button" style={{ minWidth: "185px" }}>
-            <button type="button" className="btn btn-secondary btn-edit btn-editfriend" style={{ background: "#dbdbdc" }} onClick={handleCancelRequest}>
+            <button type="button" className="btn btn-secondary btn-edit btn-edit-friend" style={{ background: "#dbdbdc" }} onClick={handleCancelRequest}>
               <i className="fas fa-user-slash" style={{ color: "black" }}>
                 <span>Từ chối kết bạn</span>
               </i>

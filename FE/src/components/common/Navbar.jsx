@@ -35,7 +35,7 @@ export default function Navbar() {
         const currentDomain = window.location.pathname.split("/")[1];
         if (`/${user?.username}` !== `/${currentDomain}`) {
             navigate(`/${user?.username}`);
-            setUserProfile(res)
+            // setUserProfile(res)
             $('.profile-menu').hide();
         } else {
             $('.profile-menu').hide();
