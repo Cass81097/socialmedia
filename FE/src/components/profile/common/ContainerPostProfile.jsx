@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { BiSolidLockAlt } from 'react-icons/bi';
@@ -18,9 +18,10 @@ import { baseUrl, postRequest, putRequest } from "../../../utils/services";
 import LoadingNew from "../../common/LoadingNew";
 import Like from "../../common/Like";
 import LikeList from "../../common/LikeList";
+import $ from 'jquery';
 
 export default function ContainerPostProfile(props) {
-    const { user, userProfile, setShowLikeList, setLikeListIndex } = props;
+    const { user, userProfile, setShowLikeList, setLikeListIndex, setShowPostEdit, setPostEditIndex } = props;
 
     const navigate = useNavigate();
     const { postUser, postImageUser, fetchPostUser, fetchImagePostUser } = useContext(PostContext);
@@ -46,6 +47,12 @@ export default function ContainerPostProfile(props) {
     const handleLikeListShow = async (index) => {
         setLikeListIndex(index)
         setShowLikeList(true);
+    };
+
+    //Edit
+    const handlePostEditShow = async (index) => {
+        setPostEditIndex(index)
+        setShowPostEdit(true);
     };
 
     useEffect(() => {
@@ -167,8 +174,8 @@ export default function ContainerPostProfile(props) {
                 const responseImage = await postRequest(`${baseUrl}/imageStatus`, JSON.stringify(dataImage));
             }
         }
-        setIsPostLoading(false);
 
+        setIsPostLoading(false);
         setTextMessage("");
         setImageSrcProfile(null);
         await fetchPostUser();
@@ -200,6 +207,21 @@ export default function ContainerPostProfile(props) {
 
     const goImageUrl = (imageUrl) => {
         window.open(imageUrl, "_blank");
+    };
+
+    // Handle Menu Post
+    let currentMenuIndex = null;
+    const showPostMenu = (index) => {
+        if (currentMenuIndex === index) {
+            $(`.post-menu-${index}`).hide();
+            currentMenuIndex = null;
+            return;
+        }
+        if (currentMenuIndex !== null) {
+            $(`.post-menu-${currentMenuIndex}`).hide();
+        }
+        $(`.post-menu-${index}`).show();
+        currentMenuIndex = index;
     };
 
     return (
@@ -291,24 +313,22 @@ export default function ContainerPostProfile(props) {
                                 null}
 
                             {imageSrcProfile && imageSrcProfile.length > 0 && (
-                                <div className="post-image-close">
-                                    <Button variant="light" onClick={handleImageClose}>X</Button>
-                                </div>
-                            )}
-                            {imageSrcProfile && imageSrcProfile.length > 0 && (
-                                <label htmlFor="image-upload-add" className="post-image-add" style={{ cursor: "pointer" }}>
-                                    <div className="btn btn-light">Thêm ảnh</div>
-                                    <input
-                                        id="image-upload-add"
-                                        type="file"
-                                        multiple
-                                        onChange={handleImageUploadMore}
-                                        style={{ display: "none" }}
-                                    />
-                                </label>
-                            )}
-                            {imageSrcProfile && imageSrcProfile.length > 0 && (
-                                <Button variant="light" className="post-image-change" onClick={() => handleShow()}>Chỉnh sửa tất cả</Button>
+                                <>
+                                    <div className="post-image-close">
+                                        <Button variant="light" onClick={handleImageClose} style={{borderRadius:"50%"}} >X</Button>
+                                    </div>
+                                    <label htmlFor="image-upload-add" className="post-image-add" style={{ cursor: "pointer" }}>
+                                        <div className="btn btn-light">Thêm ảnh</div>
+                                        <input
+                                            id="image-upload-add"
+                                            type="file"
+                                            multiple
+                                            onChange={handleImageUploadMore}
+                                            style={{ display: "none" }}
+                                        />
+                                    </label>
+                                    <Button variant="light" className="post-image-change" onClick={handleShow}>Chỉnh sửa tất cả</Button>
+                                </>
                             )}
                         </div>
 
@@ -337,62 +357,82 @@ export default function ContainerPostProfile(props) {
                         <div key={index} className="index-content">
                             <div className="post-container">
                                 <div className="user-profile">
-                                    <div className="user-avatar" onClick={() => goProfile(post.sender?.username)}>
-                                        <img src={post.sender?.avatar} alt="User Avatar" />
-                                    </div>
-                                    <div>
-                                        <div className="post-user-name">
-                                            {post.sender?.id !== post.receiver?.id && (
-                                                <>
-                                                    <p onClick={() => goProfile(post.sender?.username)}>{post.sender?.fullname}</p>
-                                                    <i className="fas fa-caret-right icon-post-user"></i>
-                                                </>
-                                            )}
-                                            <p>{post.receiver?.fullname}</p>
+                                    <div style={{ display: "flex", alignItems: "center" }}>
+                                        <div className="user-avatar" onClick={() => goProfile(post.sender?.username)}>
+                                            <img src={post.sender?.avatar} alt="User Avatar" />
                                         </div>
+                                        <div>
+                                            <div className="post-user-name">
+                                                {post.sender?.id !== post.receiver?.id && (
+                                                    <>
+                                                        <p onClick={() => goProfile(post.sender?.username)}>{post.sender?.fullname}</p>
+                                                        <i className="fas fa-caret-right icon-post-user"></i>
+                                                    </>
+                                                )}
+                                                <p>{post.receiver?.fullname}</p>
+                                            </div>
 
-                                        <div className="time-status">
-                                            {(() => {
-                                                const timeString = post.time;
-                                                const date = new Date(timeString);
-                                                const now = new Date();
-                                                const timeDiffInMinutes = Math.floor((now - date) / (1000 * 60));
-                                                let timeAgo;
+                                            <div className="time-status">
+                                                {(() => {
+                                                    const timeString = post.time;
+                                                    const date = new Date(timeString);
+                                                    const now = new Date();
+                                                    const timeDiffInMinutes = Math.floor((now - date) / (1000 * 60));
+                                                    let timeAgo;
 
-                                                if (timeDiffInMinutes === 0) {
-                                                    timeAgo = "Vừa xong";
-                                                } else if (timeDiffInMinutes < 60) {
-                                                    timeAgo = `${timeDiffInMinutes} phút trước`;
-                                                } else {
-                                                    const hours = Math.floor(timeDiffInMinutes / 60);
-                                                    const minutes = timeDiffInMinutes % 60;
-                                                    if (hours >= 24) {
-                                                        timeAgo = "1 ngày trước";
-                                                    } else if (minutes === 0) {
-                                                        timeAgo = `${hours} giờ`;
+                                                    if (timeDiffInMinutes === 0) {
+                                                        timeAgo = "Vừa xong";
+                                                    } else if (timeDiffInMinutes < 60) {
+                                                        timeAgo = `${timeDiffInMinutes} phút trước`;
                                                     } else {
-                                                        timeAgo = `${hours} giờ ${minutes} phút trước`;
+                                                        const hours = Math.floor(timeDiffInMinutes / 60);
+                                                        const minutes = timeDiffInMinutes % 60;
+                                                        if (hours >= 24) {
+                                                            timeAgo = "1 ngày trước";
+                                                        } else if (minutes === 0) {
+                                                            timeAgo = `${hours} giờ`;
+                                                        } else {
+                                                            timeAgo = `${hours} giờ ${minutes} phút trước`;
+                                                        }
                                                     }
-                                                }
 
-                                                return (
-                                                    <div className="post-privacy-change">
-                                                        <span>{timeAgo}</span>
-                                                        {postUser[index]?.visibility === 'public' && (
-                                                            <i className="fas fa-globe-americas" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
-                                                        )}
-                                                        {postUser[index]?.visibility === 'friend' && (
-                                                            <i className="fas fa-user-friends" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
-                                                        )}
-                                                        {postUser[index]?.visibility === 'private' && (
-                                                            <i className="fas fa-lock" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
-                                                        )}
-                                                    </div>
-                                                );
-                                            })()}
+                                                    return (
+                                                        <div className="post-privacy-change">
+                                                            <span>{timeAgo}</span>
+                                                            {postUser[index]?.visibility === 'public' && (
+                                                                <i className="fas fa-globe-americas" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
+                                                            )}
+                                                            {postUser[index]?.visibility === 'friend' && (
+                                                                <i className="fas fa-user-friends" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
+                                                            )}
+                                                            {postUser[index]?.visibility === 'private' && (
+                                                                <i className="fas fa-lock" style={{ color: '#65676B', cursor: 'pointer', padding: "5px", fontSize: "smaller" }} onClick={() => handlePrivacyShow(index)} />
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })()}
+                                            </div>
                                         </div>
+                                    </div>
+
+
+                                    <div className="user-action-post" onClick={() => showPostMenu(index)}>
+                                        <Button variant="light">
+                                            <i className="fas fa-ellipsis-h"></i>
+                                        </Button>
+                                        <ol className={`post-menu-${index} show-post-menu`} style={{ display: "none" }}>
+                                            <li onClick={() => handlePostEditShow(index)} >
+                                                <i className="far fa-edit"></i>
+                                                <span>Sửa bài viết</span>
+                                            </li>
+                                            <li>
+                                                <i className="far fa-trash-alt"></i>
+                                                <span>Xóa bài viết</span>
+                                            </li>
+                                        </ol>
                                     </div>
                                 </div>
+
                                 <div className="post-user">
                                     <p className="post-text">{post.content}</p>
 
@@ -625,6 +665,7 @@ export default function ContainerPostProfile(props) {
             {isPostLoading || isImageLoading ? (
                 <LoadingNew></LoadingNew>
             ) : null}
+
         </>
     )
 }

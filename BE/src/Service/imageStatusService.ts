@@ -39,5 +39,13 @@ export class ImageStatusService {
 
     }
 
+    deleteAllByStatusId = async (statusId) => {
+        await this.imageStatusRepository
+            .createQueryBuilder()
+            .delete()
+            .where("status.id = :statusId", { statusId })
+            .execute();
+    }
+
 }
 export default new ImageStatusService()

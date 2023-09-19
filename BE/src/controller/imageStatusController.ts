@@ -14,12 +14,16 @@ export class ImageStatusController {
         res.json(data)
     }
     update = async (req, res) => {
-        console.log(req.params.id,req.body,1111 )
         let data = await ImageStatusService.update(req.params.id, req.body);
         res.json(data)
     }
     delete = async (req, res) => {
         let data = await ImageStatusService.delete(req.params.id);
+        res.json(data)
+    }
+
+    deleteAllByStatusId = async (req, res) => {
+        let data = await ImageStatusService.deleteAllByStatusId(req.params.statusId);
         res.json(data)
     }
 

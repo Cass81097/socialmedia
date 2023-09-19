@@ -8,3 +8,5 @@ imageStatusRouter.post("", imageController.add);
 imageStatusRouter.put("/:id", imageController.update);
 imageStatusRouter.get("/:id", imageController.findAllByStatusId);
 imageStatusRouter.get("/", imageController.findAll);    
+
+imageStatusRouter.delete("/delete/:statusId", imageController.deleteAllByStatusId);

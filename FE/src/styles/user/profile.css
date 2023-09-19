@@ -381,10 +381,6 @@ header {
     border-radius: 50%;
 }
 
-
-
-/*  */
-
 .write-post-container {
     width: 100%;
     background-color: #fff;
@@ -396,6 +392,7 @@ header {
 .user-profile {
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .user-avatar {
