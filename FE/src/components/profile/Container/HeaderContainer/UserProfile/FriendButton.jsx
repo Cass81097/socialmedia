@@ -10,7 +10,7 @@ import { baseUrl, getRequest, postRequest } from "../../../../../utils/services"
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-export default function FriendButton() {
+export default function FriendButton(prop) {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const { userProfile, socket } = useContext(ProfileContext);
@@ -39,6 +39,7 @@ export default function FriendButton() {
     const fetchData = async () => {
       try {
         const response = await getRequest(`${baseUrl}/users/find/id/${friendRequest?.senderId}`);
+        prop.setUserRequest({...response[0], userAccepted: userAccepted})
         setUserRequest(response);
       } catch (error) {
         console.error("Error checking friend status:", error);

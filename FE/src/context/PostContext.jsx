@@ -16,10 +16,10 @@ export const PostContextProvider = ({ children }) => {
             const storedUser = localStorage.getItem('User');
             const userStorage = JSON.parse(storedUser).username;
             const userId = userProfile?.[0]?.id;
-
             let response;
             if (userStorage === userId) {
                 response = await getRequest(`${baseUrl}/status/${userId}`);
+
             } 
             else {
                 const friendshipCheckResponse = await getRequest(`${baseUrl}/friendShips/checkStatusByUserId/${userId}/${user?.id}`);

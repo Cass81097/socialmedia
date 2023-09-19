@@ -174,3 +174,122 @@ a:visited {
     border: 0.1rem solid #1877F2;
     border-radius: 50%;
 }
+/*CSS phần thông báo _ Quỳnh*/
+.notifi-box {
+    width: 380px;
+    height: 0px;
+    opacity: 0;
+    position: absolute;
+    top: 70px;
+    right: 35px;
+    transition: 1s opacity, 250ms height;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    overflow: auto;
+    border-radius: 10px;
+    z-index: 2;
+    background: #FFFFFF;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    /*scrollbar-width: thin; !* Chiều rộng của thanh ray *!*/
+    scrollbar-color: #888888 #F0F0F0; /* Màu sắc của thanh ray */
+}
+.notifi-box::-webkit-scrollbar {
+    width: 10px;
+    height: 50px;
+}
+
+.notifi-box::-webkit-scrollbar-thumb {
+    background-color: #CCCCCC;
+    border-radius: 50px;
+}
+
+.notifi-box::-webkit-scrollbar-track {
+    background-color: #F0F0F0;
+}
+
+.notifi-box::-webkit-scrollbar-thumb:hover {
+    background-color: #AAAAAA;
+}
+
+.notifi-box h2 {
+    font-size: 25px;
+    padding: 10px;
+    border:none;
+    color: black;
+    font-weight: bold
+}
+.notifi-box h2 span {
+    color: #f00;
+}
+.notifi-item {
+    display: flex;
+    border-bottom: 0 solid #eee;
+    padding: 15px 5px;
+    cursor: pointer;
+    position: relative;
+}
+
+.notifi-item:hover {
+    background-color: lightgray;
+    border-radius: 10px;
+    margin-left: 5px;
+    margin-right: 0;
+}
+.item-image {
+    position: relative;
+    display: inline-block;
+}
+.notifi-item img {
+    display: block;
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+.icon-avatar {
+    position: absolute;
+    right:5px;
+    bottom: -10px;
+    padding: 5px;
+    border-radius: 50%;
+    background:#1877F2;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-avatar i {
+    font-size: 14px;
+    color: white;
+}
+.notifi-item .text h4 {
+    color: black;
+    font-size: 17px;
+    margin-left: 10px;
+    margin-right: -5px;
+}
+.notifi-item .text p{
+    font-size: 14px;
+    margin-left: 10px;
+    color: #1877F2;
+    font-weight: bold;
+}
+.notifi-item .text span{
+    font-size: 14px;
+    margin-left: 10px;
+    color: #5f5f5f;
+}
+.icon-read {
+    width: 18px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #1877F2;
+    margin-left: 20px;
+    align-self: center;
+    margin-right: 10px;
+}
+
+/*kết thúc phần css thông báo*/

@@ -151,6 +151,7 @@ export default function ContainerPostProfile(props) {
                 id: userProfile[0].id
             }
         };
+        console.log(data,111111)
 
         const response = await postRequest(`${baseUrl}/status`, JSON.stringify(data));
         const statusId = response.id;
@@ -200,7 +201,7 @@ export default function ContainerPostProfile(props) {
     const goImageUrl = (imageUrl) => {
         window.open(imageUrl, "_blank");
     };
-
+    console.log(postUser,2222)
     return (
         <>
             <div className="post-col">
