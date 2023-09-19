@@ -171,8 +171,8 @@ export default function ContainerPostProfile(props) {
 
         setTextMessage("");
         setImageSrcProfile(null);
-        fetchPostUser();
-        fetchImagePostUser();
+        await fetchPostUser();
+        await fetchImagePostUser();
 
         console.log("Đăng post thành công");
     };
@@ -188,7 +188,8 @@ export default function ContainerPostProfile(props) {
 
         setIsPostLoading(false);
         setShowPrivacy(false);
-        fetchPostUser();
+        await fetchPostUser();
+        await fetchImagePostUser();
         console.log("Sửa Privacy thành công");
     };
 

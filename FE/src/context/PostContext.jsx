@@ -16,10 +16,10 @@ export const PostContextProvider = ({ children }) => {
             const storedUser = localStorage.getItem('User');
             const userStorage = JSON.parse(storedUser).username;
             const userId = userProfile?.[0]?.id;
-
             let response;
-            if (userStorage === userId) {
+            if (userStorage === userProfile[0]?.username) {
                 response = await getRequest(`${baseUrl}/status/${userId}`);
+         
             } 
             else {
                 const friendshipCheckResponse = await getRequest(`${baseUrl}/friendShips/checkStatusByUserId/${userId}/${user?.id}`);
@@ -30,7 +30,6 @@ export const PostContextProvider = ({ children }) => {
                     response = await getRequest(`${baseUrl}/status/visibility/public/${userId}`);
                 }
             } 
-            
             setPostUser(response);
         } catch (error) {
             console.error("Error fetching user profiles:", error);
@@ -59,7 +58,7 @@ export const PostContextProvider = ({ children }) => {
                 const userId = userProfile?.[0]?.id;
     
                 let response;
-                if (userStorage === userId) {
+                if (userStorage === userProfile[0]?.username) {
                     response = await getRequest(`${baseUrl}/status/${userId}`);
                 } else {
                     const friendshipCheckResponse = await getRequest(`${baseUrl}/friendShips/checkStatusByUserId/${userId}/${user?.id}`);
