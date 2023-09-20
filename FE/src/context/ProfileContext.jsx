@@ -1,8 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
-import { baseUrl, getRequest, postRequest } from "../utils/services";
-import { io } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
-import { get } from "jquery";
+import { io } from "socket.io-client";
+import { baseUrl, getRequest } from "../utils/services";
 
 export const ProfileContext = createContext();
 

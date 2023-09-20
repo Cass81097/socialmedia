@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "../../../../../context/AuthContext";
 import { ProfileContext } from "../../../../../context/ProfileContext";
-import "../../../../../styles/toast.css";
+import "../../../../../styles/toast.css";  
 import { baseUrl, getRequest, postRequest } from "../../../../../utils/services";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -56,16 +56,15 @@ export default function FriendButton() {
     if (socket === null) return;
 
     socket.on("friendRequest", (res) => {
+      console.log(res);
       setFriendRequest(res);
-      // if (user?.id === userProfile[0]?.id) {
-      //   setFriendStatus({ status: "pending", userSendReq: res.senderId });
-      // }
+     
     });
 
     socket.on("friendRequestAccepted", (res) => {
       setUserAccepted(true)
       setFriendRequest(res);
-      // setFriendStatus({ status: "friend", userSendReq: res.senderId });
+    
     });
 
     return () => {
@@ -124,12 +123,7 @@ export default function FriendButton() {
       setFriendStatus();
       setShowAlertUnFriend(false);
       await fetchPostUser();
-      // if (socket) {
-      //   socket.emit("cancelFriendRequest", {
-      //     senderId: user.id,
-      //     receiverId: userProfile[0]?.id,
-      //   });
-      // }
+     
     } catch (error) {
       console.error("Error canceling friend request:", error);
     }
@@ -140,12 +134,7 @@ export default function FriendButton() {
       const response = await postRequest(`${baseUrl}/friendships/unfriend/${userProfile[0]?.id}/${user.id}/`)
       setFriendStatus();
 
-      // if (socket) {
-      //   socket.emit("cancelFriendRequest", {
-      //     senderId: user.id,
-      //     receiverId: userProfile[0]?.id,
-      //   });
-      // }
+     
     } catch (error) {
       console.error("Error canceling friend request:", error);
     }

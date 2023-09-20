@@ -30,10 +30,10 @@
 
 .post-like {
     width: 50%;
-    text-align: center
+    /* text-align: center */
 }
 
-.post-like button {
+.post-like .buttonLike {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -41,7 +41,7 @@
     font-weight: 600;
 }
 
-.post-like span {
+.post-like .buttonLike-span {
     padding: 0 5px;
 }
 

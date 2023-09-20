@@ -33,34 +33,34 @@ io.on("connection", (socket) => {
     })
 
     socket.on("sendFriendRequest", (data) => {
-        // Lấy thông tin từ dữ liệu yêu cầu kết bạn
         const { senderId, receiverId } = data;
-
-        // Kiểm tra xem người nhận yêu cầu kết bạn có đang trực tuyến hay không
         const receiver = onlineUsers.find(user => user.userId === receiverId);
+        // console.log(receiver, "sendFriendRequest");
         if (receiver) {
             io.to(receiver.socketId).emit("friendRequest", { senderId, receiverId });
-        } else {
-            // Người nhận không trực tuyến, thực hiện các xử lý khác (ví dụ: gửi thông báo, lưu vào cơ sở dữ liệu, vv.)
         }
     });
 
     socket.on("acceptFriendRequest", (data) => {
-        // Lấy thông tin từ dữ liệu yêu cầu kết bạn
         const { senderId, receiverId } = data;
-        console.log(data, "cancel");
-
-        // Kiểm tra xem người nhận yêu cầu kết bạn có đang trực tuyến hay không
         const receiver = onlineUsers.find(user => user.userId === receiverId);
+        // console.log(receiver, "acceptFriendRequest");
         if (receiver) {
             io.to(receiver.socketId).emit("friendRequestAccepted", { senderId, receiverId });
-        } else {
-            // Người nhận không trực tuyến, thực hiện các xử lý khác (ví dụ: gửi thông báo, lưu vào cơ sở dữ liệu, vv.)
         }
     });
+
+    socket.on("likeStatus", (data) => {
+        const { senderId, receiverId, postId } = data;
+        const receiver = onlineUsers.find(user => user?.userId === receiverId);
+        console.log(receiver);
+        if (receiver) {
+            io.to(receiver.socketId).emit("status", { senderId, receiverId, postId });
+        }
+    });
+
 });
 
-// Khởi động máy chủ trên cổng đã chỉ định
 io.listen(port, () => {
     console.log(`Socket.IO server is running on port ${port}`);
 });

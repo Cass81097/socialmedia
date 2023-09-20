@@ -20,7 +20,7 @@ export class FriendShipController {
         res.json(data);
     }
     findById = async (req, res) => {
-        console.log(req.body, 111)
+       
         const { user1: { id: user1Id }, user2: { id: user2Id } } = req.body
         let data = await friendShipService.findById(user1Id, user2Id)
         res.json(data);

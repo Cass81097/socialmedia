@@ -1,16 +1,22 @@
-import axios from "axios";
-import { baseUrl, getRequest, postRequest, deleteRequest } from "../../utils/services";
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import { useContext, useEffect, useState, useRef  } from "react";
 import Button from 'react-bootstrap/Button';
+import Toast from 'react-bootstrap/Toast';
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 import { PostContext } from "../../context/PostContext";
+import { ProfileContext } from "../../context/ProfileContext";
+import { baseUrl, deleteRequest, getRequest, postRequest } from "../../utils/services";
 
 export default function Like(props) {
-    const { postId, countLike, checkStatusLike, setIsCountLike, onLikeClick} = props
+    const navigate = useNavigate();
+    const handleStatusRef = useRef(null);
+    const { postId, countLike, checkStatusLike, setIsCountLike, userLike } = props
     const { user } = useContext(AuthContext)
+    const { userProfile, socket } = useContext(ProfileContext)
     const { fetchPostUser } = useContext(PostContext)
     const [isLiked, setIsLiked] = useState(checkStatusLike);
     const [likeCount, setLikeCount] = useState(countLike);
+
 
     useEffect(() => {
         setIsCountLike(likeCount);
@@ -23,25 +29,49 @@ export default function Like(props) {
         }
         const response = await postRequest(`${baseUrl}/likes/add/${postId}`, JSON.stringify(data));
         setIsLiked(true);
-        // setLikeCount(likeCount + 1);
-        // onLikeClick();
+        fetchPostUser();
 
-        fetchPostUser()
+        if (socket) {
+            socket.emit("likeStatus", {     
+                senderId: user?.id,
+                receiverId: userProfile[0]?.id,
+                postId: postId
+            });
+        }
     };
 
     const handleRemoveLike = async () => {
         const data = user.id;
         const response = await deleteRequest(`${baseUrl}/likes/${postId}?userId=${data}`);
         setIsLiked(false);
-        // setLikeCount(likeCount - 1);
-        // onLikeClick();
-        fetchPostUser() 
+        fetchPostUser()
     };
+
+    // useEffect(() => {
+    //     if (socket === null) return;
+        
+    //     const handleStatus = async (response) => {
+    //         console.log(response);
+    //         try {
+    //             const userId = response.senderId;
+    //             const res = await getRequest(`${baseUrl}/users/find/id/${userId}`);
+    //             setUserPost(res[0]);
+    //             setShowToast(true);
+    //         } catch (error) {
+    //             console.error("Error fetching user post:", error);
+    //         }
+    //     };
+    
+    //     socket.on("status", handleStatus);
+    
+    //     return () => {
+    //         socket.off("status", handleStatus);
+    //     };
+    // }, [socket]);
 
     useEffect(() => {
         async function checkLikedStatus() {
             const us = JSON.parse(localStorage.getItem("User"));
-
             try {
                 const response = await getRequest(`${baseUrl}/likes/${postId}`);
                 const hasLiked = response.likeRecords;
@@ -63,16 +93,38 @@ export default function Like(props) {
     return (
         <>
             {isLiked ? (
-                <Button variant="light" onClick={handleRemoveLike} style={{color:"rgb(27 97 255)"}}>
+                <Button className="buttonLike" variant="light" onClick={handleRemoveLike} style={{ color: "rgb(27 97 255)" }}>
                     <i className="fas fa-thumbs-up"></i>
-                    <span>Thích</span>
+                    <span className="buttonLike-span">Thích</span>
                 </Button>
             ) : (
-                <Button variant="light" onClick={handleAddLike}>
+                <Button className="buttonLike" variant="light" onClick={handleAddLike}>
                     <i className="far fa-thumbs-up" ></i>
-                    <span>Thích</span>
+                    <span className="buttonLike-span">Thích</span>
                 </Button>
-            )}  
+            )}
+
+            {/* {showToast && (
+                <Toast onClose={() => setShowToast(false)}>
+                    <div className="toast-header">
+                        <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
+                        <strong className="me-auto">Thông báo mới</strong>
+                        <button type="button" className="btn-close" onClick={() => setShowToast(false)}></button>
+                    </div>
+                    <Toast.Body>
+                        <div className="toast-container">
+                            <div className="toast-avatar">
+                                <img src={userPost?.avatar} alt="" />
+                            </div>
+                            <div className="toast-content" style={{ color: "black", marginLeft: "5px" }}>
+                                <p><span style={{ fontWeight: "600" }}>{userPost?.fullname}</span> vừa mới thích bài viết của bạn</p>
+                                <span style={{ color: "#0D6EFD" }}>vài giây trước</span>
+                            </div>
+                            <i className="fas fa-circle"></i>
+                        </div>
+                    </Toast.Body>
+                </Toast>
+            )} */}
         </>
     );
 }

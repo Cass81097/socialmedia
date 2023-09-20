@@ -23,7 +23,7 @@ export class StatusController {
     updateContent = async (req: Request, res: Response) => {
         const userId = req.params.id;
         const content = req.body.content;
-        console.log(userId,content, 1111)
+
         let data = await statusService.updateContent(userId, content);
         res.json(data);
     }

@@ -6,10 +6,10 @@ import { AuthContext } from "../../context/AuthContext";
 import { PostContext } from "../../context/PostContext";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import InputEmoji from "react-input-emoji";
-import EmojiPicker from 'emoji-picker-react';
 import LoadingNew from "./LoadingNew";
 import uploadImages from "../../hooks/UploadMulti";
+import styled from "styled-components";
+import Picker from "emoji-picker-react";
 
 export default function EditPost(props) {
     const { showPostEdit, setShowPostEdit, postEditIndex, setPostEditIndex } = props;
@@ -17,9 +17,32 @@ export default function EditPost(props) {
     const { postUser, postImageUser, fetchPostUser, fetchImagePostUser } = useContext(PostContext);
     const [isPostEditLoading, setIsPostEditLoading] = useState(false);
     const [imageEdit, setImageEdit] = useState([]);
+    const [imagePostEdit, setImagePostEdit] = useState([]);
     const [textMessage, setTextMessage] = useState('');
+    const [showChangeImage, setShowChangeImage] = useState(false);
+    const [showPicker, setShowPicker] = useState(false);
 
-    console.log(imageEdit);
+    const handleCloseChangeImage = async () => {
+        const postId = postUser[postEditIndex].id;
+        const responseImage = await deleteRequest(`${baseUrl}/imageStatus/delete/${postId}`);
+
+        const postRequests = imageEdit.map(async (image) => {
+            const dataImage = {
+                imageUrl: image.imageUrl,
+                status: {
+                    id: postId
+                }
+            };
+            return postRequest(`${baseUrl}/imageStatus`, JSON.stringify(dataImage));
+        });
+
+        const responseImages = await Promise.all(postRequests);
+        setShowChangeImage(false);
+    };
+
+    const handleShowChangeImage = async () => {
+        setShowChangeImage(true);
+    };
 
     useEffect(() => {
         if (postUser && postUser[postEditIndex]?.image) {
@@ -62,18 +85,19 @@ export default function EditPost(props) {
 
         if (imageEdit.length === 0) {
             const responseImage = await deleteRequest(`${baseUrl}/imageStatus/delete/${postId}`);
-
         } else {
-            for (let i = 0; i < imageEdit.length; i++) {
+            const postRequests = imagePostEdit.map(async (image) => {
                 const dataImage = {
-                    imageUrl: imageEdit[i].imageUrl,
+                    imageUrl: image.imageUrl,
                     status: {
                         id: postId
                     }
                 };
-                const responseImage = await postRequest(`${baseUrl}/imageStatus`, JSON.stringify(dataImage));
-                console.log(responseImage);
-            }
+                return postRequest(`${baseUrl}/imageStatus`, JSON.stringify(dataImage));
+            });
+
+            const responseImages = await Promise.all(postRequests);
+            setImagePostEdit([])
         }
 
         setIsPostEditLoading(false);
@@ -91,7 +115,23 @@ export default function EditPost(props) {
             setIsPostEditLoading(false);
             const newImages = images.map((image) => ({ imageUrl: image }));
             setImageEdit((prevImages) => [...prevImages, ...newImages]);
+            setImagePostEdit([...newImages])
         }, setIsPostEditLoading);
+    };
+
+    const handleDeleteImage = async (index) => {
+        setImageEdit((prevImages) => {
+            const newImages = [...prevImages];
+            newImages.splice(index, 1);
+            return newImages;
+        });
+    };
+
+
+    const onEmojiClick = (event, emojiObject) => {
+        const emoji = emojiObject.emoji;
+        setTextMessage((prevText) => prevText + emoji);
+        setShowPicker(false);
     };
 
     return (
@@ -103,8 +143,8 @@ export default function EditPost(props) {
                             <section className="post">
                                 <header>Sửa bài viết</header>
                                 <div className="post-form">
-                                    <div className="content" style={{ margin: "82px 0 -20px 0" }}>
-                                        <div>
+                                    <div className="content" style={{ margin: "82px 0 10px 0" }}>
+                                        <div className="content-avatar">
                                             <img src={postUser[postEditIndex]?.sender.avatar} alt="logo" />
                                         </div>
                                         <div className="details">
@@ -143,7 +183,6 @@ export default function EditPost(props) {
                                         />
 
                                         <div className="image-all-edit">
-
                                             {imageEdit && imageEdit.length > 0 && imageEdit.length < 3 ? (
                                                 <div className="img-post">
                                                     {imageEdit.map((src, index) => (
@@ -189,7 +228,7 @@ export default function EditPost(props) {
                                                             onChange={handleImageUploadMore}
                                                         />
                                                     </label>
-                                                    <Button variant="light" className="postEdit-image-change" >Chỉnh sửa tất cả</Button>
+                                                    <Button variant="light" className="postEdit-image-change" onClick={handleShowChangeImage} >Chỉnh sửa tất cả</Button>
                                                 </>
                                             )}
                                         </div>
@@ -227,8 +266,23 @@ export default function EditPost(props) {
                                                     alt="gallery" />
                                             </li>
                                             <li>
-                                                <img src="https://static.xx.fbcdn.net/rsrc.php/v3/yd/r/Y4mYLVOhTwq.png"
-                                                    alt="gallery" />
+                                                <img className="emoji-icon" src="https://static.xx.fbcdn.net/rsrc.php/v3/yd/r/Y4mYLVOhTwq.png"
+                                                    alt="gallery" onClick={() => setShowPicker((val) => !val)} />
+                                                {showPicker && (
+                                                    <div
+                                                        style={{
+                                                            position: 'absolute',
+                                                            bottom: "300PX",
+                                                            right: '-200px',
+                                                            width: '500px',
+                                                            height: '150px',
+                                                            zIndex: '9999'
+
+                                                        }}
+                                                    >
+                                                        <Picker onEmojiClick={onEmojiClick} />
+                                                    </div>
+                                                )}
                                             </li>
                                             <li>
                                                 <img src="https://static.xx.fbcdn.net/rsrc.php/v3/y1/r/8zlaieBcZ72.png"
@@ -256,9 +310,52 @@ export default function EditPost(props) {
                 </div>
             </div>
 
+            {/* Modal Change Image */}
+            <CustomModal show={showChangeImage} onHide={handleCloseChangeImage} centered className="custom-modal">
+                <Modal.Header closeButton>
+                </Modal.Header>
+                <Modal.Body>
+                    {imageEdit && imageEdit.length > 0 && (
+                        <div className="modal-image-container">
+                            {imageEdit.map((src, index) => (
+                                <div className="modal-image-change" key={index} >
+                                    <img src={src.imageUrl} alt={`Image ${index}`} />
+                                    <Button variant="light" className="modal-image-delete" onClick={() => handleDeleteImage(index)}>
+                                        X
+                                    </Button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handleCloseChangeImage}>
+                        Đóng
+                    </Button>
+                </Modal.Footer>
+            </CustomModal>
+
             {isPostEditLoading ? (
                 <LoadingNew></LoadingNew>
             ) : null}
         </Modal>
     )
 }
+
+
+const CustomModal = styled(Modal)`
+.custom-modal {
+    max-width: 1000px; 
+  }
+
+  .modal-dialog-centered {
+    max-width: fit-content;
+  }
+
+  .modal-body {
+    overflow: auto;
+    max-width: 999px;
+    background: #E4E6EB;
+  }
+  
+`;

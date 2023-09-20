@@ -64,7 +64,7 @@ export default function SearchPost () {
 
                        <div style={{   marginBottom: "30px"}} className="index-content-status" key={index}>
                            <div className="post-container">
-                               <div className="user-profile">
+                               <div className="user-profile" style={{justifyContent:"unset"}}>
                                    <div className="user-avatar" onClick={() => goProfile(item.sender?.username)}>
                                        <img src={item.sender?.avatar} alt="User Avatar" />
                                    </div>

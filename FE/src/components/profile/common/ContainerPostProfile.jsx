@@ -18,15 +18,16 @@ import "../../../styles/user/post/inputEmoji.css";
 import "../../../styles/user/post/postImage.css";
 import "../../../styles/user/post/postUser.css";
 import "../../../styles/user/post/privacy.css";
-import { baseUrl, deleteRequest, postRequest, putRequest } from "../../../utils/services";
+import { baseUrl, deleteRequest, postRequest, putRequest, getRequest } from "../../../utils/services";
 import Like from "../../common/Like";
 import LoadingNew from "../../common/LoadingNew";
+import Toast from 'react-bootstrap/Toast';
 
 export default function ContainerPostProfile(props) {
     const { user, userProfile, setShowLikeList, setLikeListIndex, setShowPostEdit, setPostEditIndex } = props;
 
     const navigate = useNavigate();
-    const { checkFriendStatus } = useContext(ProfileContext)
+    const { checkFriendStatus, socket } = useContext(ProfileContext)
     const { postUser, postImageUser, fetchPostUser, fetchImagePostUser } = useContext(PostContext);
     const [imageSrcProfile, setImageSrcProfile] = useState(null);
     const [show, setShow] = useState(false);
@@ -46,6 +47,33 @@ export default function ContainerPostProfile(props) {
 
     //Like
     const [isCountLike, setIsCountLike] = useState([]);
+
+    // Socket
+    const [showToast, setShowToast] = useState(false);
+    const [userPost, setUserPost] = useState(false);
+
+    useEffect(() => {
+        if (socket === null) return;
+
+        const handleStatus = async (response) => {
+            if (response.senderId !== response.receiverId) {
+                try {
+                    const userId = response.senderId;
+                    const res = await getRequest(`${baseUrl}/users/find/id/${userId}`);
+                    setUserPost(res[0]);
+                    setShowToast(true);
+                } catch (error) {
+                    console.error("Error fetching user post:", error);
+                }
+            }
+        };
+
+        socket.on("status", handleStatus);
+
+        return () => {
+            socket.off("status", handleStatus);
+        };
+    }, [socket]);
 
     const handleLikeListShow = async (index) => {
         setLikeListIndex(index)
@@ -723,7 +751,10 @@ export default function ContainerPostProfile(props) {
                                     <p className="post-text">{post.content}</p>
 
                                     {postImageUser[index]?.length > 0 && postImageUser[index] && (
-                                        <div className={`post-image ${postImageUser[index]?.length === 4 ? 'four' : postImageUser[index]?.length > 2 && postImageUser[index]?.length !== 4 ? 'three' : ''}`}>
+                                        <div className={`post-image ${postImageUser[index]?.length === 4 ? 'four' :
+                                                postImageUser[index]?.length === 5 ? 'five' :
+                                                    postImageUser[index]?.length > 2 && postImageUser[index]?.length !== 4 ? 'three' : ''
+                                            }`}>
                                             {postImageUser[index]?.map((image, imageIndex) => (
                                                 <img src={image.imageUrl} alt="Post Image" className="post-img" key={imageIndex} />
                                             ))}
@@ -926,13 +957,13 @@ export default function ContainerPostProfile(props) {
             {/* Modal Change Image */}
             <CustomModal show={show} onHide={handleClose} centered className="custom-modal">
                 <Modal.Header closeButton>
-                    <Modal.Title style={{ transform: "translateX(600px)" }}>Xóa ảnh</Modal.Title>
+                    {/* <Modal.Title style={{ transform: "translateX(600px)" }}>Xóa ảnh</Modal.Title> */}
                 </Modal.Header>
                 <Modal.Body>
                     {imageSrcProfile && imageSrcProfile.length > 0 && (
                         <div className="modal-image-container">
                             {imageSrcProfile.map((src, index) => (
-                                <div key={index} style={{ position: "relative" }}>
+                                <div className="modal-image-change" key={index} >
                                     <img src={src} alt={`Image ${index}`} />
                                     <Button variant="light" className="modal-image-delete" onClick={() => handleDeleteImage(index)}>
                                         X
@@ -1002,6 +1033,28 @@ export default function ContainerPostProfile(props) {
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+            {showToast && (
+                <Toast onClose={() => setShowToast(false)}>
+                    <div className="toast-header">
+                        <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
+                        <strong className="me-auto">Thông báo mới</strong>
+                        <button type="button" className="btn-close" onClick={() => setShowToast(false)}></button>
+                    </div>
+                    <Toast.Body>
+                        <div className="toast-container">
+                            <div className="toast-avatar">
+                                <img src={userPost?.avatar} alt="" />
+                            </div>
+                            <div className="toast-content" style={{ color: "black", marginLeft: "5px" }}>
+                                <p><span style={{ fontWeight: "600" }}>{userPost?.fullname}</span> vừa mới thích bài viết của bạn</p>
+                                <span style={{ color: "#0D6EFD" }}>vài giây trước</span>
+                            </div>
+                            <i className="fas fa-circle"></i>
+                        </div>
+                    </Toast.Body>
+                </Toast>
+            )}
 
             {isPostLoading || isImageLoading ? (
                 <LoadingNew></LoadingNew>
