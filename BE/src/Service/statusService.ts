@@ -172,32 +172,33 @@ export class StatusService {
 
 
     delete = async (statusId) => {
-
         try {
             await this.statusRepository.createQueryBuilder()
-                .delete().from("like") // Thay thế "like" bằng tên bảng thực tế của bạn
+                .delete()
+                .from("like") 
                 .where("statusId = :statusId", { statusId })
                 .execute();
+
             await this.statusRepository.createQueryBuilder()
                 .delete()
-                .from("image") // Thay thế "like" bằng tên bảng thực tế của bạn
+                .from("image_status") 
                 .where("statusId = :statusId", { statusId })
                 .execute();
 
-
-
-            // Xóa bài viết (status) cùng với các dòng liên quan trong bảng Like và ImageStatus
             await this.statusRepository.createQueryBuilder()
                 .delete()
                 .from("status")
                 .where("id = :statusId", { statusId })
                 .execute();
+
             return "xoá thành  công";
+
         } catch (error) {
             console.error('Lỗi khi xóa bài viết:', error.message);
             throw error;
         }
     }
+
     updateVisibility = async (statusId, visibility) => {
         try {
             const status = this.statusRepository.find({
@@ -245,20 +246,33 @@ export class StatusService {
     findByContent = async (id, content) => {
 
         try {
-            return await this.statusRepository.find({
+            let status = await this.statusRepository.find({
                 relations: {
                     receiver: true,
-                    sender: true
+                    images : true,
+                    sender : true
                 },
                 where: {
                     content: Like(`%${content}%`),
                     sender: { id: id }
                 }
             });
+            for (let i = 0; i < status.length; i++) {
+                let likeByStatusId = await likeService.getLikeForStatus(status[i].id);
+
+
+                status[i] = {
+                    ...status[i],
+                    accountLike: likeByStatusId.likeCount,
+                    listUserLike: [...likeByStatusId.likeRecords]
+                };
+            }
+            return status
+
         } catch (error) {
-            throw new Error('Error finding user by name');
+            throw new Error(error);
         }
-    }
+    } 
 
 
 }

@@ -12,5 +12,7 @@ statusRouter.put('/content/:id', statusController.updateContent);
 statusRouter.put('/visibility/:id', statusController.updateVisibility);
 statusRouter.get("/id/:senderId/:receiverId", statusController.findStatusByIdUser);
 
+statusRouter.get("/content/:userId",statusController.findByContent)
+
 statusRouter.get("/visibility/:userId", statusController.findByIdAndStatus);
 statusRouter.get("/visibility/public/:userId", statusController.findByIdAndStatusPublic);

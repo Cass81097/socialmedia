@@ -27,7 +27,7 @@ export class Status {
     @OneToMany(() => Like, (like) => like.id, { onDelete: 'CASCADE' })
     likes: Like[];
 
-    @OneToMany(() => ImageStatus, (img) => img.id, { onDelete: 'CASCADE' })
+    @OneToMany(() => ImageStatus, (img) => img.status, { onDelete: 'CASCADE' })
     images: ImageStatus[];
 
 }

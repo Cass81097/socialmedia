@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import { PostContext } from "../../context/PostContext";
 
 export default function Like(props) {
-    const { postId, countLike, checkStatusLike, setIsCountLike} = props
+    const { postId, countLike, checkStatusLike, setIsCountLike,onLikeClick} = props
     const { user } = useContext(AuthContext)
     const { fetchPostUser } = useContext(PostContext)
     const [isLiked, setIsLiked] = useState(checkStatusLike);
@@ -24,6 +24,8 @@ export default function Like(props) {
         const response = await postRequest(`${baseUrl}/likes/add/${postId}`, JSON.stringify(data));
         setIsLiked(true);
         setLikeCount(likeCount + 1);
+        onLikeClick();
+
         fetchPostUser()
     };
 
@@ -31,7 +33,9 @@ export default function Like(props) {
         const data = user.id;
         const response = await deleteRequest(`${baseUrl}/likes/${postId}?userId=${data}`);
         setIsLiked(false);
-        setLikeCount(likeCount - 1); 
+        setLikeCount(likeCount - 1);
+        onLikeClick();
+
         fetchPostUser() 
     };
 

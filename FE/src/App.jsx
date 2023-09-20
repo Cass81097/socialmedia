@@ -10,6 +10,9 @@ import Profile from "./pages/Profile";
 import Loading from "./components/common/Loading"
 import { PostContextProvider } from './context/PostContext';
 
+import { SearchContextProvider } from './context/SearchContext';
+import SearchPost from './components/search/SearchPost';
+
 export default function App() {
   const { user, allUser } = useContext(AuthContext);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -26,25 +29,30 @@ export default function App() {
 
   return (
     <Router>
-      <ProfileContextProvider user={user}>
-        <PostContextProvider>
-          <Routes>
-            <Route path="/loading" element={<Loading />} />
-            <Route path="/404" element={<PageNotFound />} />
-            <Route path="/" element={user ? <Home /> : <Login />} />
-            <Route path="/login" element={user ? <Home /> : <Login />} />
-            <Route path="/home" element={user ? <Home /> : <Login />} />
-            {allUser?.length > 0 &&
-              allUser.map((username) => (
-                <Route
-                  key={username}
-                  path={`/${username}`}
-                  element={user ? <Profile user={username} /> : <Login />}
-                />
-              ))}
-          </Routes>
-        </PostContextProvider>
-      </ProfileContextProvider>
+      <SearchContextProvider>
+        <ProfileContextProvider user={user}>
+          <PostContextProvider>
+
+            <Routes>
+              <Route path="/loading" element={<Loading />} />
+              <Route path="/404" element={<PageNotFound />} />
+              <Route path="/" element={user ? <Home /> : <Login />} />
+              <Route path="/login" element={user ? <Home /> : <Login />} />
+              <Route path="/home" element={user ? <Home /> : <Login />} />
+              {allUser?.length > 0 &&
+                allUser.map((username) => (
+                  <Route
+                    key={username}
+                    path={`/${username}`}
+                    element={user ? <Profile user={username} /> : <Login />}
+                  />
+                ))}
+             <Route path="/status" element={<SearchPost />} />
+
+            </Routes>
+          </PostContextProvider>
+        </ProfileContextProvider>
+      </SearchContextProvider>
     </Router>
   );
 }

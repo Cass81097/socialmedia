@@ -1,26 +1,26 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import $ from 'jquery';
+import React, { useContext, useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { BiSolidLockAlt } from 'react-icons/bi';
+import { BiSolidLike, BiSolidLockAlt } from 'react-icons/bi';
 import { FaUserFriends } from 'react-icons/fa';
 import { FaEarthAmericas } from 'react-icons/fa6';
-import { BiSolidLike } from 'react-icons/bi';
 import InputEmoji from "react-input-emoji";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
 import { PostContext } from "../../../context/PostContext";
+import { ProfileContext } from "../../../context/ProfileContext";
 import uploadImages from "../../../hooks/UploadMulti";
+import "../../../styles/modalChangeImage.css";
 import "../../../styles/user/post/inputEmoji.css";
 import "../../../styles/user/post/postImage.css";
 import "../../../styles/user/post/postUser.css";
 import "../../../styles/user/post/privacy.css";
-import "../../../styles/modalChangeImage.css"
-import { baseUrl, postRequest, putRequest } from "../../../utils/services";
-import LoadingNew from "../../common/LoadingNew";
+import { baseUrl, deleteRequest, postRequest, putRequest } from "../../../utils/services";
 import Like from "../../common/Like";
-import LikeList from "../../common/LikeList";
-import $ from 'jquery';
-import { ProfileContext } from "../../../context/ProfileContext";
+import LoadingNew from "../../common/LoadingNew";
 
 export default function ContainerPostProfile(props) {
     const { user, userProfile, setShowLikeList, setLikeListIndex, setShowPostEdit, setPostEditIndex } = props;
@@ -226,6 +226,36 @@ export default function ContainerPostProfile(props) {
         $(`.post-menu-${index}`).show();
         currentMenuIndex = index;
     };
+
+    // Delete Post
+    const toastOptions = {
+        position: "bottom-right",
+        autoClose: 2000,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+    };
+
+    const [showAlert, setIsShowAlert] = useState(false);
+    const [postIdToDelete, setPostIdToDelete] = useState(null);
+
+    const handleCloseAlert = () => {
+        setIsShowAlert(false);
+    }
+
+    const handleShowAlert = (postId) => {
+        setPostIdToDelete(postId)
+        setIsShowAlert(true);
+    }
+
+    const handleDeleteStatus = (async (postId) => {
+        setIsPostLoading(true);
+        const response = await deleteRequest(`${baseUrl}/status/${postId}`);
+        setIsPostLoading(false);
+        setIsShowAlert(false);
+        toast.success("Xóa thành công.", toastOptions);
+        await fetchPostUser();
+    })
 
     return (
         <>
@@ -659,7 +689,7 @@ export default function ContainerPostProfile(props) {
                                                     </li>
                                                 )}
 
-                                                <li>
+                                                <li onClick={() => { handleShowAlert(post.id) }}>
                                                     <i className="far fa-trash-alt"></i>
                                                     <span>Xóa bài viết</span>
                                                 </li>
@@ -679,7 +709,7 @@ export default function ContainerPostProfile(props) {
                                                     <span>Sửa bài viết</span>
                                                 </li>
 
-                                                <li>
+                                                <li onClick={() => { handleShowAlert(post.id) }}>
                                                     <i className="far fa-trash-alt"></i>
                                                     <span>Xóa bài viết</span>
                                                 </li>
@@ -955,6 +985,23 @@ export default function ContainerPostProfile(props) {
                     </Button>
                 </Modal.Footer>
             </CustomModal >
+
+            {/* Modal Delete */}
+
+            <Modal show={showAlert} onHide={handleCloseAlert} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title style={{ transform: "translateX(170px)" }}>Xác nhận</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Bạn có chắc chắn muốn xóa bài viết ?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseAlert}>
+                        Đóng
+                    </Button>
+                    <Button variant="primary" onClick={() => handleDeleteStatus(postIdToDelete)}>
+                        Có
+                    </Button>
+                </Modal.Footer>
+            </Modal>
 
             {isPostLoading || isImageLoading ? (
                 <LoadingNew></LoadingNew>
