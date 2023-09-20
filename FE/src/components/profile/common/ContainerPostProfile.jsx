@@ -924,7 +924,7 @@ export default function ContainerPostProfile(props) {
             </Modal>
 
             {/* Modal Change Image */}
-            {/* <CustomModal show={show} onHide={handleClose} centered className="custom-modal">
+            <CustomModal show={show} onHide={handleClose} centered className="custom-modal">
                 <Modal.Header closeButton>
                     <Modal.Title style={{ transform: "translateX(600px)" }}>Xóa ảnh</Modal.Title>
                 </Modal.Header>
@@ -947,9 +947,9 @@ export default function ContainerPostProfile(props) {
                         Đóng
                     </Button>
                 </Modal.Footer>
-            </CustomModal> */}
+            </CustomModal>
 
-            <CustomModal show={show} onHide={handleClose} centered className="custom-modal">
+            {/* <CustomModal show={show} onHide={handleClose} centered className="custom-modal">
                 <div className="modal-body-change-image">
                     {imageSrcProfile && imageSrcProfile.length === 1 && (
                         <div className="modal-body-image-change-container">
@@ -970,9 +970,9 @@ export default function ContainerPostProfile(props) {
                                 {imageSrcProfile.map((src, index) => (
                                     <>
                                         <img src={src} alt={`Image ${index}`} />
-                                        {/* <Button variant="light" className="modal-image-delete" onClick={() => handleDeleteImage(index)}>
+                                        <Button variant="light" className="modal-image-delete" onClick={() => handleDeleteImage(index)}>
                                         X
-                                    </Button> */}
+                                    </Button>
                                     </>
                                 ))}
                             </div>
@@ -984,7 +984,7 @@ export default function ContainerPostProfile(props) {
                         Đóng
                     </Button>
                 </Modal.Footer>
-            </CustomModal >
+            </CustomModal > */}
 
             {/* Modal Delete */}
 
