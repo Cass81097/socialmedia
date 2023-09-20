@@ -56,7 +56,7 @@ export default function ContainerPostProfile(props) {
         if (socket === null) return;
 
         const handleStatus = async (response) => {
-            if (response.senderId !== response.receiverId) {
+            if (response?.senderId !== response?.receiverId && user?.id !== response?.senderId) {
                 try {
                     const userId = response.senderId;
                     const res = await getRequest(`${baseUrl}/users/find/id/${userId}`);
@@ -426,7 +426,7 @@ export default function ContainerPostProfile(props) {
                                 <Link to="">
                                     <img src="./images/watch.png" /> Video trực tiếp
                                 </Link>
-                                <label htmlFor="image-upload-post" className="upload-label" style={{ cursor: "pointer" }}>
+                                <label htmlFor="image-upload-post" className="upload-label" style={{ cursor: "pointer", alignItems: "center", display: "flex", justifyContent: "center" }}>
                                     <img src="./images/photo.png" style={{ marginRight: "10px", width: "20px" }} /> Ảnh/video
                                     <input
                                         id="image-upload-post"
@@ -581,7 +581,7 @@ export default function ContainerPostProfile(props) {
                                 <Link to="">
                                     <img src="./images/watch.png" /> Video trực tiếp
                                 </Link>
-                                <label htmlFor="image-upload-post" className="upload-label" style={{ cursor: "pointer" }}>
+                                <label htmlFor="image-upload-post" className="upload-label" style={{ cursor: "pointer", alignItems: "center", display: "flex", justifyContent: "center" }}>
                                     <img src="./images/photo.png" style={{ marginRight: "10px", width: "20px" }} /> Ảnh/video
                                     <input
                                         id="image-upload-post"
@@ -752,8 +752,8 @@ export default function ContainerPostProfile(props) {
 
                                     {postImageUser[index]?.length > 0 && postImageUser[index] && (
                                         <div className={`post-image ${postImageUser[index]?.length === 4 ? 'four' :
-                                                postImageUser[index]?.length === 5 ? 'five' :
-                                                    postImageUser[index]?.length > 2 && postImageUser[index]?.length !== 4 ? 'three' : ''
+                                            postImageUser[index]?.length === 5 ? 'five' :
+                                                postImageUser[index]?.length > 2 && postImageUser[index]?.length !== 4 ? 'three' : ''
                                             }`}>
                                             {postImageUser[index]?.map((image, imageIndex) => (
                                                 <img src={image.imageUrl} alt="Post Image" className="post-img" key={imageIndex} />

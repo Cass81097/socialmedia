@@ -22,7 +22,7 @@ export default function LeftPostProfile() {
                         <i className="fas fa-map-marker-alt icon-profile" style={{marginRight:"4px"}}/>
                         <span>{userProfile[0]?.address}</span>
                     </div>
-                    <div className="picture-profile">
+                    {/* <div className="picture-profile">
                         <div
                             className="picture-profile-1"
                             style={{
@@ -30,7 +30,7 @@ export default function LeftPostProfile() {
                                     "linear-gradient(transparent, rgba(0,0,0,0.5)), url(./img/avatar-main.jpg)"
                             }}
                         ></div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </>

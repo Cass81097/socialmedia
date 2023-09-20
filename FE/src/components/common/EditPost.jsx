@@ -37,6 +37,7 @@ export default function EditPost(props) {
         });
 
         const responseImages = await Promise.all(postRequests);
+        setImagePostEdit([]);
         setShowChangeImage(false);
     };
 
