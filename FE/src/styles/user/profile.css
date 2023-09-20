@@ -333,9 +333,9 @@ header {
     height: 200px;
 }
 
-.post-image-container.four-image {
+/* .post-image-container.four-image {
     min-height: 485px;
-}
+} */
 
 .post-image-container.four-image img:nth-child(1) {
     height: 300px;
@@ -544,6 +544,7 @@ header {
     width: fit-content;
     cursor: pointer;
     transition: 0.3s;
+    margin-top: 5px;
 }
 
 .activity-icons:hover {
